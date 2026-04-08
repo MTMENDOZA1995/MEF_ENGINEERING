@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>EDITAR DATOS DEL USUARIO | MEF Engineering & Soluciones</title>
+    <link rel="stylesheet" href="RegistroUsuarios.css">
+    <style>
+        /* Estilos específicos para el input de contraseña con ícono */
+        .password-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        .password-wrapper input {
+            width: 100%;
+            padding-right: 40px; 
+        }
+        .toggle-password {
+            position: absolute;
+            right: 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 4px;
+            border-radius: 50%;
+            transition: background-color 0.2s ease;
+        }
+        .toggle-password:hover {
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+        .toggle-password img {
+            width: 20px;
+            height: 20px;
+            opacity: 0.6;
+            transition: opacity 0.2s ease;
+        }
+        .toggle-password:hover img {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+
+    <main class="card">
+
+        <header class="card-header">
+            <div class="header-content">
+                <a href="TBRegistroUsuarios.html" title="Ver usuarios registrados" class="icon-link">
+                    <img src="Iconos/LUPA1.png" alt="Ver usuarios registrados" class="icon">
+                </a>
+                <h1>EDITAR USUARIO</h1>
+            </div>
+        </header>
+
+        <section class="card-body">
+            <form class="card-form" id="formEditarUsuario" autocomplete="off" novalidate>
+                
+                <div class="form-group">
+                    <label for="codigo">CÓDIGO DE PERSONAL:</label>
+                    <input 
+                        type="text" 
+                        id="codigo" 
+                        name="codigo" 
+                        placeholder="Ej. P001" 
+                        required 
+                        oninput="this.value = this.value.toUpperCase()"
+                        autofocus
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="dni">DNI:</label>
+                    <input type="text" id="dni" name="dni" placeholder="Autollenado" readonly tabindex="-1">
+                </div>
+
+                <div class="form-group">
+                    <label for="apellidos">APELLIDOS:</label>
+                    <input type="text" id="apellidos" name="apellidos" placeholder="Autollenado" readonly tabindex="-1">
+                </div>
+
+                <div class="form-group">
+                    <label for="nombres">NOMBRES:</label>
+                    <input type="text" id="nombres" name="nombres" placeholder="Autollenado" readonly tabindex="-1">
+                </div>
+
+                <div class="form-group">
+                    <label for="cargo">CARGO (ROL):</label>
+                    <select id="cargo" name="cargo" required>
+                        <option value="" disabled selected>Seleccione un cargo...</option>
+                        <option value="ADMINISTRADOR">ADMINISTRADOR</option>
+                        <option value="SUPERVISOR">SUPERVISOR</option>
+                        <option value="ASISTENTE">ASISTENTE</option>
+                        <option value="OPERARIO">OPERARIO</option>
+                    </select>
+                </div> 
+
+                <div class="form-group">
+                    <label for="id">ID DE USUARIO (Login):</label>
+                    <input 
+                        type="text" 
+                        id="id" 
+                        name="id" 
+                        placeholder="Nombre de usuario" 
+                        required 
+                        oninput="this.value = this.value.toUpperCase()"
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="clave">CONTRASEÑA:</label>
+                    <div class="password-wrapper">
+                        <input 
+                            type="password" 
+                            id="clave" 
+                            name="clave" 
+                            placeholder="Mín. 7 caracteres (Letras y números)" 
+                            minlength="7" 
+                            maxlength="20"
+                            required
+                        >
+                        <span class="toggle-password" id="togglePassword" title="Mostrar/Ocultar contraseña">
+                            <img src="Iconos/VER.png" id="eyeIcon" alt="Mostrar">
+                        </span>
+                    </div>
+                </div>
+
+                <button type="submit" class="submit-btn">GUARDAR CAMBIOS</button>
+            </form>
+        </section>
+
+        <footer class="card-footer">
+            <a href="#" title="Volver al Menú Principal" onclick="volverAlMenu(event)">
+                <img src="Imagenes/ECFM.png" alt="Logo MEF Engineering" class="logo">
+            </a>
+        </footer>
+
+    </main>  
+
+<script>
+    'use strict';
+
+    // ==========================================
+    // 1. GESTIÓN DE SESIÓN Y NAVEGACIÓN
+    // ==========================================
+    function cerrarSesion(e) {
+        if (e && typeof e.preventDefault === 'function') e.preventDefault();
+        alert("🔒 Sesión finalizada de forma segura.");
+        sessionStorage.clear();
+        localStorage.setItem("sesionActiva", "no");
+        window.location.replace("index.html");
+    }
+
+    function validarSesion() {
+        if (sessionStorage.getItem("sesionActiva") !== "true") {
+            cerrarSesion();
+        }
+    }
+
+    function volverAlMenu(e) {
+        if (e && typeof e.preventDefault === 'function') e.preventDefault();
+        window.location.href = sessionStorage.getItem("menuUsuario") || "Botones.html";
+    }
+
+    window.addEventListener("DOMContentLoaded", validarSesion);
+    window.addEventListener("pageshow", validarSesion);
+
+    // Límite estricto de inactividad a 1 minuto
+    let timerInactividad;
+    const reiniciarTemporizador = () => {
+        clearTimeout(timerInactividad);
+        timerInactividad = setTimeout(() => {
+            alert("⏰ INACTIVIDAD DETECTADA. SESIÓN CERRADA.");
+            cerrarSesion();
+        }, 1 * 60 * 1000); 
+    };
+
+    ["mousemove", "keydown", "click", "scroll", "touchstart"].forEach(evento => {
+        document.addEventListener(evento, reiniciarTemporizador, { passive: true });
+    });
+    reiniciarTemporizador();
+
+
+    // ==========================================
+    // 2. LÓGICA PRINCIPAL DE EDICIÓN
+    // ==========================================
+    document.addEventListener("DOMContentLoaded", () => {
+        
+        const usuarioEnCache = JSON.parse(localStorage.getItem('usuarioEditar'));
+        const index = localStorage.getItem('usuarioEditarIndex');
+
+        // Seguridad: Si alguien entra directo a la URL sin elegir a alguien para editar
+        if (!usuarioEnCache || index === null) {
+            alert("⚠️ ERROR: No se encontraron datos del usuario para editar.");
+            window.location.replace("TBRegistroUsuarios.html");
+            return;
+        }
+
+        const form = document.getElementById('formEditarUsuario');
+        const inputCodigo = document.getElementById('codigo');
+        const inputClave = document.getElementById('clave');
+        const togglePassword = document.getElementById('togglePassword');
+        const eyeIcon = document.getElementById('eyeIcon');
+        const selectCargo = document.getElementById('cargo');
+        const inputID = document.getElementById('id');
+
+        // --- LÓGICA DEL OJITO (MOSTRAR/OCULTAR CONTRASEÑA) ---
+        togglePassword.addEventListener('click', function () {
+            const isPassword = inputClave.getAttribute('type') === 'password';
+            inputClave.setAttribute('type', isPassword ? 'text' : 'password');
+            eyeIcon.style.opacity = isPassword ? "1" : "0.6";
+        });
+
+
+        // --- RELLENAR EL FORMULARIO CON LOS DATOS ACTUALES ---
+        inputCodigo.value = usuarioEnCache.codigo || '';
+        document.getElementById('dni').value = usuarioEnCache.dni || '';
+        document.getElementById('apellidos').value = usuarioEnCache.apellidos || '';
+        document.getElementById('nombres').value = usuarioEnCache.nombres || '';
+        inputID.value = usuarioEnCache.id || '';
+
+        // Seleccionar cargo
+        const cargoUsuario = (usuarioEnCache.cargo || '').toUpperCase();
+        if (Array.from(selectCargo.options).some(opt => opt.value === cargoUsuario)) {
+            selectCargo.value = cargoUsuario;
+        }
+
+        // Desencriptar contraseña para editar
+        let claveVisible = "";
+        try {
+            claveVisible = atob(usuarioEnCache.clave);
+        } catch (e) {
+            claveVisible = usuarioEnCache.clave || '';
+        }
+        inputClave.value = claveVisible;
+
+
+        // --- LÓGICA DE AUTOCOMPLETADO (Por si cambian el código) ---
+        const limpiarCampos = () => {
+            ['dni', 'apellidos', 'nombres'].forEach(id => {
+                document.getElementById(id).value = '';
+            });
+        };
+
+        const cargarDatosPersonal = () => {
+            const codigo = inputCodigo.value.trim().toUpperCase();
+            if (!codigo) {
+                limpiarCampos();
+                return;
+            }
+
+            const personal = JSON.parse(localStorage.getItem('personal')) || [];
+            const persona = personal.find(p => p.codigo === codigo);
+
+            if (persona) {
+                document.getElementById('dni').value = persona.dni || '';
+                document.getElementById('apellidos').value = persona.apellidos || '';
+                document.getElementById('nombres').value = persona.nombres || '';
+            } else {
+                limpiarCampos();
+                inputCodigo.value = ''; 
+                alert("⚠️ CÓDIGO NO ENCONTRADO.\nEl trabajador debe estar registrado en el módulo de 'Personal'.");
+                inputCodigo.focus();
+            }
+        };
+
+        inputCodigo.addEventListener('blur', cargarDatosPersonal);
+        inputCodigo.addEventListener('keypress', function(e) {
+            if(e.key === 'Enter') {
+                e.preventDefault(); 
+                cargarDatosPersonal();
+            }
+        });
+
+
+        // --- GUARDAR CAMBIOS ---
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            // 1. Validar autocompletado
+            if (!document.getElementById('dni').value) {
+                alert("⚠️ ERROR: Faltan los datos del personal. Ingrese un código válido.");
+                inputCodigo.focus();
+                return;
+            }
+
+            const usuarios = JSON.parse(localStorage.getItem('usuarios')) || [];
+            const claveTexto = inputClave.value.trim();
+            const idTexto = inputID.value.trim().toUpperCase();
+            const cargoTexto = selectCargo.value;
+
+            // 2. Validar selección de rol
+            if (!cargoTexto) {
+                alert("⚠️ POR FAVOR, SELECCIONE EL CARGO (ROL) PARA ESTE USUARIO.");
+                selectCargo.focus();
+                return;
+            }
+
+            // 3. Validar contraseña
+            if (!/^(?=.*[A-Za-z])(?=.*\d).{7,}$/.test(claveTexto)) {
+                alert("⚠️ SEGURIDAD DÉBIL:\nLa contraseña debe tener al menos 7 caracteres e incluir letras y números.");
+                inputClave.focus();
+                return;
+            }
+
+            // 4. Protección del Administrador Maestro (MTMENDOZA)
+            if (usuarioEnCache.id.toUpperCase() === "MTMENDOZA") {
+                // Si intentan cambiarle el ID o el Rol
+                if (idTexto !== "MTMENDOZA" || cargoTexto !== "ADMINISTRADOR") {
+                    alert("❌ ACCIÓN DENEGADA:\nNo se puede cambiar el ID ni el ROL del administrador principal del sistema.");
+                    inputID.value = "MTMENDOZA";
+                    selectCargo.value = "ADMINISTRADOR";
+                    return;
+                }
+            }
+
+            const nuevosDatos = {
+                codigo: inputCodigo.value.trim().toUpperCase(),
+                dni: document.getElementById('dni').value.trim(),
+                apellidos: document.getElementById('apellidos').value.trim().toUpperCase(),
+                nombres: document.getElementById('nombres').value.trim().toUpperCase(),
+                cargo: cargoTexto,
+                id: idTexto,
+                clave: btoa(claveTexto) // Re-encriptar la contraseña
+            };
+
+            // 5. Validar duplicados (Asegurándonos de no chocar con otro usuario, ignorando este mismo registro)
+            const duplicado = usuarios.some((u, i) =>
+                i !== parseInt(index) && (u.codigo === nuevosDatos.codigo || u.id === nuevosDatos.id)
+            );
+            
+            if (duplicado) {
+                alert("⚠️ YA EXISTE OTRO USUARIO REGISTRADO CON ESE CÓDIGO O ID.");
+                return;
+            }
+
+            // 6. Sobrescribir en la base de datos
+            usuarios[index] = nuevosDatos;
+            localStorage.setItem('usuarios', JSON.stringify(usuarios));
+            
+            // 7. Limpiar caché temporal y redirigir
+            localStorage.removeItem('usuarioEditar');
+            localStorage.removeItem('usuarioEditarIndex');
+
+            alert("✅ USUARIO EDITADO CORRECTAMENTE.");
+            window.location.href = "TBRegistroUsuarios.html";
+        });
+    });
+</script>
+
+</body>
+</html>

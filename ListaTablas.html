@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>LISTA DE TABLAS | MEF Engineering & Soluciones</title>
+    
+    <style>
+        /* =====================================================
+           IMPORTAR FUENTE Y VARIABLES
+        ===================================================== */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+        :root {
+            --primary-color: #1d3b20;
+            --primary-hover: #143117;
+            --bg-color: #f4f6f5;
+            --white: #ffffff;
+            --text-dark: #333333;
+            --text-light: #666666;
+            --shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+            --transition: all 0.25s ease;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: var(--bg-color);
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            min-height: 100svh;
+            color: var(--text-dark);
+            padding: 20px;
+        }
+
+        /* =====================================================
+           CONTENEDOR GLOBAL
+        ===================================================== */
+        .menu-container {
+            width: 100%;
+            max-width: 420px;
+            background-color: var(--white);
+            border: 1.5px solid var(--primary-color);
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .menu-header {
+            background-color: var(--primary-color);
+            color: var(--white);
+            padding: 16px 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .menu-header .icon-link { position: absolute; left: 15px; }
+        .menu-header .icon { width: 24px; height: 24px; cursor: pointer; filter: brightness(0) invert(1); transition: var(--transition); }
+        .menu-header .icon:hover { transform: scale(1.15); }
+        
+        .menu-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 0;
+        }
+
+        /* =====================================================
+           CONTENEDOR DE BOTONES (TARJETAS COMPACTAS)
+        ===================================================== */
+        .menu-cards {
+            display: flex;
+            flex-direction: column;
+            gap: 12px; /* Espaciado reducido para acomodar 6 tarjetas */
+            padding: 20px 15px;
+            flex-grow: 1;
+        }
+
+        .card-menu {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: var(--white);
+            border-radius: 10px;
+            padding: 10px;
+            cursor: pointer;
+            transition: var(--transition);
+            border: 1px solid #e0e0e0;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.04);
+            position: relative;
+            overflow: hidden;
+            min-height: 75px; /* Altura compacta */
+        }
+
+        .card-menu:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(29, 59, 32, 0.12);
+            border-color: var(--primary-color);
+        }
+
+        .card-menu:active { transform: scale(0.98); }
+
+        /* BORDE LATERAL DE COLOR AL PASAR EL MOUSE */
+        .card-menu::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(180deg, var(--primary-color), #43a047);
+            opacity: 0;
+            transition: 0.3s;
+        }
+        .card-menu:hover::before { opacity: 1; }
+
+        /* IMAGEN / ICONO COMPACTO */
+        .img-container {
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #f4f6f5, #e8f5e9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-shrink: 0;
+            transition: var(--transition);
+        }
+
+        .card-menu img {
+            width: 55%;
+            height: auto;
+            object-fit: contain;
+            transition: transform 0.3s ease;
+        }
+
+        .card-menu:hover .img-container { background: linear-gradient(135deg, #e8f5e9, #c8e6c9); }
+        .card-menu:hover img { transform: scale(1.15) rotate(3deg); }
+
+        /* TEXTO DEL BOTÓN COMPACTO */
+        .text-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .card-menu h3 {
+            font-size: 13px;
+            margin: 0 0 2px 0;
+            color: var(--primary-color);
+            font-weight: 800;
+        }
+
+        .card-menu p {
+            font-size: 11px;
+            margin: 0;
+            color: var(--text-light);
+            line-height: 1.2;
+            white-space: nowrap; 
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* =====================================================
+           PIE DE PÁGINA
+        ===================================================== */
+        .card-footer {
+            background-color: #fafafa;
+            text-align: center;
+            padding: 12px;
+            border-top: 1px solid #eeeeee;
+            margin-top: auto;
+        }
+
+        .card-footer .logo {
+            width: 70px;
+            opacity: 0.9;
+            transition: transform 0.2s ease;
+        }
+        .card-footer a:hover .logo { transform: scale(1.05); }
+
+        /* RESPONSIVE MÓVIL */
+        @media (max-width: 480px) {
+            body { padding: 10px; align-items: flex-start; }
+            .menu-container { border-radius: 12px; min-height: 100%; border: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <main class="menu-container">
+        
+        <header class="menu-header">
+            <a href="#" title="Volver al Menú Principal" class="icon-link" onclick="volverAlMenu(event)">
+                <img src="Iconos/VOLVER.png" alt="Volver" class="icon">
+            </a>
+            <h1 class="menu-title">LISTA DE TABLAS</h1>
+        </header>
+
+        <nav class="menu-cards" aria-label="Navegación de Tablas">
+
+            <div class="card-menu" onclick="window.location.href='TBPersonalRegistrado.html'">
+                <div class="img-container">
+                    <img src="Iconos/PERSONAL.png" alt="Personal" onerror="this.style.display='none'">
+                </div>
+                <div class="text-container">
+                    <h3>👥 BASE DE PERSONAL</h3>
+                    <p>Registro maestro de clientes y trabajadores.</p>
+                </div>
+            </div>
+
+            <div class="card-menu" onclick="window.location.href='TBRegistroUsuarios.html'">
+                <div class="img-container">
+                    <img src="Iconos/USUARIO.png" alt="Usuarios" onerror="this.style.display='none'">
+                </div>
+                <div class="text-container">
+                    <h3>🔐 USUARIOS DEL SISTEMA</h3>
+                    <p>Gestión de accesos, roles y contraseñas.</p>
+                </div>
+            </div>
+
+            <div class="card-menu" onclick="window.location.href='TBMembresias.html'">
+                <div class="img-container">
+                    <img src="Iconos/MEMBRESIA.png" alt="Membresías" onerror="this.style.display='none'">
+                </div>
+                <div class="text-container">
+                    <h3>⭐ ESTADO MEMBRESÍAS</h3>
+                    <p>Control de planes, créditos y ecopoints.</p>
+                </div>
+            </div>
+
+            <div class="card-menu" onclick="window.location.href='TBRegistroAsistencias.html'">
+                <div class="img-container">
+                    <img src="Iconos/ASISTENCIA.png" alt="Asistencias" onerror="this.style.display='none'">
+                </div>
+                <div class="text-container">
+                    <h3>📋 CONTROL ASISTENCIAS</h3>
+                    <p>Historial de marcaciones y turnos.</p>
+                </div>
+            </div>
+
+            <div class="card-menu" onclick="window.location.href='TBEventosRegistrados.html'">
+                <div class="img-container">
+                    <img src="Iconos/EVENTO.png" alt="Eventos" onerror="this.style.display='none'">
+                </div>
+                <div class="text-container">
+                    <h3>📅 EVENTOS REGISTRADOS</h3>
+                    <p>Cronograma de capacitaciones y actividades.</p>
+                </div>
+            </div>
+
+            <div class="card-menu" onclick="window.location.href='TBReporteReciclaje.html'">
+                <div class="img-container">
+                    <img src="Iconos/REPORTE.png" alt="Reciclaje" onerror="this.style.display='none'">
+                </div>
+                <div class="text-container">
+                    <h3>♻️ REPORTE RECICLAJE</h3>
+                    <p>Estadísticas y kilos recolectados por material.</p>
+                </div>
+            </div>
+
+        </nav>
+
+        <footer class="card-footer">
+            <a href="#" title="Volver al Menú Principal" onclick="volverAlMenu(event)">
+                <img src="Imagenes/ECFM.png" alt="Logo MEF Engineering" class="logo" />
+            </a>
+        </footer>
+
+    </main>
+
+<script>
+    'use strict';
+
+    // ==========================================
+    // 1. GESTIÓN DE SESIÓN Y NAVEGACIÓN
+    // ==========================================
+    function cerrarSesion(e) {
+        if (e && typeof e.preventDefault === 'function') e.preventDefault();
+        sessionStorage.clear();
+        localStorage.setItem("sesionActiva", "no");
+        window.location.replace("index.html");
+    }
+
+    function validarSesion() {
+        if (sessionStorage.getItem("sesionActiva") !== "true") {
+            cerrarSesion();
+        }
+    }
+
+    function volverAlMenu(e) {
+        if (e && typeof e.preventDefault === 'function') e.preventDefault();
+        // Asume que el menú principal del administrador se llama Botones.html
+        window.location.href = sessionStorage.getItem("menuUsuario") || "Botones.html";
+    }
+
+    window.addEventListener("DOMContentLoaded", validarSesion);
+    window.addEventListener("pageshow", validarSesion);
+
+    // ==========================================
+    // 2. CONTROL DE INACTIVIDAD ESTRICTO (1 MINUTO)
+    // ==========================================
+    let timerInactividad;
+    const reiniciarTemporizador = () => {
+        clearTimeout(timerInactividad);
+        timerInactividad = setTimeout(() => {
+            alert("⏰ TIEMPO DE INACTIVIDAD EXCEDIDO. SESIÓN CERRADA.");
+            cerrarSesion();
+        }, 1 * 60 * 1000); 
+    };
+
+    ["mousemove", "keydown", "click", "scroll", "touchstart"].forEach(evento => {
+        document.addEventListener(evento, reiniciarTemporizador, { passive: true });
+    });
+    reiniciarTemporizador();
+
+</script>
+
+</body>
+</html>

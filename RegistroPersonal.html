@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>REGISTRO DEL PERSONAL | MEF Engineering & Soluciones</title>
+    <link rel="stylesheet" href="RegistroPersonal.css" />
+</head>
+<body>
+
+    <main class="card">
+        
+        <header class="card-header">
+            <div class="header-content">
+                <a href="TBPersonalRegistrado.html" title="Ver personal registrado" class="icon-link">
+                    <img src="Iconos/LUPA1.png" alt="Ver personal registrado" class="icon" />
+                </a>
+                <h1>REGISTRAR PERSONAL</h1>
+            </div>
+        </header>
+        
+        <section class="card-body">
+            <form id="formRegistroPersonal" class="card-form" autocomplete="off" novalidate>
+                
+                <div class="form-group">
+                    <label for="codigo">CÓDIGO (ID):</label>
+                    <input 
+                        type="text" 
+                        id="codigo" 
+                        name="codigo" 
+                        placeholder="Ej. P001" 
+                        required 
+                        oninput="this.value = this.value.toUpperCase()" 
+                        autofocus
+                    />
+                </div>
+
+                <div class="form-group">
+                    <label for="dni">DNI:</label>
+                    <input 
+                        type="text" 
+                        id="dni" 
+                        name="dni" 
+                        placeholder="8 dígitos numéricos" 
+                        maxlength="8" 
+                        inputmode="numeric" 
+                        required 
+                        oninput="this.value = this.value.replace(/[^0-9]/g, '')" 
+                    />
+                </div>
+
+                <div class="form-group">
+                    <label for="apellidos">APELLIDOS:</label>
+                    <input 
+                        type="text" 
+                        id="apellidos" 
+                        name="apellidos" 
+                        placeholder="Apellidos completos" 
+                        required 
+                        oninput="this.value = this.value.toUpperCase()" 
+                    />
+                </div>
+
+                <div class="form-group">
+                    <label for="nombres">NOMBRES:</label>
+                    <input 
+                        type="text" 
+                        id="nombres" 
+                        name="nombres" 
+                        placeholder="Nombres completos" 
+                        required 
+                        oninput="this.value = this.value.toUpperCase()" 
+                    />
+                </div>
+
+                <div class="form-group">
+                    <label for="celular">N° CELULAR:</label>
+                    <input 
+                        type="text" 
+                        id="celular" 
+                        name="celular" 
+                        placeholder="9 dígitos numéricos" 
+                        maxlength="9" 
+                        inputmode="numeric" 
+                        required 
+                        oninput="this.value = this.value.replace(/[^0-9]/g, '')" 
+                    />
+                </div>
+
+                <div class="form-group">
+                    <label for="FechaNacimiento">FECHA DE NACIMIENTO:</label>
+                    <input 
+                        type="date" 
+                        id="FechaNacimiento" 
+                        name="FechaNacimiento" 
+                        required 
+                    />
+                </div>
+
+                <button type="submit" class="btn-submit">GUARDAR REGISTRO</button>
+            </form>
+        </section>
+
+        <footer class="card-footer">
+            <a href="#" title="Volver al Menú Principal" onclick="volverAlMenu(event)">
+                <img src="Imagenes/ECFM.png" alt="Logo MEF Engineering" class="logo" />
+            </a>
+        </footer>
+
+    </main>
+
+<script>
+    'use strict';
+
+    // ==========================================
+    // 1. GESTIÓN DE SESIÓN Y NAVEGACIÓN
+    // ==========================================
+    function cerrarSesion(e) {
+        if (e && typeof e.preventDefault === 'function') e.preventDefault();
+        alert("🔒 Sesión finalizada de forma segura.");
+        sessionStorage.clear();
+        localStorage.setItem("sesionActiva", "no");
+        window.location.replace("index.html");
+    }
+
+    function validarSesion() {
+        if (sessionStorage.getItem("sesionActiva") !== "true") {
+            cerrarSesion();
+        }
+    }
+
+    function volverAlMenu(e) {
+        if (e && typeof e.preventDefault === 'function') e.preventDefault();
+        window.location.href = sessionStorage.getItem("menuUsuario") || "Botones.html";
+    }
+
+    window.addEventListener("DOMContentLoaded", validarSesion);
+    window.addEventListener("pageshow", validarSesion);
+
+    // Control estricto de inactividad: 1 minuto
+    let timerInactividad;
+    const reiniciarTemporizador = () => {
+        clearTimeout(timerInactividad);
+        timerInactividad = setTimeout(() => {
+            alert("⏰ INACTIVIDAD DETECTADA. SESIÓN CERRADA.");
+            cerrarSesion();
+        }, 1 * 60 * 1000); 
+    };
+
+    ["mousemove", "keydown", "click", "scroll", "touchstart"].forEach(evento => {
+        document.addEventListener(evento, reiniciarTemporizador, { passive: true });
+    });
+    reiniciarTemporizador();
+
+
+    // ==========================================
+    // 2. LÓGICA DE REGISTRO DE PERSONAL
+    // ==========================================
+    document.addEventListener("DOMContentLoaded", () => {
+        const form = document.getElementById("formRegistroPersonal");
+        const inputFechaNacimiento = document.getElementById("FechaNacimiento");
+
+        // UX: Bloquear en el calendario fechas que harían a la persona menor de 18 años
+        const calcularFechaMaxima = () => {
+            const hoy = new Date();
+            // Restamos 18 años exactos a la fecha de hoy
+            const maxFecha = new Date(hoy.getFullYear() - 18, hoy.getMonth(), hoy.getDate());
+            return maxFecha.toISOString().split("T")[0];
+        };
+        
+        // Aplicamos el límite visual al input de tipo Date
+        inputFechaNacimiento.setAttribute("max", calcularFechaMaxima());
+
+        // Función para calcular edad exacta en años
+        const calcularEdad = (fechaNacimientoStr) => {
+            const fechaNac = new Date(fechaNacimientoStr);
+            const hoy = new Date();
+            let edad = hoy.getFullYear() - fechaNac.getFullYear();
+            const mes = hoy.getMonth() - fechaNac.getMonth();
+            
+            // Ajuste si aún no ha llegado su mes/día de cumpleaños este año
+            if (mes < 0 || (mes === 0 && hoy.getDate() < fechaNac.getDate())) {
+                edad--;
+            }
+            return edad;
+        };
+
+        form.addEventListener("submit", (event) => {
+            event.preventDefault();
+
+            const persona = {
+                codigo: document.getElementById('codigo').value.trim().toUpperCase(),
+                dni: document.getElementById('dni').value.trim(),
+                apellidos: document.getElementById('apellidos').value.trim().toUpperCase(),
+                nombres: document.getElementById('nombres').value.trim().toUpperCase(),
+                celular: document.getElementById('celular').value.trim(),
+                fechaNacimiento: document.getElementById('FechaNacimiento').value
+            };
+
+            // 1. Validación de campos vacíos
+            if (Object.values(persona).some(campo => campo === "")) {
+                alert("⚠️ POR FAVOR, COMPLETA TODOS LOS CAMPOS.");
+                return;
+            }
+
+            // 2. Validación: Edad mínima de 18 años
+            const edadCalculada = calcularEdad(persona.fechaNacimiento);
+            if (edadCalculada < 18) {
+                alert(`⚠️ ACCESO DENEGADO:\nEl trabajador tiene ${edadCalculada} años. La edad mínima requerida para el registro es de 18 años (Mayor de edad).`);
+                inputFechaNacimiento.focus();
+                return;
+            }
+
+            // 3. Validación: DNI
+            if (persona.dni.length !== 8) {
+                alert("⚠️ ERROR: EL DNI DEBE CONTENER EXACTAMENTE 8 DÍGITOS NUMÉRICOS.");
+                document.getElementById('dni').focus();
+                return;
+            }
+
+            // 4. Validación: Celular
+            if (persona.celular.length !== 9) {
+                alert("⚠️ ERROR: EL NÚMERO DE CELULAR DEBE CONTENER EXACTAMENTE 9 DÍGITOS.");
+                document.getElementById('celular').focus();
+                return;
+            }
+
+            const personal = JSON.parse(localStorage.getItem("personal")) || [];
+
+            // 5. Validación: Código duplicado
+            if (personal.some(p => p.codigo === persona.codigo)) {
+                alert(`⚠️ EL CÓDIGO "${persona.codigo}" YA ESTÁ REGISTRADO EN EL SISTEMA.`);
+                document.getElementById('codigo').focus();
+                return;
+            }
+
+            // 6. Validación: DNI duplicado
+            if (personal.some(p => p.dni === persona.dni)) {
+                alert(`⚠️ EL DNI "${persona.dni}" YA ESTÁ REGISTRADO EN EL SISTEMA.`);
+                document.getElementById('dni').focus();
+                return;
+            }
+
+            // 7. Guardado
+            personal.push(persona);
+            localStorage.setItem("personal", JSON.stringify(personal));
+
+            alert(`✅ PERSONAL REGISTRADO CORRECTAMENTE:\n\n${persona.nombres} ${persona.apellidos}`);
+            form.reset();
+            window.location.href = "RegistroPersonal.html"; 
+        });
+    });
+</script>
+
+</body>
+</html>

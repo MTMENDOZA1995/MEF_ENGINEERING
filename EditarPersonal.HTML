@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>EDITAR DATOS DEL PERSONAL | MEF Engineering & Soluciones</title>
+    <link rel="stylesheet" href="RegistroPersonal.css">
+</head>
+<body>
+
+    <main class="card">
+        
+        <header class="card-header">
+            <div class="header-content">
+                <a href="TBPersonalRegistrado.html" title="Volver a la tabla de personal" class="icon-link">
+                    <img src="Iconos/LUPA1.png" alt="Ver personal registrado" class="icon">
+                </a>
+                <h1>EDITAR PERSONAL</h1>
+            </div>
+        </header>
+        
+        <section class="card-body">
+            <form class="card-form" id="formRegistroPersonal" autocomplete="off" novalidate>
+                
+                <div class="form-group">
+                    <label for="codigo">CÓDIGO:</label>
+                    <input 
+                        type="text" 
+                        id="codigo" 
+                        name="codigo" 
+                        placeholder="Ej. P001" 
+                        required 
+                        oninput="this.value = this.value.toUpperCase()" 
+                        autofocus
+                    />
+                </div>
+
+                <div class="form-group">
+                    <label for="dni">DNI:</label>
+                    <input 
+                        type="text" 
+                        id="dni" 
+                        name="dni" 
+                        placeholder="8 dígitos numéricos" 
+                        maxlength="8" 
+                        inputmode="numeric" 
+                        required 
+                        oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+                    />
+                </div>
+
+                <div class="form-group">
+                    <label for="apellidos">APELLIDOS:</label>
+                    <input 
+                        type="text" 
+                        id="apellidos" 
+                        name="apellidos" 
+                        placeholder="Apellidos del trabajador" 
+                        required 
+                        oninput="this.value = this.value.toUpperCase()" 
+                    />
+                </div>
+
+                <div class="form-group">
+                    <label for="nombres">NOMBRES:</label>
+                    <input 
+                        type="text" 
+                        id="nombres" 
+                        name="nombres" 
+                        placeholder="Nombres del trabajador" 
+                        required 
+                        oninput="this.value = this.value.toUpperCase()" 
+                    />
+                </div>
+
+                <div class="form-group">
+                    <label for="celular">N° CELULAR:</label>
+                    <input 
+                        type="text" 
+                        id="celular" 
+                        name="celular" 
+                        placeholder="9 dígitos numéricos" 
+                        maxlength="9" 
+                        inputmode="numeric" 
+                        required 
+                        oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+                    />
+                </div>
+
+                <div class="form-group">
+                    <label for="FechaNacimiento">FECHA DE NACIMIENTO:</label>
+                    <input 
+                        type="date" 
+                        id="FechaNacimiento" 
+                        name="FechaNacimiento" 
+                        required
+                    />
+                </div>
+
+                <button type="submit" class="submit-btn">GUARDAR CAMBIOS</button>
+            </form>
+        </section>
+
+        <footer class="card-footer">
+            <a href="#" title="Volver al Menú Principal" onclick="volverAlMenu(event)">
+                <img src="Imagenes/ECFM.png" alt="Logo MEF Engineering" class="logo">
+            </a>
+        </footer>
+
+    </main>
+
+<script>
+    'use strict';
+
+    // ==========================================
+    // 1. GESTIÓN DE SESIÓN Y NAVEGACIÓN
+    // ==========================================
+    function cerrarSesion(e) {
+        if (e && typeof e.preventDefault === 'function') e.preventDefault();
+        alert("🔒 Sesión finalizada de forma segura.");
+        sessionStorage.clear();
+        localStorage.setItem("sesionActiva", "no");
+        window.location.replace("index.html");
+    }
+
+    function validarSesion() {
+        if (sessionStorage.getItem("sesionActiva") !== "true") {
+            cerrarSesion();
+        }
+    }
+
+    function volverAlMenu(e) {
+        if (e && typeof e.preventDefault === 'function') e.preventDefault();
+        window.location.href = sessionStorage.getItem("menuUsuario") || "Botones.html";
+    }
+
+    window.addEventListener("DOMContentLoaded", validarSesion);
+    window.addEventListener("pageshow", validarSesion);
+
+    // Límite estricto de inactividad: 1 minuto
+    let timerInactividad;
+    const reiniciarTemporizador = () => {
+        clearTimeout(timerInactividad);
+        timerInactividad = setTimeout(() => {
+            alert("⏰ INACTIVIDAD DETECTADA. SESIÓN CERRADA.");
+            cerrarSesion();
+        }, 1 * 60 * 1000); 
+    };
+
+    ["mousemove", "keydown", "click", "scroll", "touchstart"].forEach(evento => {
+        document.addEventListener(evento, reiniciarTemporizador, { passive: true });
+    });
+    reiniciarTemporizador();
+
+
+    // ==========================================
+    // 2. LÓGICA DE EDICIÓN DEL PERSONAL
+    // ==========================================
+    document.addEventListener("DOMContentLoaded", () => {
+        
+        const personaEnCache = JSON.parse(localStorage.getItem('personalEditar'));
+        const index = localStorage.getItem('personalEditarIndex');
+        const inputFechaNacimiento = document.getElementById('FechaNacimiento');
+
+        // Seguridad: Si alguien entra directo a la URL sin elegir a alguien para editar
+        if (!personaEnCache || index === null) {
+            alert("⚠️ ERROR: No se encontraron datos del trabajador para editar.");
+            window.location.replace("TBPersonalRegistrado.html");
+            return;
+        }
+
+        // UX: Bloquear fechas en el calendario (Regla de 18 años)
+        const calcularFechaMaxima = () => {
+            const hoy = new Date();
+            const maxFecha = new Date(hoy.getFullYear() - 18, hoy.getMonth(), hoy.getDate());
+            return maxFecha.toISOString().split("T")[0];
+        };
+        inputFechaNacimiento.setAttribute("max", calcularFechaMaxima());
+
+        // Función utilitaria para edad
+        const calcularEdad = (fechaNacimientoStr) => {
+            const fechaNac = new Date(fechaNacimientoStr);
+            const hoy = new Date();
+            let edad = hoy.getFullYear() - fechaNac.getFullYear();
+            const mes = hoy.getMonth() - fechaNac.getMonth();
+            
+            if (mes < 0 || (mes === 0 && hoy.getDate() < fechaNac.getDate())) {
+                edad--;
+            }
+            return edad;
+        };
+
+        // --- RELLENAR LOS CAMPOS DEL FORMULARIO CON DATOS EXISTENTES ---
+        document.getElementById('codigo').value = personaEnCache.codigo || '';
+        document.getElementById('dni').value = personaEnCache.dni || '';
+        document.getElementById('apellidos').value = personaEnCache.apellidos || '';
+        document.getElementById('nombres').value = personaEnCache.nombres || '';
+        
+        // Adaptación: Si el registro viejo tenía "cargo", lo ignoramos. Si tenía "celular", lo cargamos.
+        document.getElementById('celular').value = personaEnCache.celular || '';
+        inputFechaNacimiento.value = personaEnCache.fechaNacimiento || '';
+
+        // --- PROCESAR LOS DATOS ACTUALIZADOS ---
+        document.getElementById('formRegistroPersonal').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            // Extracción y limpieza
+            const persona = {
+                codigo: document.getElementById('codigo').value.trim().toUpperCase(),
+                dni: document.getElementById('dni').value.trim(),
+                apellidos: document.getElementById('apellidos').value.trim().toUpperCase(),
+                nombres: document.getElementById('nombres').value.trim().toUpperCase(),
+                celular: document.getElementById('celular').value.trim(),
+                fechaNacimiento: inputFechaNacimiento.value
+            };
+
+            // 1. Validar campos vacíos
+            if (Object.values(persona).some(campo => campo === "")) {
+                alert("⚠️ POR FAVOR, COMPLETA TODOS LOS CAMPOS.");
+                return;
+            }
+
+            // 2. Validación: Edad mínima de 18 años
+            const edadCalculada = calcularEdad(persona.fechaNacimiento);
+            if (edadCalculada < 18) {
+                alert(`⚠️ ACCESO DENEGADO:\nEl trabajador tiene ${edadCalculada} años. La edad mínima requerida para mantener el registro es de 18 años (Mayor de edad).`);
+                inputFechaNacimiento.focus();
+                return;
+            }
+
+            // 3. Validar DNI
+            if (persona.dni.length !== 8) {
+                alert("⚠️ ERROR: EL DNI DEBE CONTENER EXACTAMENTE 8 DÍGITOS NUMÉRICOS.");
+                document.getElementById('dni').focus();
+                return;
+            }
+
+            // 4. Validar Celular
+            if (persona.celular.length !== 9) {
+                alert("⚠️ ERROR: EL NÚMERO DE CELULAR DEBE CONTENER EXACTAMENTE 9 DÍGITOS NUMÉRICOS.");
+                document.getElementById('celular').focus();
+                return;
+            }
+
+            const personalDB = JSON.parse(localStorage.getItem('personal')) || [];
+
+            // 5. Validar duplicados (Asegurándonos de no chocar con OTRO trabajador, ignorando a este mismo)
+            const duplicado = personalDB.some((p, i) =>
+                i !== parseInt(index) && (p.codigo === persona.codigo || p.dni === persona.dni)
+            );
+
+            if (duplicado) {
+                alert("⚠️ YA EXISTE OTRO TRABAJADOR REGISTRADO CON ESE MISMO CÓDIGO O DNI.");
+                return;
+            }
+
+            // 6. Sobrescribir en la base de datos
+            personalDB[parseInt(index)] = persona;
+            localStorage.setItem('personal', JSON.stringify(personalDB));
+            
+            // 7. Limpiar la caché temporal
+            localStorage.removeItem('personalEditar');
+            localStorage.removeItem('personalEditarIndex');
+
+            alert(`✅ REGISTRO ACTUALIZADO CORRECTAMENTE:\n\n${persona.nombres} ${persona.apellidos}`);
+            window.location.href = "TBPersonalRegistrado.html";
+        });
+    });
+</script>
+
+</body>
+</html>

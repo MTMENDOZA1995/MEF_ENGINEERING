@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>RECICLA RESIDUOS | MEF Engineering & Soluciones</title>
+
+    <style>
+        /* =====================================================
+           VARIABLES Y RESET
+        ===================================================== */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+        :root {
+            --primary-color: #1d3b20;
+            --bg-color: #f4f6f5;
+            --white: #ffffff;
+            --text-dark: #333333;
+            --text-light: #666666;
+            --shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+            --transition: all 0.25s ease;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: var(--bg-color);
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            min-height: 100svh;
+            color: var(--text-dark);
+            padding: 20px;
+        }
+
+        /* =====================================================
+           CONTENEDOR GLOBAL
+        ===================================================== */
+        .menu-container {
+            width: 100%;
+            max-width: 420px;
+            background-color: var(--white);
+            border: 1.5px solid var(--primary-color);
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .menu-header {
+            background-color: var(--primary-color);
+            color: var(--white);
+            padding: 16px 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .menu-header .icon-link { position: absolute; left: 15px; }
+        .menu-header .icon { width: 24px; height: 24px; cursor: pointer; }
+        
+        .menu-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 0;
+        }
+
+        /* =====================================================
+           TARJETAS COMPACTAS (Para acomodar 8 opciones)
+        ===================================================== */
+        .planes-section {
+            display: flex;
+            flex-direction: column;
+            gap: 10px; /* Reducido */
+            padding: 15px; /* Reducido */
+        }
+
+        .card-membresia {
+            background: var(--white);
+            padding: 10px; /* Reducido */
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+            border: 1px solid #e0e0e0;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            gap: 12px; /* Reducido */
+            cursor: pointer;
+            min-height: 85px; /* Altura mínima compacta */
+        }
+
+        .card-membresia:hover {
+            box-shadow: 0 4px 12px rgba(29, 59, 32, 0.15);
+            border-color: var(--primary-color);
+            transform: translateY(-2px);
+        }
+
+        .card-membresia:active { transform: scale(0.98); }
+
+        /* IMÁGENES COMPACTAS */
+        .img-container {
+            width: 60px; /* Reducido */
+            height: 60px; /* Reducido */
+            border-radius: 8px;
+            background-color: #f4f6f5; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-shrink: 0;
+            overflow: hidden;
+        }
+
+        .servicio-img { width: 100%; height: 100%; object-fit: cover; }
+
+        /* TEXTOS COMPACTOS */
+        .info-container {
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+            justify-content: center;
+        }
+
+        .card-membresia h2 {
+            font-size: 13px; /* Reducido */
+            margin: 0 0 2px 0;
+            color: var(--primary-color);
+            font-weight: 800;
+        }
+
+        .card-membresia p {
+            font-size: 11px; /* Reducido */
+            margin: 0 0 6px 0;
+            color: var(--text-light);
+            white-space: nowrap; /* Evita que el texto salte a otra línea */
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .valor-kilo {
+            font-size: 11px; /* Reducido */
+            font-weight: 800;
+            color: #2e7d32;
+            background: #e8f5e9;
+            padding: 3px 8px;
+            border-radius: 6px;
+            display: inline-block;
+            align-self: flex-start;
+        }
+
+        /* ETIQUETAS (BADGES) */
+        .recomendado { border-color: var(--primary-color); }
+        .vip { border-color: #fbc02d; }
+
+        .badge {
+            position: absolute;
+            top: 0;
+            right: 0;
+            font-size: 9px;
+            padding: 3px 8px;
+            border-bottom-left-radius: 8px;
+            background: var(--primary-color);
+            color: white;
+            font-weight: 700;
+            z-index: 2;
+        }
+        .vip-badge { background: #fbc02d; color: #333; }
+
+        /* FOOTER */
+        .card-footer {
+            background-color: #fafafa;
+            padding: 12px;
+            border-top: 1px solid #eeeeee;
+            text-align: center;
+            margin-top: auto;
+        }
+
+        .card-footer .logo { width: 70px; height: auto; opacity: 0.9; }
+
+        /* RESPONSIVE MÓVIL */
+        @media (max-width: 480px) {
+            body { padding: 10px; align-items: flex-start; }
+            .menu-container { border-radius: 12px; min-height: 100%; border: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <main class="menu-container">
+        
+        <header class="menu-header">
+            <a href="#" class="icon-link" onclick="cerrarSesion(event)">
+                <img src="Iconos/SALIR.png" alt="Cerrar sesión" class="icon">
+            </a>
+            <h1 class="menu-title">RECICLA ECOPOINTS</h1>
+        </header>
+
+        <section class="planes-section">
+
+            <div class="card-membresia recomendado" data-nombre="PLÁSTICO (PET)" data-puntos-kg="5" onclick="procesarReciclaje(this)">
+                <div class="badge">♻️ COMÚN</div>
+                <div class="img-container">
+                    <img src="Iconos/PLASTICO.png" alt="Plástico" class="servicio-img" onerror="this.style.display='none'">
+                </div>
+                <div class="info-container">
+                    <h2>♻️ PLÁSTICO (PET)</h2>
+                    <p>Botellas y envases limpios.</p>
+                    <div class="valor-kilo"><span class="txt-puntos"></span> pts x Kg</div>
+                </div>
+            </div>
+
+            <div class="card-membresia" data-nombre="PAPEL" data-puntos-kg="2" onclick="procesarReciclaje(this)">
+                <div class="img-container">
+                    <img src="Iconos/PAPEL.png" alt="Papel" class="servicio-img" onerror="this.style.display='none'">
+                </div>
+                <div class="info-container">
+                    <h2>📄 PAPEL</h2>
+                    <p>Hojas, periódicos y folletos.</p>
+                    <div class="valor-kilo"><span class="txt-puntos"></span> pts x Kg</div>
+                </div>
+            </div>
+
+            <div class="card-membresia" data-nombre="CARTÓN" data-puntos-kg="2" onclick="procesarReciclaje(this)">
+                <div class="img-container">
+                    <img src="Iconos/CARTON.png" alt="Cartón" class="servicio-img" onerror="this.style.display='none'">
+                </div>
+                <div class="info-container">
+                    <h2>📦 CARTÓN</h2>
+                    <p>Cajas desarmadas y limpias.</p>
+                    <div class="valor-kilo"><span class="txt-puntos"></span> pts x Kg</div>
+                </div>
+            </div>
+
+            <div class="card-membresia" data-nombre="METALES" data-puntos-kg="5" onclick="procesarReciclaje(this)">
+                <div class="img-container">
+                    <img src="Iconos/METALES.png" alt="Metales" class="servicio-img" onerror="this.style.display='none'">
+                </div>
+                <div class="info-container">
+                    <h2>🔩 METALES</h2>
+                    <p>Fierro, chatarra y latas.</p>
+                    <div class="valor-kilo"><span class="txt-puntos"></span> pts x Kg</div>
+                </div>
+            </div>
+
+            <div class="card-membresia vip" data-nombre="COBRE" data-puntos-kg="50" onclick="procesarReciclaje(this)">
+                <div class="badge vip-badge">⭐ ALTO VALOR</div>
+                <div class="img-container">
+                    <img src="Iconos/COBRE.png" alt="Cobre" class="servicio-img" onerror="this.style.display='none'">
+                </div>
+                <div class="info-container">
+                    <h2>🔶 COBRE</h2>
+                    <p>Cables pelados, tuberías.</p>
+                    <div class="valor-kilo"><span class="txt-puntos"></span> pts x Kg</div>
+                </div>
+            </div>
+
+            <div class="card-membresia vip" data-nombre="BRONCE" data-puntos-kg="30" onclick="procesarReciclaje(this)">
+                <div class="badge vip-badge">⭐ ALTO VALOR</div>
+                <div class="img-container">
+                    <img src="Iconos/BRONCE.png" alt="Bronce" class="servicio-img" onerror="this.style.display='none'">
+                </div>
+                <div class="info-container">
+                    <h2>🔔 BRONCE</h2>
+                    <p>Grifería, llaves, adornos.</p>
+                    <div class="valor-kilo"><span class="txt-puntos"></span> pts x Kg</div>
+                </div>
+            </div>
+
+            <div class="card-membresia vip" data-nombre="ALUMINIO" data-puntos-kg="15" onclick="procesarReciclaje(this)">
+                <div class="badge vip-badge">⭐ VALOR MEDIO</div>
+                <div class="img-container">
+                    <img src="Iconos/ALUMINIO.png" alt="Aluminio" class="servicio-img" onerror="this.style.display='none'">
+                </div>
+                <div class="info-container">
+                    <h2>⚪ ALUMINIO</h2>
+                    <p>Latas de bebidas, perfiles.</p>
+                    <div class="valor-kilo"><span class="txt-puntos"></span> pts x Kg</div>
+                </div>
+            </div>
+
+            <div class="card-membresia recomendado" data-nombre="RAEE" data-puntos-kg="25" onclick="procesarReciclaje(this)">
+                <div class="badge">⚙️ ESPECIAL</div>
+                <div class="img-container">
+                    <img src="Iconos/RAEE.png" alt="RAEE" class="servicio-img" onerror="this.style.display='none'">
+                </div>
+                <div class="info-container">
+                    <h2>🔌 RAEE</h2>
+                    <p>Aparatos eléctricos en desuso.</p>
+                    <div class="valor-kilo"><span class="txt-puntos"></span> pts x Kg</div>
+                </div>
+            </div>
+
+        </section>
+
+        <footer class="card-footer">
+            <a href="#" title="Volver al Menú Anterior" onclick="window.history.back(); return false;">
+                <img src="Imagenes/ECFM.png" alt="Logo de MEF Engineering" class="logo" />
+            </a>
+        </footer>
+
+    </main>
+
+<script>
+    'use strict';
+
+    // 1. INICIALIZAR PUNTOS VISUALES
+    function inicializarPuntos() {
+        document.querySelectorAll('.card-membresia').forEach(tarjeta => {
+            const puntosKg = tarjeta.getAttribute('data-puntos-kg');
+            const spanPuntos = tarjeta.querySelector('.txt-puntos');
+            if (spanPuntos && puntosKg) {
+                spanPuntos.textContent = puntosKg;
+            }
+        });
+    }
+
+    // 2. SEGURIDAD E INACTIVIDAD (1 MINUTO)
+    function cerrarSesion(arg) {
+        if (arg && typeof arg.preventDefault === 'function') arg.preventDefault();
+        alert("🔒 Sesión finalizada de forma segura.");
+        sessionStorage.clear();
+        localStorage.setItem("sesionActiva", "no");
+        window.location.replace("index.html");
+    }
+
+    function validarSesion() {
+        if (sessionStorage.getItem("sesionActiva") !== "true") {
+            cerrarSesion();
+        }
+    }
+
+    window.addEventListener("DOMContentLoaded", () => {
+        validarSesion();
+        inicializarPuntos(); 
+    });
+    window.addEventListener("pageshow", validarSesion);
+
+    let timerInactividad;
+    const reiniciarTemporizador = () => {
+        clearTimeout(timerInactividad);
+        timerInactividad = setTimeout(() => {
+            alert("⏰ TIEMPO DE INACTIVIDAD EXCEDIDO. SESIÓN CERRADA.");
+            cerrarSesion();
+        }, 1 * 60 * 1000); 
+    };
+
+    ["mousemove", "keydown", "click", "scroll", "touchstart"].forEach(evento => {
+        document.addEventListener(evento, reiniciarTemporizador, { passive: true });
+    });
+    reiniciarTemporizador();
+
+    // 3. LÓGICA DE RECICLAJE Y CÁLCULO
+    function procesarReciclaje(elementoHTML) {
+        const nombreMaterial = elementoHTML.getAttribute('data-nombre');
+        const puntosPorKg = parseInt(elementoHTML.getAttribute('data-puntos-kg'), 10);
+
+        // Pedir cantidad (Ej: 1.5)
+        const kilosInput = prompt(`RECICLAJE: ${nombreMaterial}\nValor: ${puntosPorKg} pts x Kg\n\nIngrese la cantidad exacta de material en KILOS (Ejemplo: 1.5 o 3):`);
+        
+        if (!kilosInput) return; // Canceló o dejó en blanco
+
+        // Convertir comas a puntos para decimales y convertir a número
+        const kilos = parseFloat(kilosInput.replace(',', '.')); 
+
+        if (isNaN(kilos) || kilos <= 0) {
+            alert("⛔ ERROR: La cantidad de Kilos ingresada no es válida.");
+            return;
+        }
+
+        // Matemáticas: Multiplicar y redondear al entero más cercano
+        const puntosGanados = Math.round(kilos * puntosPorKg);
+
+        // Confirmación final antes de validar al cliente
+        const confirmarCalculo = confirm(`📊 RESUMEN DE CÁLCULO:\n\nMaterial: ${nombreMaterial}\nPeso: ${kilos} Kg\nTotal a entregar: +${puntosGanados} Ecopoints\n\n¿Desea proceder a validar al cliente?`);
+        
+        if (confirmarCalculo) {
+            // Mandamos todos los datos importantes por la URL hacia la pantalla de validación
+            window.location.href = `ValidarRecargaEcopoints.html?accion=reciclaje&material=${encodeURIComponent(nombreMaterial)}&kilos=${kilos}&puntos=${puntosGanados}`;
+        }
+    }
+</script>
+
+</body>
+</html>

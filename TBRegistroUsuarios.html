@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>REGISTRO DE USUARIOS | MEF Engineering & Soluciones</title>
+    <style>
+        /* VARIABLES GLOBALES Y RESET */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+        :root {
+            --color-principal: #1d3b20;
+            --color-fondo: #f4f6f5;
+            --color-texto: #333;
+            --color-hover: #e8f5e9;
+            --color-par: #ffffff;
+            --color-impar: #fbfdfb;
+        }
+
+        * { 
+            box-sizing: border-box; 
+            margin: 0; 
+            padding: 0; 
+        }
+
+        body {
+            padding: 40px;
+            font-family: 'Inter', -apple-system, sans-serif;
+            background-color: var(--color-fondo);
+            color: var(--color-texto);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* BARRA DE NAVEGACIÓN */
+        .icon-bar {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 20px;
+            width: 100%;
+            max-width: 1100px;
+            margin-bottom: 30px;
+        }
+
+        .icon-bar a img {
+            width: 28px;
+            height: 28px;
+            cursor: pointer;
+            transition: transform 0.2s ease, opacity 0.2s ease;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+        }
+
+        .icon-bar a img:hover {
+            transform: scale(1.15);
+            opacity: 0.8;
+        }
+
+        /* TABLA RESPONSIVA */
+        .table-container {
+            width: 100%;
+            max-width: 1100px;
+            overflow-x: auto;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+            background-color: #fff;
+            border: 1px solid #e0e0e0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 900px;
+        }
+
+        caption {
+            background: linear-gradient(135deg, var(--color-principal), #142d17);
+            color: #fff;
+            font-size: 1.2rem;
+            font-weight: 700;
+            padding: 18px;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            text-align: center;
+        }
+
+        thead {
+            background-color: #e8f5e9;
+            border-bottom: 2px solid #2e7d32;
+        }
+
+        th, td {
+            padding: 16px 14px;
+            font-size: 0.9rem;
+            text-align: center;
+            border-bottom: 1px solid #f0f0f0;
+            white-space: nowrap;
+        }
+
+        th {
+            color: var(--color-principal);
+            text-transform: uppercase;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        tbody tr:nth-child(even) { background-color: var(--color-par); }
+        tbody tr:nth-child(odd) { background-color: var(--color-impar); }
+        tbody tr:hover { background-color: var(--color-hover); }
+
+        .acciones {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .icon-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.2s ease;
+            border-radius: 8px;
+        }
+
+        .icon-btn:hover {
+            transform: scale(1.15) translateY(-2px);
+            background-color: rgba(46, 125, 50, 0.1);
+        }
+
+        .icon-btn img {
+            width: 22px;
+            height: 22px;
+            pointer-events: none;
+        }
+
+        /* RESPONSIVE PARA CELULARES */
+        @media (max-width: 600px) {
+            body { padding: 15px 10px; }
+            .icon-bar { justify-content: center; gap: 25px; margin-bottom: 20px; }
+            caption { font-size: 1rem; padding: 15px; }
+            th, td { padding: 12px 10px; font-size: 0.85rem; }
+            .icon-btn img { width: 20px; height: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <main style="width: 100%; display: flex; flex-direction: column; align-items: center;">
+
+        <nav class="icon-bar" aria-label="Navegación superior">
+            <a href="#" title="Menú Principal" onclick="volverAlMenu(event)">
+                <img src="Iconos/MENU1.webp" alt="Menú">
+            </a>
+            <a href="RegistroUsuarios.html" title="Registrar Nuevo Usuario">
+                <img src="Iconos/VOLVER.png" alt="Registrar">
+            </a>
+            <a href="#" title="Cerrar Sesión de forma segura" onclick="cerrarSesion(event)">
+                <img src="Iconos/SALIR.png" alt="Cerrar sesión">
+            </a>
+        </nav>
+
+        <section class="table-container">
+            <table>
+                <caption>REGISTRO DE USUARIOS DEL SISTEMA</caption>
+                <thead>
+                    <tr>
+                        <th>Código</th>
+                        <th>DNI</th>
+                        <th>Apellidos</th>
+                        <th>Nombres</th>
+                        <th>Rol (Cargo)</th>
+                        <th>ID de Acceso</th>
+                        <th>Contraseña</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="tablaUsuarios">
+                    </tbody>
+            </table>
+        </section>
+
+    </main>
+
+<script>
+    'use strict';
+
+    // ==========================================
+    // 1. GESTIÓN DE SESIÓN Y NAVEGACIÓN
+    // ==========================================
+    function cerrarSesion(e) {
+        if (e && typeof e.preventDefault === 'function') e.preventDefault();
+        alert("🔒 Sesión finalizada de forma segura.");
+        sessionStorage.clear();
+        localStorage.setItem("sesionActiva", "no");
+        window.location.replace("index.html");
+    }
+
+    function validarSesion() {
+        if (sessionStorage.getItem("sesionActiva") !== "true") {
+            cerrarSesion();
+        }
+    }
+
+    function volverAlMenu(e) {
+        if (e && typeof e.preventDefault === 'function') e.preventDefault();
+        window.location.href = sessionStorage.getItem("menuUsuario") || "Botones.html";
+    }
+
+    window.addEventListener("DOMContentLoaded", validarSesion);
+    window.addEventListener("pageshow", validarSesion);
+
+    // Límite estricto de inactividad a 1 minuto
+    let timerInactividad;
+    const reiniciarTemporizador = () => {
+        clearTimeout(timerInactividad);
+        timerInactividad = setTimeout(() => {
+            alert("⏰ INACTIVIDAD DETECTADA. SESIÓN CERRADA.");
+            cerrarSesion();
+        }, 1 * 60 * 1000); 
+    };
+
+    ["mousemove", "keydown", "click", "scroll", "touchstart"].forEach(evento => {
+        document.addEventListener(evento, reiniciarTemporizador, { passive: true });
+    });
+    reiniciarTemporizador();
+
+
+    // ==========================================
+    // 2. LÓGICA DE LA TABLA DE USUARIOS
+    // ==========================================
+    function cargarUsuarios() {
+        const tabla = document.getElementById('tablaUsuarios');
+        const usuarios = JSON.parse(localStorage.getItem('usuarios')) || [];
+        
+        tabla.innerHTML = '';
+
+        if (usuarios.length === 0) {
+            tabla.innerHTML = `<tr><td colspan="8" style="text-align:center; padding:30px; font-style:italic; color:#777;">NO HAY USUARIOS REGISTRADOS EN EL SISTEMA.</td></tr>`;
+            return;
+        }
+
+        usuarios.forEach((usuario, index) => {
+            // Desencriptar solo para contar cuántos asteriscos pintar (Seguridad Visual)
+            let longitudReal = 7;
+            try {
+                longitudReal = atob(usuario.clave).length;
+            } catch (e) {
+                longitudReal = (usuario.clave || "*******").length;
+            }
+
+            const fila = document.createElement('tr');
+            fila.innerHTML = `
+                <td><strong>${usuario.codigo || '-'}</strong></td>
+                <td>${usuario.dni || '-'}</td>
+                <td>${usuario.apellidos || '-'}</td>
+                <td>${usuario.nombres || '-'}</td>
+                <td><span style="background:#e8f5e9; color:#2e7d32; padding:4px 8px; border-radius:4px; font-weight:600; font-size:0.8rem;">${usuario.cargo || '-'}</span></td>
+                <td><strong>${usuario.id || '-'}</strong></td>
+                <td style="letter-spacing: 2px; color:#666;">${'*'.repeat(longitudReal)}</td>
+                <td class="acciones">
+                    <button class="icon-btn" title="Editar Usuario" onclick="editarUsuario(${index})">
+                        <img src="Iconos/EDITAR.png" alt="Editar">
+                    </button>
+                    <button class="icon-btn" title="Eliminar Usuario" onclick="eliminarUsuario(${index})">
+                        <img src="Iconos/ELIMINAR.png" alt="Eliminar">
+                    </button>
+                </td>
+            `;
+            tabla.appendChild(fila);
+        });
+    }
+
+    // --- FUNCIONES DE ACCIÓN (Globales para uso en los botones) ---
+    window.eliminarUsuario = function(index) {
+        const usuarios = JSON.parse(localStorage.getItem('usuarios')) || [];
+        const usuario = usuarios[index];
+
+        if (!usuario) return;
+
+        // Protección absoluta para el administrador maestro
+        if (usuario.id.toUpperCase() === "MTMENDOZA") {
+            alert("❌ ACCIÓN PROHIBIDA:\nNo se puede eliminar la cuenta del administrador principal del sistema.");
+            return;
+        }
+
+        if (!confirm(`⚠️ ADVERTENCIA CRÍTICA:\n\n¿Estás seguro de eliminar permanentemente el acceso del usuario:\n[ ${usuario.id} - ${usuario.nombres} ]?`)) {
+            return;
+        }
+
+        usuarios.splice(index, 1);
+        localStorage.setItem('usuarios', JSON.stringify(usuarios));
+        cargarUsuarios();
+    };
+
+    window.editarUsuario = function(index) {
+        const usuarios = JSON.parse(localStorage.getItem('usuarios')) || [];
+        const usuario = usuarios[index];
+
+        if (!usuario) {
+            alert("⚠️ ERROR: No se encontró la cuenta de usuario solicitada.");
+            return;
+        }
+
+        // Protección absoluta: No permitir editar la cuenta maestra desde esta vista
+        if (usuario.id.toUpperCase() === "MTMENDOZA") {
+            alert("❌ ACCIÓN PROHIBIDA:\nLos datos del administrador principal no pueden ser modificados por seguridad.");
+            return;
+        }
+
+        // Cachear datos y enviar a pantalla de edición
+        localStorage.setItem('usuarioEditar', JSON.stringify(usuario));
+        localStorage.setItem('usuarioEditarIndex', index.toString());
+        
+        // ⚠️ Asumo que llamarás al archivo EditarU.html o similar (Edición de usuario)
+        window.location.href = 'EditarUsuario.html'; 
+    };
+
+    // --- INICIALIZAR ---
+    document.addEventListener("DOMContentLoaded", cargarUsuarios);
+
+</script>
+
+</body>
+</html>

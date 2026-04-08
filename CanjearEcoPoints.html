@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>CANJEAR ECOPOINTS | MEF Engineering & Soluciones</title>
+    
+    <style>
+        /* =====================================================
+           VARIABLES Y RESET
+        ===================================================== */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+        :root {
+            --primary-color: #1d3b20;
+            --primary-hover: #143117;
+            --bg-color: #f4f6f5;
+            --white: #ffffff;
+            --text-dark: #333333;
+            --text-light: #666666;
+            --danger-color: #d32f2f; /* Rojo para costo */
+            --danger-bg: #ffebee;    /* Fondo rosa para costo */
+            --shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+            --transition: all 0.25s ease;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: var(--bg-color);
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            min-height: 100svh;
+            color: var(--text-dark);
+            padding: 20px;
+        }
+
+        /* =====================================================
+           CONTENEDOR GLOBAL
+        ===================================================== */
+        .menu-container {
+            width: 100%;
+            max-width: 420px;
+            background-color: var(--white);
+            border: 1.5px solid var(--primary-color);
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .menu-header {
+            background-color: var(--primary-color);
+            color: var(--white);
+            padding: 16px 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .menu-header .icon-link { position: absolute; left: 15px; }
+        .menu-header .icon { width: 24px; height: 24px; cursor: pointer; transition: var(--transition); }
+        .menu-header .icon:hover { transform: scale(1.15); filter: brightness(1.2); }
+        
+        .menu-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 0;
+        }
+
+        /* =====================================================
+           TARJETAS COMPACTAS (SERVICIOS)
+        ===================================================== */
+        .planes-section {
+            display: flex;
+            flex-direction: column;
+            gap: 12px; /* Reducido */
+            padding: 20px 15px;
+        }
+
+        .card-membresia {
+            background: var(--white);
+            padding: 10px; /* Reducido */
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+            border: 1px solid #e0e0e0;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            gap: 12px; /* Reducido */
+            cursor: pointer;
+            min-height: 85px; /* Altura mínima compacta */
+        }
+
+        .card-membresia:hover {
+            box-shadow: 0 4px 12px rgba(29, 59, 32, 0.15);
+            border-color: var(--primary-color);
+            transform: translateY(-2px);
+        }
+
+        .card-membresia:active { transform: scale(0.98); }
+
+        /* IMÁGENES COMPACTAS */
+        .img-container {
+            width: 60px; /* Reducido */
+            height: 60px; /* Reducido */
+            border-radius: 8px;
+            background-color: #f4f6f5; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-shrink: 0;
+            overflow: hidden;
+        }
+
+        .servicio-img { width: 100%; height: 100%; object-fit: cover; }
+
+        /* TEXTOS COMPACTOS */
+        .info-container {
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+            justify-content: center;
+        }
+
+        .card-membresia h2 {
+            font-size: 13px; /* Reducido */
+            margin: 0 0 2px 0;
+            color: var(--primary-color);
+            font-weight: 800;
+        }
+
+        .card-membresia p {
+            font-size: 11px; /* Reducido */
+            margin: 0 0 6px 0;
+            color: var(--text-light);
+            line-height: 1.2;
+        }
+
+        /* Estilo del costo en créditos (Rojo indicando gasto) */
+        .costo-restar {
+            font-size: 11px; /* Reducido */
+            font-weight: 800;
+            color: var(--danger-color);
+            background: var(--danger-bg);
+            padding: 3px 8px;
+            border-radius: 6px;
+            display: inline-block;
+            align-self: flex-start;
+        }
+
+        /* ETIQUETAS (BADGES) */
+        .recomendado { border-color: var(--primary-color); }
+        .vip { border-color: #fbc02d; }
+
+        .badge {
+            position: absolute;
+            top: 0;
+            right: 0;
+            font-size: 9px;
+            padding: 3px 8px;
+            border-bottom-left-radius: 8px;
+            background: var(--primary-color);
+            color: white;
+            font-weight: 700;
+            z-index: 2;
+        }
+        .vip-badge { background: #fbc02d; color: #333; }
+
+        /* FOOTER */
+        .card-footer {
+            background-color: #fafafa;
+            padding: 12px;
+            border-top: 1px solid #eeeeee;
+            text-align: center;
+            margin-top: auto;
+        }
+
+        .card-footer .logo { width: 70px; height: auto; transition: var(--transition); }
+        .card-footer a:hover .logo { transform: scale(1.05); }
+
+        /* RESPONSIVE MÓVIL */
+        @media (max-width: 480px) {
+            body { padding: 10px; align-items: flex-start; }
+            .menu-container { border-radius: 12px; min-height: 100%; border: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <main class="menu-container">
+        
+        <header class="menu-header">
+            <a href="#" class="icon-link" onclick="cerrarSesion(event)">
+                <img src="Iconos/SALIR.png" alt="Cerrar sesión" class="icon">
+            </a>
+            <h1 class="menu-title">CANJEAR ECOPOINTS</h1>
+        </header>
+
+        <section class="planes-section">
+
+            <div class="card-membresia" data-nombre="TRAVESÍA EXCLUSIVA" data-puntos="100" onclick="iniciarCanje(this)">
+                <div class="img-container">
+                    <img src="Iconos/TRAVESIA EXCLUSIVA.png" alt="Icono Paseo Moto" class="servicio-img" onerror="this.style.display='none'">
+                </div>
+
+                <div class="info-container">
+                    <h2>🛵 TRAVESÍA EXCLUSIVA</h2>
+                    <p>Viaje privado en motocicleta.</p>
+                    <div class="costo-restar">- <span class="txt-puntos"></span> pts</div>
+                </div>
+            </div>
+
+            <div class="card-membresia recomendado" data-nombre="AÉREO NATURAL" data-puntos="150" onclick="iniciarCanje(this)">
+                <div class="badge">⭐ POPULAR</div>
+                
+                <div class="img-container">
+                    <img src="Iconos/AEREO NATURAL.png" alt="Icono Foto Dron" class="servicio-img" onerror="this.style.display='none'">
+                </div>
+
+                <div class="info-container">
+                    <h2>🌿 AÉREO NATURAL</h2>
+                    <p>Grabación aérea en paisajes naturales.</p>
+                    <div class="costo-restar">- <span class="txt-puntos"></span> pts</div>
+                </div>
+            </div>
+
+            <div class="card-membresia vip" data-nombre="AÉREO MOTO" data-puntos="250" onclick="iniciarCanje(this)">
+                <div class="badge vip-badge">👑 PREMIUM</div>
+                
+                <div class="img-container">
+                    <img src="Iconos/AEREO MOTO.png" alt="Icono Video Moto" class="servicio-img" onerror="this.style.display='none'">
+                </div>
+
+                <div class="info-container">
+                    <h2>🚁 AÉREO MOTO</h2>
+                    <p>Grabación aérea con seguimiento.</p>
+                    <div class="costo-restar">- <span class="txt-puntos"></span> pts</div>
+                </div>
+            </div>
+
+        </section>
+
+        <footer class="card-footer">
+            <a href="#" title="Volver al Menú Anterior" onclick="window.history.back(); return false;">
+                <img src="Imagenes/ECFM.png" alt="Logo de MEF Engineering" class="logo" />
+            </a>
+        </footer>
+
+    </main>
+
+<script>
+    'use strict';
+
+    // ==========================================
+    // 1. INICIALIZACIÓN VISUAL (PUNTOS)
+    // ==========================================
+    function inicializarPuntos() {
+        document.querySelectorAll('.card-membresia').forEach(tarjeta => {
+            const costoPuntos = tarjeta.getAttribute('data-puntos');
+            const spanPuntos = tarjeta.querySelector('.txt-puntos');
+            if (spanPuntos && costoPuntos) {
+                spanPuntos.textContent = costoPuntos;
+            }
+        });
+    }
+
+    // ==========================================
+    // 2. GESTIÓN DE SESIÓN Y NAVEGACIÓN
+    // ==========================================
+    function cerrarSesion(e) {
+        if (e && typeof e.preventDefault === 'function') e.preventDefault();
+        alert("🔒 Sesión finalizada de forma segura.");
+        sessionStorage.clear();
+        localStorage.setItem("sesionActiva", "no");
+        window.location.replace("index.html");
+    }
+
+    function validarSesion() {
+        if (sessionStorage.getItem("sesionActiva") !== "true") {
+            cerrarSesion();
+        }
+    }
+
+    window.addEventListener("DOMContentLoaded", () => {
+        validarSesion();
+        inicializarPuntos(); 
+    });
+    window.addEventListener("pageshow", validarSesion);
+
+    // Control estricto de inactividad a 1 minuto
+    let timerInactividad;
+    const reiniciarTemporizador = () => {
+        clearTimeout(timerInactividad);
+        timerInactividad = setTimeout(() => {
+            alert("⏰ TIEMPO DE INACTIVIDAD EXCEDIDO. SESIÓN CERRADA.");
+            cerrarSesion();
+        }, 1 * 60 * 1000); 
+    };
+
+    ["mousemove", "keydown", "click", "scroll", "touchstart"].forEach(evento => {
+        document.addEventListener(evento, reiniciarTemporizador, { passive: true });
+    });
+    reiniciarTemporizador();
+
+    // ==========================================
+    // 3. LÓGICA DE CANJE (REDIRECCIÓN)
+    // ==========================================
+    function iniciarCanje(elementoHTML) {
+        // Extraemos el servicio y su costo en puntos
+        const nombreServicio = elementoHTML.getAttribute('data-nombre');
+        const costoPuntos = parseInt(elementoHTML.getAttribute('data-puntos'), 10);
+
+        if (nombreServicio && costoPuntos) {
+            // Redirigimos a la página de validación universal usando accion=canje
+            window.location.href = `ValidarRecargaEcopoints.html?accion=canje&servicio=${encodeURIComponent(nombreServicio)}&costo=${costoPuntos}`;
+        } else {
+            alert("⚠️ Error: No se pudieron leer los datos de este servicio.");
+        }
+    }
+
+</script>
+
+</body>
+</html>

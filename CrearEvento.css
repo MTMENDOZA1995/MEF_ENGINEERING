@@ -1,0 +1,345 @@
+/* =================== VARIABLES GLOBALES =================== */
+:root {
+  --primary-color: #1d3b20;
+  --primary-dark: #1d3b20;
+  --bg-gradient: linear-gradient(135deg, #e7f4e4, #ffffff);
+  --input-border: #cddccf;
+  --input-focus: rgba(46, 125, 50, 0.2);
+  --card-bg: #ffffff;
+  --footer-bg: #f9f9f9;
+  --shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+  --radius: 12px;
+  --font-main: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* =================== RESET =================== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* =================== CUERPO =================== */
+body {
+  font-family: var(--font-main);
+  background: var(--bg-gradient);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px;
+  color: var(--primary-color);
+}
+
+/* =================== CONTENEDOR =================== */
+.container {
+  width: 100%;
+  max-width: 400px;
+  background-color: var(--card-bg);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  border: 1px solid var(--input-border);
+  overflow: hidden;
+  transition: box-shadow 0.3s ease;
+}
+
+.container:hover {
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.15);
+}
+
+/* =================== ENCABEZADO =================== */
+.header {
+  background-color: var(--primary-color);
+  color: #ffffff;
+  text-align: center;
+  padding: 11px 11px;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+/* =================== FORMULARIO =================== */
+.form {
+  padding: 30px;
+}
+
+.form label {
+  display: block;
+  font-weight: 700;
+  margin: 6px 0 6px;
+  font-size: 16px;
+  color: var(--primary-color);
+}
+
+.form input[type="text"],
+.form input[type="date"],
+.form input[type="time"],
+.form input[type="password"] {
+  width: 100%;
+  padding: 12px 14px;
+  border: 2px solid var(--input-border);
+  border-left: 4px solid var(--primary-color);
+  border-radius: 8px;
+  font-size: 15px;
+  background-color: #fff;
+  transition: all 0.3s ease;
+}
+
+.form input:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px var(--input-focus);
+  background-color: #f7fdf6;
+}
+
+/* =================== BOTÓN =================== */
+.form button {
+  margin-top: 28px;
+  width: 100%;
+  background-color: var(--primary-color);
+  color: #fff;
+  padding: 14px;
+  font-size: 16px;
+  font-weight: 700;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+}
+
+.form button:hover {
+  background-color: var(--primary-dark);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+}
+
+/* =================== PIE DE PÁGINA =================== */
+.footer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 18px;
+  background-color: var(--footer-bg);
+  border-top: 1px solid #e0e0e0;
+}
+
+.footer img {
+  height: 45px;
+  filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.1));
+}
+
+.footer span {
+  margin-left: 14px;
+  color: var(--primary-color);
+  font-weight: 600;
+  font-size: 1rem;
+  letter-spacing: 0.5px;
+}
+
+/* =====================================================
+   PIE DE TARJETA / FOOTER
+===================================================== */
+.card-footer {
+  background-color: #ffffff;
+  color: #1d3b20;
+  text-align: center;
+  padding: 5px;
+  font-size: 1px;
+  font-weight: bold;
+  border-top: 1px solid #ccc;
+}
+
+.card-footer .logo {
+  width: 80px;
+  height: auto;
+  display: block;
+  margin: 0 auto 6px;
+}
+
+
+/* =====================================================
+   ENCABEZADO DE LA TARJETA
+===================================================== */
+.card-header {
+  background-color: #1d3b20;
+  color: #ffffff;
+  padding: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px 8px 0 0;
+}
+
+.card-header .header-content {
+  display: flex;
+  align-items: center;
+  gap: 25px;
+}
+
+.card-header .icon {
+  width: 28px;
+  height: 28px;
+  cursor: pointer;
+  transition: transform 0.2s ease, filter 0.2s ease;
+  filter: brightness(1) contrast(1);
+}
+
+.card-header .icon:hover {
+  transform: scale(1.1);
+  filter: brightness(1.2);
+}
+
+/* =================== RESPONSIVE PROFESIONAL PARA S24 Y MÓVILES =================== */
+@media (max-width: 480px) {
+  html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    min-height: 100svh;
+    background-color: #f4f4f4;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    overflow-x: hidden;
+    -webkit-user-select: none;
+    user-select: none;
+    touch-action: manipulation;
+    display: flex;
+    flex-direction: column;
+  }
+
+
+  .container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 100%;
+    min-height: 100%;
+    background: #ffffff;
+    border: none;
+    box-shadow: none;
+    border-radius: 0 !important;
+    overflow: visible !important;
+  }
+
+
+
+  .header {
+    font-size: 1rem;
+    padding: 16px;
+    background-color: #1d3b20;
+    text-align: center;
+    background-color: var(--primary-color, #1d3b20);
+    color: white;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    flex-shrink: 0;
+    border-radius: 0 !important;
+    overflow: visible !important;
+    display: flex;
+    align-items: center;
+  }
+
+  .header {
+  border-top-left-radius: 0 !important;
+  border-top-right-radius: 0 !important;
+  }
+
+  .form {
+    flex: 1;
+    padding: 20px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .form label {
+    font-size: 0.9rem;
+    color: #333;
+  }
+
+  .form input,
+  .form select {
+    font-size: 0.95rem;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1.5px solid var(--input-border, #ccc);
+    background-color: #fff;
+    outline: none;
+    width: 100%;
+  }
+
+  .form input:focus,
+  .form select:focus {
+    border-color: var(--primary-color, #1d3b20);
+    box-shadow: 0 0 0 2px rgba(29, 59, 32, 0.15);
+  }
+
+  .form button {
+    font-size: 0.95rem;
+    padding: 14px;
+    border-radius: 10px;
+    margin-top: 20px;
+    background-color: var(--primary-color, #1d3b20);
+    color: #fff;
+    font-weight: 700;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  }
+
+  .form button:hover {
+    background-color: #163016;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  .footer {
+    padding: 12px;
+    font-size: 0.85rem;
+    text-align: center;
+    background-color: var(--footer-bg, #f4f6f5);
+    color: #1d3b20;
+    border-top: 1px solid #ccc;
+    flex-shrink: 0;
+  }
+
+  .footer img {
+    height: 38px;
+    display: block;
+    margin: 0 auto 6px;
+  }
+
+  .footer span {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 600;
+  }
+
+  .card-footer {
+    font-size: 0.8rem;
+    padding: 10px;
+    text-align: center;
+    color: #444;
+    background-color: #f1f1f1;
+    border-top: 1px solid #ccc;
+    flex-shrink: 0;
+  }
+
+  .card-footer .logo {
+    width: 65px;
+    height: auto;
+    display: block;
+    margin: 8px auto 4px;
+  }
+}

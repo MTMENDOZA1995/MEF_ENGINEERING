@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>CRÉDITOS Y PUNTOS | MEF Engineering & Soluciones</title>
+
+    <style>
+        /* =====================================================
+           IMPORTAR FUENTE Y VARIABLES
+        ===================================================== */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+        :root {
+            --mme-primary: #1d3b20;
+            --mme-primary-hover: #142d17;
+            --mme-accent: #2e7d32;
+            --bg-app: #f4f6f5;
+            --bg-card: #ffffff;
+            --text-main: #333333;
+            --border-color: #dcdcdc;
+            --color-puntos: #e65100;
+            --color-creditos: #2e7d32;
+            --color-alerta: #d32f2f;
+            --shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background-color: var(--bg-app);
+            margin: 0;
+            padding: 0;
+            color: var(--text-main);
+        }
+
+        /* =====================================================
+           CONTENEDOR PRINCIPAL
+        ===================================================== */
+        .menu-container {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            max-width: 1100px; 
+            margin: 0 auto;
+            min-height: 100vh;
+            min-height: 100svh;
+            background: var(--bg-app);
+        }
+
+        /* ENCABEZADO */
+        .menu-header {
+            background-color: var(--mme-primary);
+            color: #ffffff;
+            padding: 20px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .menu-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            margin: 0;
+            text-transform: uppercase;
+        }
+
+        .icon-link {
+            position: absolute;
+            left: 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .icon {
+            width: 24px;
+            height: 24px;
+            filter: brightness(0) invert(1);
+            transition: transform 0.2s ease;
+        }
+
+        .icon:hover {
+            transform: scale(1.15);
+        }
+
+        section {
+            padding: 25px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            flex-grow: 1;
+        }
+
+        /* =====================================================
+           BUSCADOR
+        ===================================================== */
+        .search-wrapper {
+            display: flex;
+            gap: 8px;
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .search-wrapper input {
+            width: 100%;
+            padding: 14px 14px 14px 40px; 
+            font-size: 0.95rem;
+            font-family: 'Inter', sans-serif;
+            border: 1.5px solid var(--border-color);
+            border-radius: 8px;
+            outline: none;
+            transition: all 0.3s ease;
+            background: var(--bg-card);
+        }
+
+        .search-wrapper input:focus {
+            border-color: var(--mme-accent);
+            box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.1);
+        }
+
+        .search-wrapper::before {
+            content: "🔍";
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.1rem;
+            opacity: 0.5;
+        }
+
+        /* =====================================================
+           DISEÑO DE LA TABLA
+        ===================================================== */
+        .table-wrapper {
+            background: var(--bg-card);
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            border: 1px solid var(--border-color);
+            overflow-x: auto; 
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 950px; 
+            font-size: 0.9rem;
+        }
+
+        thead {
+            background-color: #e8f5e9;
+            border-bottom: 2px solid var(--mme-accent);
+        }
+
+        th {
+            color: var(--mme-primary);
+            font-weight: 700;
+            text-align: center;
+            padding: 16px 12px;
+            white-space: nowrap;
+            letter-spacing: 0.5px;
+        }
+
+        td {
+            padding: 14px 12px;
+            border-bottom: 1px solid #f0f0f0;
+            color: #444;
+            text-align: center;
+            vertical-align: middle;
+            white-space: nowrap;
+        }
+
+        th:nth-child(2), td:nth-child(2) {
+            text-align: left; /* Alinear nombres a la izquierda */
+        }
+
+        tbody tr {
+            transition: background-color 0.2s ease;
+        }
+
+        tbody tr:nth-child(even) { background-color: #fafbfa; }
+        tbody tr:hover { background-color: #f1f8f4; }
+
+        /* BADGES Y TEXTOS ESPECIALES */
+        .plan-badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 800;
+            display: inline-block;
+            min-width: 110px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .plan-basico { background: #e8f5e9; color: #2e7d32; border: 1px solid #c8e6c9; }
+        .plan-aventura { background: #fff3e0; color: #ef6c00; border: 1px solid #ffe0b2; }
+        .plan-elite { background: #fffde7; color: #fbc02d; border: 1px solid #fff9c4; }
+        .sin-plan { background: #f5f5f5; color: #999; border: 1px solid #e0e0e0; font-style: italic; }
+
+        .val-destacado {
+            font-weight: 800;
+            font-size: 16px;
+            font-family: monospace;
+        }
+
+        .nota-header {
+            display: block;
+            font-size: 10px;
+            font-weight: 500;
+            opacity: 0.8;
+            margin-top: 4px;
+            text-transform: none;
+            letter-spacing: 0;
+        }
+
+        .texto-vencido {
+            color: var(--color-alerta);
+            font-weight: 800;
+            background: #ffebee;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+
+        /* =====================================================
+           FOOTER
+        ===================================================== */
+        .card-footer {
+            background-color: var(--bg-card);
+            text-align: center;
+            padding: 15px;
+            border-top: 1px solid var(--border-color);
+            margin-top: auto;
+        }
+
+        .card-footer .logo {
+            width: 85px;
+            opacity: 0.9;
+            transition: transform 0.2s ease;
+        }
+
+        .card-footer a:hover .logo { transform: scale(1.05); }
+
+        /* =====================================================
+           RESPONSIVE MÓVIL
+        ===================================================== */
+        @media (max-width: 600px) {
+            section { padding: 15px 10px; }
+            .menu-title { font-size: 1rem; }
+            .table-wrapper { border-radius: 8px; }
+            .search-wrapper input { padding: 12px 12px 12px 35px; }
+        }
+    </style>
+</head>
+<body>
+
+    <main class="menu-container">
+        
+        <header class="menu-header">
+            <a href="Membresias.html" class="icon-link" title="Volver a Membresías">
+                <img src="Iconos/VOLVER.png" alt="Volver" class="icon">
+            </a>
+            <h1 class="menu-title">CRÉDITOS Y PUNTOS</h1>
+        </header>
+
+        <section>
+            <div class="search-wrapper">
+                <input type="text" id="buscador" placeholder="Buscar por Código o Nombre del Cliente..." onkeyup="filtrarTabla()">
+            </div>
+
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>CÓDIGO</th>
+                            <th>CLIENTE</th>
+                            <th>PLAN ACTUAL</th>
+                            <th>CRÉDITOS <span class="nota-header">(Caducan a los 30 días)</span></th>
+                            <th>PUNTOS <span class="nota-header">(No caducan)</span></th>
+                            <th>FECHA INICIO</th>
+                            <th>CADUCIDAD</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tablaMembresias">
+                        </tbody>
+                </table>
+            </div>
+        </section>
+
+        <footer class="card-footer">
+            <a href="#" title="Volver al Menú Principal" onclick="volverAlMenu(event)">
+                <img src="Imagenes/ECFM.png" alt="Logo de MEF Engineering" class="logo" />
+            </a>
+        </footer>
+
+    </main>
+
+<script>
+    'use strict';
+
+    // ==========================================
+    // 1. GESTIÓN DE SESIÓN, NAVEGACIÓN E INACTIVIDAD
+    // ==========================================
+    function cerrarSesion(e, mensaje = "🔒 Sesión finalizada de forma segura.") {
+        if (e && typeof e.preventDefault === 'function') e.preventDefault();
+        alert(mensaje);
+        sessionStorage.clear();
+        localStorage.setItem("sesionActiva", "no");
+        window.location.replace("index.html");
+    }
+
+    function validarSesion() {
+        if (sessionStorage.getItem("sesionActiva") !== "true") {
+            cerrarSesion(null, "⚠️ ACCESO DENEGADO. SESIÓN CERRADA.");
+        }
+    }
+
+    function volverAlMenu(e) {
+        if (e && typeof e.preventDefault === 'function') e.preventDefault();
+        window.location.href = sessionStorage.getItem("menuUsuario") || "Botones.html";
+    }
+
+    window.addEventListener("DOMContentLoaded", () => {
+        validarSesion();
+        cargarMembresias();
+    });
+    window.addEventListener("pageshow", validarSesion);
+
+    // Control estricto de inactividad: 1 minuto
+    let timerInactividad;
+    const reiniciarTemporizador = () => {
+        clearTimeout(timerInactividad);
+        timerInactividad = setTimeout(() => {
+            cerrarSesion(null, "⏰ TIEMPO DE INACTIVIDAD EXCEDIDO. SESIÓN CERRADA.");
+        }, 1 * 60 * 1000); 
+    };
+
+    ["mousemove", "keydown", "click", "scroll", "touchstart"].forEach(evento => {
+        document.addEventListener(evento, reiniciarTemporizador, { passive: true });
+    });
+    reiniciarTemporizador();
+
+
+    // ==========================================
+    // 2. FUNCIÓN DE BÚSQUEDA
+    // ==========================================
+    function filtrarTabla() {
+        const input = document.getElementById("buscador");
+        const filtro = input.value.toUpperCase();
+        const tabla = document.getElementById("tablaMembresias");
+        const filas = tabla.getElementsByTagName("tr");
+
+        for (let i = 0; i < filas.length; i++) {
+            if (filas[i].cells.length <= 1) continue; 
+
+            const celdaCodigo = filas[i].cells[0];
+            const celdaNombre = filas[i].cells[1];
+
+            if (celdaCodigo || celdaNombre) {
+                const textoCodigo = celdaCodigo.textContent || celdaCodigo.innerText;
+                const textoNombre = celdaNombre.textContent || celdaNombre.innerText;
+
+                if (textoCodigo.toUpperCase().indexOf(filtro) > -1 || textoNombre.toUpperCase().indexOf(filtro) > -1) {
+                    filas[i].style.display = "";
+                } else {
+                    filas[i].style.display = "none";
+                }
+            }
+        }
+    }
+
+    // ==========================================
+    // 3. CARGAR DATOS Y PROCESAR CADUCIDADES
+    // ==========================================
+    function cargarMembresias() {
+        let clientes = JSON.parse(localStorage.getItem('personal')) || [];
+        const tbody = document.getElementById('tablaMembresias');
+        tbody.innerHTML = '';
+
+        if (clientes.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding:30px; font-style:italic; color:#777;">No hay clientes registrados en el sistema.</td></tr>`;
+            return;
+        }
+
+        let huboCambios = false;
+
+        // Filtrar clientes que tienen o tuvieron membresías o puntos
+        const clientesConMovimientos = clientes.filter(c => c.membresiaActual || c.creditos || c.puntos);
+
+        if (clientesConMovimientos.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding:30px; font-style:italic; color:#777;">Ningún cliente ha registrado planes o puntos aún.</td></tr>`;
+            return;
+        }
+
+        clientesConMovimientos.forEach((u) => {
+            let tienePlan = u.membresiaActual && u.membresiaActual.trim() !== "";
+            let creditos = u.creditos || 0;
+            let puntos = u.puntos || 0;
+            
+            let txtFechaInicio = "---";
+            let txtFechaCaducidad = "---";
+            let estaCaducado = false;
+
+            // LÓGICA DE FECHAS Y CADUCIDAD
+            if (tienePlan && u.fechaMovimiento) {
+                try {
+                    let fechaStr = u.fechaMovimiento.split(',')[0].trim();
+                    let partes = fechaStr.split('/');
+                    let fInicio;
+
+                    if (partes.length === 3) {
+                        let p1 = parseInt(partes[0], 10);
+                        let p2 = parseInt(partes[1], 10);
+                        let p3 = parseInt(partes[2], 10);
+                        
+                        if (p1 > 12) { fInicio = new Date(p3, p2 - 1, p1); } 
+                        else { fInicio = new Date(p3, p1 - 1, p2); } 
+                    } else {
+                        if (u.fechaMovimiento.includes('-') && u.fechaMovimiento.length === 10) {
+                            fInicio = new Date(u.fechaMovimiento + "T12:00:00");
+                        } else {
+                            fInicio = new Date(u.fechaMovimiento);
+                        }
+                    }
+
+                    if (!isNaN(fInicio.getTime())) {
+                        txtFechaInicio = fInicio.toLocaleDateString();
+
+                        // Caducidad a 30 días
+                        let fCaducidad = new Date(fInicio);
+                        fCaducidad.setDate(fCaducidad.getDate() + 30);
+                        txtFechaCaducidad = fCaducidad.toLocaleDateString();
+
+                        let hoy = new Date();
+                        hoy.setHours(0, 0, 0, 0);
+                        fCaducidad.setHours(0, 0, 0, 0);
+
+                        // Si la fecha actual supera la caducidad
+                        if (hoy > fCaducidad) {
+                            estaCaducado = true;
+                            
+                            // REGLA DE NEGOCIO: Retirar plan y créditos. Conservar puntos.
+                            u.membresiaActual = "";
+                            u.creditos = 0; 
+                            
+                            tienePlan = false;
+                            creditos = 0;
+                            huboCambios = true;
+                            
+                            // Actualizamos el registro original en "clientes"
+                            let indexOriginal = clientes.findIndex(c => c.codigo === u.codigo);
+                            if (indexOriginal !== -1) {
+                                clientes[indexOriginal].membresiaActual = "";
+                                clientes[indexOriginal].creditos = 0;
+                            }
+                        }
+                    }
+                } catch (e) {
+                    console.error("Error procesando fecha para usuario:", u.codigo);
+                }
+            }
+
+            // Renderizado visual del badge del plan
+            const labelPlan = tienePlan ? u.membresiaActual.toUpperCase() : "SIN PLAN";
+            const clasePlan = tienePlan ? `plan-${u.membresiaActual.toLowerCase()}` : "sin-plan";
+            
+            if (!tienePlan) {
+                txtFechaCaducidad = "---";
+                txtFechaInicio = "---";
+            }
+
+            // Creación de la fila
+            const fila = document.createElement('tr');
+            fila.innerHTML = `
+                <td><strong style="color: var(--mme-primary);">${u.codigo || '---'}</strong></td>
+                <td><strong>${u.nombres || ''}</strong> ${u.apellidos || ''}</td>
+                <td><span class="plan-badge ${clasePlan}">${labelPlan}</span></td>
+                <td style="color: var(--color-creditos);">
+                    <span class="val-destacado">${creditos} CR</span>
+                </td>
+                <td style="color: var(--color-puntos);">
+                    <span class="val-destacado">${puntos} PTS</span>
+                </td>
+                <td style="font-size:13px; color:#555;">${txtFechaInicio}</td>
+                <td style="font-size:13px;">
+                    ${estaCaducado ? '<span class="texto-vencido">⚠️ ACABA DE VENCER</span>' : txtFechaCaducidad}
+                </td>
+            `;
+            tbody.appendChild(fila);
+        });
+
+        // ⚠️ GUARDADO: Actualizamos "personal" si hubo caducidades
+        if (huboCambios) {
+            localStorage.setItem('personal', JSON.stringify(clientes));
+        }
+    }
+</script>
+
+</body>
+</html>

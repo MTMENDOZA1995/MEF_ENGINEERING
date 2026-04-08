@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>REGISTRAR ASISTENCIA | MEF Engineering & Soluciones</title>
+    <link rel="stylesheet" href="RegistrarLista.css" />
+</head>
+<body>
+    
+    <main class="asistencia-card">
+
+        <header class="card-header">
+            <div class="header-content">
+                <a href="#" title="Cerrar Sesión" onclick="cerrarSesion(event)" class="icon-link">
+                    <img src="Iconos/SALIR.png" alt="Cerrar sesión" class="icon">
+                </a>
+                <h1 id="tituloEvento">CARGANDO EVENTO...</h1>
+            </div>
+        </header>
+
+        <section class="card-body">
+            <form id="formAsistencia" class="card-form" autocomplete="off" novalidate>
+                
+                <div class="form-group">
+                    <label for="codigo">CÓDIGO (ID):</label>
+                    <input 
+                        type="text" 
+                        id="codigo" 
+                        name="codigo" 
+                        placeholder="Ingrese o escanee el código" 
+                        required 
+                        oninput="this.value = this.value.toUpperCase()" 
+                        autofocus
+                    />
+                </div>
+
+                <div class="form-group">
+                    <label for="dni">DNI:</label>
+                    <input type="text" id="dni" name="dni" placeholder="Autollenado" readonly tabindex="-1" />
+                </div>
+
+                <div class="form-group">
+                    <label for="apellidos">APELLIDOS:</label>
+                    <input type="text" id="apellidos" name="apellidos" placeholder="Autollenado" readonly tabindex="-1" />
+                </div>
+
+                <div class="form-group">
+                    <label for="nombres">NOMBRES:</label>
+                    <input type="text" id="nombres" name="nombres" placeholder="Autollenado" readonly tabindex="-1" />
+                </div>
+
+                <div class="form-group">
+                    <label for="cargo">CARGO:</label>
+                    <input type="text" id="cargo" name="cargo" placeholder="Autollenado" readonly tabindex="-1" />
+                </div>
+
+                <div class="form-group">
+                    <label for="fecha">FECHA:</label>
+                    <input type="date" id="fecha" name="fecha" readonly tabindex="-1" />
+                </div>
+
+                <div class="form-group">
+                    <label for="hora">HORA (Tiempo Real):</label>
+                    <input type="time" id="hora" name="hora" readonly tabindex="-1" />
+                </div>
+
+                <button type="submit" class="submit-btn">REGISTRAR ASISTENCIA</button>
+            </form>
+        </section>
+
+        <footer class="card-footer">
+            <a href="#" title="Volver al Menú Principal" onclick="volverAlMenu(event)">
+                <img src="Imagenes/ECFM.png" alt="Logo MEF Engineering" class="logo" />
+            </a>
+        </footer>
+
+    </main>
+
+<script>
+    'use strict';
+
+    // ==========================================
+    // 1. GESTIÓN DE SESIÓN Y NAVEGACIÓN
+    // ==========================================
+    function cerrarSesion(e) {
+        if (e && typeof e.preventDefault === 'function') e.preventDefault();
+        alert("🔒 Sesión finalizada de forma segura.");
+        sessionStorage.clear();
+        localStorage.setItem("sesionActiva", "no");
+        window.location.replace("index.html");
+    }
+
+    function validarSesion() {
+        const activa = sessionStorage.getItem("sesionActiva");
+        if (activa !== "true") {
+            cerrarSesion();
+        }
+    }
+
+    function volverAlMenu(e) {
+        if (e && typeof e.preventDefault === 'function') e.preventDefault();
+        const menuDestino = sessionStorage.getItem("menuUsuario") || "Botones.html";
+        window.location.href = menuDestino;
+    }
+
+    window.addEventListener("DOMContentLoaded", validarSesion);
+    window.addEventListener("pageshow", validarSesion);
+
+    let timerInactividad;
+    const reiniciarTemporizador = () => {
+        clearTimeout(timerInactividad);
+        timerInactividad = setTimeout(() => {
+            alert("⏰ INACTIVIDAD DETECTADA. SESIÓN CERRADA.");
+            cerrarSesion();
+        }, 1 * 60 * 1000); 
+    };
+
+    ["mousemove", "keydown", "click", "scroll", "touchstart"].forEach(evento => {
+        document.addEventListener(evento, reiniciarTemporizador, { passive: true });
+    });
+    reiniciarTemporizador();
+
+
+    // ==========================================
+    // 2. LÓGICA DEL RELOJ EN TIEMPO REAL
+    // ==========================================
+    const inputFecha = document.getElementById("fecha");
+    const inputHora = document.getElementById("hora");
+
+    const actualizarReloj = () => {
+        const ahora = new Date();
+        const offset = ahora.getTimezoneOffset();
+        const fechaLocal = new Date(ahora.getTime() - (offset * 60 * 1000));
+        
+        inputFecha.value = fechaLocal.toISOString().split("T")[0];
+        inputHora.value = fechaLocal.toISOString().split("T")[1].substring(0, 5);
+    };
+
+    actualizarReloj();
+    setInterval(actualizarReloj, 30000); 
+
+
+    // ==========================================
+    // 3. LÓGICA CORE: ASISTENCIAS (ENTRADAS / SALIDAS)
+    // ==========================================
+    document.addEventListener("DOMContentLoaded", () => {
+        const eventoSeleccionado = JSON.parse(localStorage.getItem("eventoSeleccionado"));
+
+        if (!eventoSeleccionado) {
+            alert("⚠️ NO SE HA SELECCIONADO NINGÚN EVENTO VÁLIDO PARA MARCAR ASISTENCIA.");
+            window.location.replace("ListaEventos.html"); 
+            return;
+        }
+
+        const inputCodigo = document.getElementById("codigo");
+        const tituloEvento = document.getElementById("tituloEvento");
+        const formAsistencia = document.getElementById("formAsistencia");
+        
+        tituloEvento.textContent = (eventoSeleccionado.NombreEvento || "EVENTO SIN NOMBRE").toUpperCase();
+        
+        // Extraer fecha y hora programadas del evento
+        const fechaProgramada = eventoSeleccionado.FechaEvento;
+        const horaProgramada = eventoSeleccionado.HoraEntrante || "08:00";
+
+        // --- FUNCIONES DE CÁLCULO ---
+        const convertirAHoraEnMinutos = hora => {
+            const [h, m] = hora.split(":").map(Number);
+            return (h * 60) + (m || 0);
+        };
+
+        const convertirMinutosAHoras = minutos => {
+            if (minutos <= 0) return "0h 0min";
+            const h = Math.floor(minutos / 60);
+            const m = minutos % 60;
+            return `${h}h ${m}min`;
+        };
+
+        // ⚠️ NUEVO: Cálculo avanzado de tardanza que toma en cuenta la fecha
+        const calcularTardanzaReal = (fechaActual, horaActual, fechaProgramada, horaProgramada) => {
+            // Si las fechas son iguales, usamos la lógica normal
+            if (fechaActual === fechaProgramada) {
+                const entradaMin = convertirAHoraEnMinutos(horaActual);
+                const programadaMin = convertirAHoraEnMinutos(horaProgramada);
+                return Math.max(0, entradaMin - programadaMin);
+            }
+            
+            // Si la fecha actual es ANTERIOR a la fecha programada (Llegó un día antes)
+            if (new Date(fechaActual) < new Date(fechaProgramada)) {
+                return 0; // No hay tardanza si llegó antes del día
+            }
+            
+            // Si la fecha actual es POSTERIOR a la fecha programada (Llegó un día o más tarde)
+            // Calculamos cuántos días de retraso hay
+            const msPorDia = 24 * 60 * 60 * 1000;
+            const diasRetraso = Math.floor((new Date(fechaActual) - new Date(fechaProgramada)) / msPorDia);
+            
+            // Le sumamos 24h (1440 min) por cada día de retraso + la diferencia de hora
+            const programadaMin = convertirAHoraEnMinutos(horaProgramada);
+            const entradaMin = convertirAHoraEnMinutos(horaActual) + (diasRetraso * 1440);
+            
+            return Math.max(0, entradaMin - programadaMin);
+        };
+
+
+        const limpiarCampos = () => {
+            ["dni", "apellidos", "nombres", "cargo"].forEach(id => {
+                document.getElementById(id).value = "";
+            });
+        };
+
+        // --- AUTOCOMPLETADO DINÁMICO ---
+        inputCodigo.addEventListener("blur", () => {
+            const codigo = inputCodigo.value.trim().toUpperCase();
+            if (!codigo) {
+                limpiarCampos();
+                return;
+            }
+
+            const listaPersonal = JSON.parse(localStorage.getItem("personal")) || [];
+            const trabajador = listaPersonal.find(p => p.codigo === codigo);
+
+            if (trabajador) {
+                document.getElementById("dni").value = trabajador.dni || '---';
+                document.getElementById("apellidos").value = trabajador.apellidos || '---';
+                document.getElementById("nombres").value = trabajador.nombres || '---';
+                document.getElementById("cargo").value = trabajador.cargo || '---';
+            } else {
+                limpiarCampos();
+            }
+        });
+
+
+        // --- PROCESAR EL REGISTRO ---
+        formAsistencia.addEventListener("submit", function (e) {
+            e.preventDefault();
+            
+            actualizarReloj();
+
+            const codigo = inputCodigo.value.trim().toUpperCase();
+            const fechaActual = inputFecha.value;
+            const horaActual = inputHora.value;
+            
+            if (!codigo) {
+                alert("⚠️ DEBE INGRESAR UN CÓDIGO VÁLIDO.");
+                return;
+            }
+
+            const listaPersonal = JSON.parse(localStorage.getItem("personal")) || [];
+            const trabajador = listaPersonal.find(p => p.codigo === codigo);
+
+            if (!trabajador) {
+                alert(`❌ ERROR: EL CÓDIGO [${codigo}] NO ESTÁ REGISTRADO EN EL SISTEMA.`);
+                this.reset();
+                actualizarReloj();
+                inputCodigo.focus();
+                return;
+            }
+
+            const claveStorage = `asistencia_${eventoSeleccionado.NombreEvento}`;
+            const asistenciasDelEvento = JSON.parse(localStorage.getItem(claveStorage)) || [];
+
+            const registroExistente = asistenciasDelEvento.find(r => r.codigo === codigo && !r.salida);
+
+            if (registroExistente) {
+                
+                // --- FLUJO 1: MARCAR SALIDA ---
+                const entradaMin = convertirAHoraEnMinutos(registroExistente.entrada);
+                const salidaMin = convertirAHoraEnMinutos(horaActual);
+                
+                let totalMinTrabajados = salidaMin - entradaMin;
+                if (totalMinTrabajados < 0) totalMinTrabajados += 1440; 
+
+                registroExistente.salida = horaActual;
+                registroExistente.horasTrabajadas = convertirMinutosAHoras(totalMinTrabajados);
+                
+                alert(`✅ SALIDA REGISTRADA\n\nNombre: ${trabajador.nombres}\nHora de salida: ${horaActual}\nTiempo trabajado: ${registroExistente.horasTrabajadas}`);
+            
+            } else if (asistenciasDelEvento.some(r => r.codigo === codigo && r.salida)) {
+                
+                // --- FLUJO 2: TURNO COMPLETO ---
+                alert("⚠️ AVISO: Este trabajador ya registró su Entrada y Salida completa para este evento.");
+                this.reset();
+                actualizarReloj();
+                inputCodigo.focus();
+                return;
+            
+            } else {
+                
+                // --- FLUJO 3: MARCAR ENTRADA INICIAL ---
+                
+                // Usamos la nueva función inteligente que cruza las fechas
+                const tardanzaMin = calcularTardanzaReal(fechaActual, horaActual, fechaProgramada, horaProgramada);
+
+                asistenciasDelEvento.push({
+                    codigo: codigo,
+                    dni: trabajador.dni || "S/D",
+                    apellidos: trabajador.apellidos || "S/A",
+                    nombres: trabajador.nombres || "S/N",
+                    cargo: trabajador.cargo || "No Asignado",
+                    fecha: fechaActual,
+                    entrada: horaActual,
+                    salida: "", 
+                    tardanza: convertirMinutosAHoras(tardanzaMin),
+                    horasTrabajadas: "0h 0min"
+                });
+
+                // Si la fecha actual es menor a la programada, alertamos que está marcando un día antes
+                let msjExtra = "";
+                if (new Date(fechaActual) < new Date(fechaProgramada)) {
+                    msjExtra = "\n(Marcó asistencia un día antes)";
+                } else {
+                    msjExtra = tardanzaMin > 0 ? `\nTardanza de: ${convertirMinutosAHoras(tardanzaMin)}` : '\n(Llegó a tiempo)';
+                }
+
+                alert(`✅ ENTRADA REGISTRADA\n\nNombre: ${trabajador.nombres}\nHora de ingreso: ${horaActual}${msjExtra}`);
+            }
+
+            localStorage.setItem(claveStorage, JSON.stringify(asistenciasDelEvento));
+            
+            limpiarCampos();
+            inputCodigo.value = '';
+            actualizarReloj();
+            inputCodigo.focus();
+        });
+    });
+</script>
+
+</body>
+</html>

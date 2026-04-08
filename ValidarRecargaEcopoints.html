@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>CONFIRMAR COMPRA DE ECOPOINTS | MEF Engineering & Soluciones</title>
+    
+    <style>
+        /* =====================================================
+           IMPORTAR FUENTE (Google Fonts - Inter)
+        ===================================================== */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+        /* =====================================================
+           VARIABLES PRO
+        ===================================================== */
+        :root {
+            --mme-primary: #1d3b20;
+            --mme-primary-hover: #142d17;
+            --mme-accent: #2e7d32;
+            --mme-danger: #d32f2f;
+            --mme-danger-hover: #b71c1c;
+            --bg-app: #f4f6f5;
+            --bg-card: #ffffff;
+            --text-main: #222222;
+            --text-label: #555555;
+            --border-color: #dcdcdc;
+            --shadow-card: 0 10px 30px rgba(0, 0, 0, 0.08);
+            --transition-smooth: all 0.25s cubic-bezier(0.25, 0.8, 0.25, 1);
+            --font-base: 'Inter', -apple-system, sans-serif;
+        }
+
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+        }
+
+        body { 
+            background-color: var(--bg-app); 
+            font-family: var(--font-base); 
+            color: var(--text-main); 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            min-height: 100vh;
+            min-height: 100svh;
+            -webkit-font-smoothing: antialiased; 
+            padding: 20px;
+        }
+        
+        .card { 
+            width: 100%; 
+            max-width: 420px; 
+            background-color: var(--bg-card); 
+            border-radius: 16px; 
+            box-shadow: var(--shadow-card); 
+            overflow: hidden; 
+            border: 1.5px solid var(--mme-primary); 
+            display: flex; 
+            flex-direction: column; 
+        }
+
+        .card-header { 
+            background-color: var(--mme-primary); 
+            color: #ffffff; 
+            padding: 20px; 
+            position: relative; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .menu-title { 
+            font-size: 1.1rem; 
+            font-weight: 700; 
+            letter-spacing: 1px; 
+            text-transform: uppercase; 
+            margin: 0; 
+            text-align: center; 
+        }
+
+        .icon-link { 
+            position: absolute; 
+            left: 20px; 
+            display: flex; 
+            align-items: center; 
+        }
+
+        .icon { 
+            width: 24px; 
+            height: 24px; 
+            cursor: pointer; 
+            transition: transform 0.2s ease; 
+            filter: brightness(0) invert(1); 
+        }
+
+        .icon:hover { 
+            transform: scale(1.15); 
+        }
+        
+        .card-form { 
+            padding: 24px 20px; 
+            display: flex; 
+            flex-direction: column; 
+            gap: 18px; 
+        }
+
+        /* =====================================================
+           DETALLE DINÁMICO
+        ===================================================== */
+        .detalle-plan { 
+            background: linear-gradient(145deg, #f1f8f4, #ffffff); 
+            border: 1.5px solid var(--mme-accent); 
+            border-radius: 12px; 
+            padding: 18px; 
+            box-shadow: 0 4px 10px rgba(46, 125, 50, 0.08); 
+        }
+
+        .detalle-plan h2 { 
+            color: var(--mme-primary); 
+            font-size: 1.1rem; 
+            margin-bottom: 6px; 
+            font-weight: 800; 
+            text-align: center; 
+        }
+
+        .detalle-plan p { 
+            font-size: 0.85rem; 
+            color: var(--text-label); 
+            margin-bottom: 12px; 
+            text-align: center; 
+            line-height: 1.3; 
+        }
+
+        .precio-plan { 
+            font-size: 1.2rem; 
+            font-weight: 800; 
+            color: var(--mme-accent); 
+            text-align: center; 
+            background: #e8f5e9; 
+            padding: 8px; 
+            border-radius: 8px; 
+            display: block; 
+            width: 100%; 
+        }
+
+        /* ESTILO PARA CANJE (Rojo) */
+        .detalle-canje { 
+            border-color: var(--mme-danger); 
+            background: linear-gradient(145deg, #fffafa, #ffffff); 
+        }
+
+        .detalle-canje h2 { 
+            color: var(--mme-danger); 
+        }
+
+        .tabla-resumen { 
+            width: 100%; 
+            border-collapse: collapse; 
+            margin-top: 10px; 
+            font-size: 0.85rem; 
+            background: #fff; 
+            border-radius: 8px; 
+            overflow: hidden; 
+            border: 1px solid var(--border-color); 
+        }
+
+        .tabla-resumen th, .tabla-resumen td { 
+            border: 1px solid var(--border-color); 
+            padding: 10px; 
+            text-align: left; 
+        }
+
+        .tabla-resumen th { 
+            background-color: #f4f6f5; 
+            color: var(--text-main); 
+            width: 40%; 
+        }
+
+        .tabla-resumen td { 
+            font-weight: 600; 
+            color: #333; 
+        }
+
+        /* =====================================================
+           FORMULARIO Y BÚSQUEDA
+        ===================================================== */
+        .form-group label { 
+            font-size: 0.8rem; 
+            font-weight: 700; 
+            color: var(--mme-primary); 
+            margin-bottom: 6px; 
+            display: block; 
+            text-transform: uppercase; 
+        }
+
+        .search-wrapper { 
+            display: flex; 
+            gap: 8px; 
+        }
+
+        .search-wrapper input { 
+            flex: 1;
+            padding: 12px 14px; 
+            font-size: 0.95rem; 
+            font-family: var(--font-base); 
+            color: var(--text-main); 
+            border: 1.5px solid var(--border-color); 
+            border-radius: 8px; 
+            background-color: #fafbfa; 
+            transition: var(--transition-smooth);
+            outline: none;
+        }
+
+        .search-wrapper input:focus { 
+            background-color: #ffffff; 
+            border-color: var(--mme-accent); 
+            box-shadow: inset 4px 0 0 var(--mme-primary), 0 0 0 3px rgba(46, 125, 50, 0.1); 
+        }
+
+        .search-wrapper input::placeholder {
+            color: #a0a0a0;
+        }
+
+        .btn-search { 
+            width: 55px; 
+            background: var(--mme-primary); 
+            border-radius: 8px; 
+            border: none; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            cursor: pointer; 
+            transition: var(--transition-smooth);
+        }
+
+        .btn-search:hover {
+            background: var(--mme-primary-hover);
+        }
+
+        .btn-search img { 
+            width: 22px; 
+            
+        }
+
+        /* =====================================================
+           RESULTADOS Y ALERTAS
+        ===================================================== */
+        .info-cliente { 
+            display: none; 
+            background: #ffffff; 
+            border: 1.5px solid var(--mme-accent); 
+            padding: 15px; 
+            border-radius: 8px; 
+            box-shadow: 0 4px 10px rgba(46, 125, 50, 0.05);
+        }
+
+        .info-cliente p { 
+            font-size: 0.95rem; 
+            margin-bottom: 8px; 
+        }
+
+        .badge-saldo {
+            background: #fff3e0; 
+            color: #e65100; 
+            font-weight: 800; 
+            padding: 6px 10px; 
+            border-radius: 6px; 
+            display: inline-block;
+            margin-top: 5px;
+        }
+
+        .alerta { 
+            display: none; 
+            background: #ffebee; 
+            color: var(--mme-danger); 
+            padding: 12px; 
+            border-radius: 8px; 
+            font-size: 0.85rem; 
+            font-weight: 700; 
+            text-align: center; 
+            margin-top: 15px; 
+            border: 1px solid #ffcdd2;
+        }
+
+        /* BOTONES DE ACCIÓN */
+        .btn-confirmar { 
+            width: 100%; 
+            margin-top: 18px; 
+            padding: 16px; 
+            font-size: 0.95rem; 
+            font-weight: 700; 
+            letter-spacing: 1px; 
+            text-transform: uppercase; 
+            background: var(--mme-accent); 
+            color: #ffffff; 
+            border: none; 
+            border-radius: 10px; 
+            cursor: pointer; 
+            display: none; 
+            transition: var(--transition-smooth); 
+            box-shadow: 0 4px 12px rgba(46, 125, 50, 0.25);
+        }
+
+        .btn-confirmar:hover {
+            transform: translateY(-2px);
+            background: #27692b;
+        }
+
+        .btn-confirmar:active { 
+            transform: scale(0.98); 
+        }
+
+        .btn-rojo { 
+            background: var(--mme-danger) !important; 
+            box-shadow: 0 4px 12px rgba(211, 47, 47, 0.25) !important;
+        }
+
+        .btn-rojo:hover { 
+            background: var(--mme-danger-hover) !important; 
+        }
+
+        /* =====================================================
+           FOOTER
+        ===================================================== */
+        .card-footer { 
+            background-color: #f9fafa; 
+            text-align: center; 
+            padding: 15px; 
+            border-top: 1px solid var(--border-color); 
+            margin-top: auto;
+        }
+
+        .card-footer .logo { 
+            width: 75px; 
+            transition: transform 0.2s ease;
+        }
+
+        .card-footer a:hover .logo {
+            transform: scale(1.05);
+        }
+
+        /* =====================================================
+           RESPONSIVE MÓVIL
+        ===================================================== */
+        @media (max-width: 480px) { 
+            body { 
+                padding: 10px;
+                align-items: flex-start; 
+            } 
+            .card { 
+                border-radius: 12px; 
+                min-height: 100%; 
+            } 
+            .btn-confirmar { 
+                margin-bottom: 10px; 
+            } 
+        }
+    </style>
+</head>
+<body>
+
+<main class="card">
+    <header class="card-header">
+        <a href="#" title="Volver atrás" class="icon-link" id="btnVolverAtras">
+            <img src="Iconos/VOLVER.png" alt="Volver atrás" class="icon">
+        </a>
+        <h1 class="menu-title">CONFIRMAR ECOPOINTS</h1>
+    </header>
+
+    <div class="card-form">
+        
+        <div id="detallePlanContainer" class="detalle-plan">
+            <p>Cargando información...</p>
+        </div>
+
+        <div class="form-group">
+            <label for="busquedaCodigo">CÓDIGO DE CLIENTE (ID):</label>
+            <div class="search-wrapper">
+                <input type="text" id="busquedaCodigo" placeholder="Ej. P001" autocomplete="off" autofocus>
+                <button type="button" class="btn-search" id="btnBuscar" aria-label="Buscar cliente">
+                    <img src="Iconos/LUPA1.png" alt="">
+                </button>
+            </div>
+        </div>
+
+        <div id="resultadoBusqueda" class="info-cliente">
+            <p><strong>Nombre:</strong> <span id="resNombre">---</span></p>
+            <p><strong>DNI:</strong> <span id="resDni">---</span></p>
+            <p class="badge-saldo">Saldo Actual: <span id="resPuntosActuales">0</span> pts</p>
+
+            <div id="msgAlerta" class="alerta" role="alert"></div>
+
+            <button id="btnConfirmar" class="btn-confirmar">CONFIRMAR OPERACIÓN</button>
+        </div>
+    </div>
+
+    <footer class="card-footer">
+        <a href="#" title="Volver al Menú Principal" id="btnVolverMenu">
+            <img src="Imagenes/ECFM.png" alt="Logo de MEF Engineering" class="logo" />
+        </a>
+    </footer>
+</main>
+
+<script>
+    'use strict';
+
+    document.addEventListener('DOMContentLoaded', () => {
+        
+        // --- 1. SERVICIOS Y UTILIDADES (Incluye Timer de Inactividad) ---
+        const StorageService = {
+            cerrarSesion: (mensaje = "🔒 Sesión finalizada de forma segura.") => {
+                alert(mensaje);
+                sessionStorage.clear();
+                localStorage.setItem("sesionActiva", "no");
+                window.location.replace("index.html");
+            },
+            validarSesion: () => {
+                if (sessionStorage.getItem("sesionActiva") !== "true") {
+                    StorageService.cerrarSesion("⚠️ ACCESO DENEGADO. SESIÓN CERRADA.");
+                }
+            },
+            obtenerPersonal: () => JSON.parse(localStorage.getItem('personal')) || [],
+            guardarPersonal: (data) => localStorage.setItem('personal', JSON.stringify(data)),
+            obtenerMenuUrl: () => sessionStorage.getItem("menuUsuario") || "Botones.html"
+        };
+
+        // Timer de Inactividad (1 minuto)
+        let timerInactividad;
+        const reiniciarTemporizador = () => {
+            clearTimeout(timerInactividad);
+            timerInactividad = setTimeout(() => {
+                StorageService.cerrarSesion("⏰ TIEMPO DE INACTIVIDAD EXCEDIDO. SESIÓN CERRADA.");
+            }, 1 * 60 * 1000); 
+        };
+
+        ["mousemove", "keydown", "click", "scroll", "touchstart"].forEach(evento => {
+            document.addEventListener(evento, reiniciarTemporizador, { passive: true });
+        });
+        reiniciarTemporizador();
+
+
+        // --- 2. CAPTURAR VARIABLES DE LA URL ---
+        const urlParams = new URLSearchParams(window.location.search);
+        const accion = urlParams.get('accion') || 'generico';
+        const puntosURL = parseInt(urlParams.get('puntos'), 10) || 0;
+        
+        // Variables de Reciclaje y Canje
+        const material = urlParams.get('material') || 'No especificado';
+        const kilos = parseFloat(urlParams.get('kilos')) || 0;
+        const servicioCanje = urlParams.get('servicio') || 'No especificado';
+        const costoCanje = parseInt(urlParams.get('costo'), 10) || 0;
+
+        // --- 3. REFERENCIAS AL DOM ---
+        const DOM = {
+            contenedorPlan: document.getElementById('detallePlanContainer'),
+            inputBusqueda: document.getElementById('busquedaCodigo'),
+            btnBuscar: document.getElementById('btnBuscar'),
+            resultadoBusqueda: document.getElementById('resultadoBusqueda'),
+            resNombre: document.getElementById('resNombre'),
+            resDni: document.getElementById('resDni'),
+            resPuntosActuales: document.getElementById('resPuntosActuales'),
+            msgAlerta: document.getElementById('msgAlerta'),
+            btnConfirmar: document.getElementById('btnConfirmar'),
+            btnVolverAtras: document.getElementById('btnVolverAtras'),
+            btnVolverMenu: document.getElementById('btnVolverMenu')
+        };
+
+        // --- 4. INICIALIZACIÓN DE LA INTERFAZ ---
+        function renderizarInterfaz() {
+            StorageService.validarSesion();
+
+            if (accion === 'canje') {
+                DOM.contenedorPlan.className = 'detalle-plan detalle-canje';
+                DOM.contenedorPlan.innerHTML = `
+                    <h2>🎁 CANJE DE PREMIO</h2>
+                    <p>Verifique que el cliente tenga saldo suficiente.</p>
+                    <table class="tabla-resumen">
+                        <tr><th>Servicio</th><td>${servicioCanje}</td></tr>
+                        <tr><th>Costo</th><td style="color: var(--mme-danger); font-size: 1.1em;">-${costoCanje} pts</td></tr>
+                    </table>
+                `;
+            } else if (accion === 'reciclaje') {
+                DOM.contenedorPlan.innerHTML = `
+                    <h2>♻️ RESUMEN RECICLAJE</h2>
+                    <table class="tabla-resumen">
+                        <tr><th>Material</th><td>${material}</td></tr>
+                        <tr><th>Peso</th><td>${kilos} Kg</td></tr>
+                        <tr><th>Premio</th><td style="color: var(--mme-accent); font-size: 1.1em;">+${puntosURL} pts</td></tr>
+                    </table>
+                `;
+            } else if (puntosURL > 0) {
+                DOM.contenedorPlan.innerHTML = `
+                    <h2>⭐ SUMAR PUNTOS</h2>
+                    <div class="precio-plan">+ ${puntosURL} Ecopoints</div>
+                `;
+            } else {
+                DOM.contenedorPlan.innerHTML = `
+                    <h2 style="color: var(--mme-danger);">⚠️ ERROR</h2>
+                    <p>Operación no válida. Faltan datos en la URL.</p>
+                `;
+            }
+        }
+
+        // --- 5. LÓGICA DE BÚSQUEDA ---
+        function buscarCliente() {
+            const codigo = DOM.inputBusqueda.value.trim().toUpperCase();
+            if (!codigo) {
+                alert("Por favor, ingrese un código válido.");
+                return;
+            }
+
+            const personal = StorageService.obtenerPersonal();
+            const clientePersonal = personal.find(p => p.codigo === codigo);
+
+            if (clientePersonal) {
+                DOM.resultadoBusqueda.style.display = 'block';
+                DOM.resNombre.innerText = `${clientePersonal.nombres || ''} ${clientePersonal.apellidos || ''}`.trim();
+                DOM.resDni.innerText = clientePersonal.dni || '---';
+                
+                const puntosActuales = parseInt(clientePersonal.puntos, 10) || 0;
+                DOM.resPuntosActuales.innerText = puntosActuales;
+
+                // Resetear estado del botón y alertas
+                DOM.msgAlerta.style.display = 'none';
+                DOM.btnConfirmar.style.display = 'block';
+                DOM.btnConfirmar.className = 'btn-confirmar'; 
+                DOM.btnConfirmar.innerText = 'CONFIRMAR OPERACIÓN';
+
+                // Validaciones específicas de canje
+                if (accion === 'canje') {
+                    if (puntosActuales < costoCanje) {
+                        DOM.msgAlerta.innerText = `⚠️ SALDO INSUFICIENTE. Faltan ${costoCanje - puntosActuales} pts.`;
+                        DOM.msgAlerta.style.display = 'block';
+                        DOM.btnConfirmar.style.display = 'none'; 
+                    } else {
+                        DOM.btnConfirmar.innerText = 'DESCONTAR PUNTOS';
+                        DOM.btnConfirmar.classList.add('btn-rojo'); 
+                    }
+                }
+            } else {
+                DOM.resultadoBusqueda.style.display = 'none';
+                alert("⚠️ CLIENTE NO ENCONTRADO en la base de datos.");
+            }
+        }
+
+        // --- 6. LÓGICA DE OPERACIÓN FINAL (GUARDAR KILOS Y PUNTOS) ---
+        function finalizarOperacion() {
+            const codigoCliente = DOM.inputBusqueda.value.trim().toUpperCase();
+            let personal = StorageService.obtenerPersonal();
+            const idxPersonal = personal.findIndex(p => p.codigo === codigoCliente);
+
+            if (idxPersonal !== -1) {
+                let puntosActuales = parseInt(personal[idxPersonal].puntos, 10) || 0;
+
+                if (accion === 'canje') {
+                    // Acción Canje (Resta)
+                    personal[idxPersonal].puntos = puntosActuales - costoCanje;
+                    alert(`✅ CANJE EXITOSO\n\nSe descontaron ${costoCanje} pts.\nNuevo saldo: ${personal[idxPersonal].puntos} Ecopoints.`);
+                
+                } else if (accion === 'reciclaje') {
+                    // Acción Reciclaje (Suma Puntos y Suma Kilos al material específico)
+                    personal[idxPersonal].puntos = puntosActuales + puntosURL;
+                    
+                    // Identificador del material (lo convierte a mayúsculas para evitar errores)
+                    const matCheck = material.toUpperCase();
+                    
+                    if (matCheck.includes('PLÁSTICO') || matCheck.includes('PET')) {
+                        personal[idxPersonal].kilosPlastico = (parseFloat(personal[idxPersonal].kilosPlastico) || 0) + kilos;
+                    } 
+                    else if (matCheck.includes('PAPEL')) {
+                        personal[idxPersonal].kilosPapel = (parseFloat(personal[idxPersonal].kilosPapel) || 0) + kilos;
+                    }
+                    else if (matCheck.includes('CARTÓN')) {
+                        personal[idxPersonal].kilosCarton = (parseFloat(personal[idxPersonal].kilosCarton) || 0) + kilos;
+                    }
+                    else if (matCheck === 'METALES' || matCheck.includes('FIERRO')) {
+                        personal[idxPersonal].kilosMetales = (parseFloat(personal[idxPersonal].kilosMetales) || 0) + kilos;
+                    }
+                    else if (matCheck.includes('COBRE')) {
+                        personal[idxPersonal].kilosCobre = (parseFloat(personal[idxPersonal].kilosCobre) || 0) + kilos;
+                    }
+                    else if (matCheck.includes('BRONCE')) {
+                        personal[idxPersonal].kilosBronce = (parseFloat(personal[idxPersonal].kilosBronce) || 0) + kilos;
+                    }
+                    else if (matCheck.includes('ALUMINIO')) {
+                        personal[idxPersonal].kilosAluminio = (parseFloat(personal[idxPersonal].kilosAluminio) || 0) + kilos;
+                    }
+                    else if (matCheck.includes('RAEE')) {
+                        personal[idxPersonal].kilosRaee = (parseFloat(personal[idxPersonal].kilosRaee) || 0) + kilos;
+                    }
+
+                    alert(`✅ RECICLAJE REGISTRADO\n\nSe sumaron ${puntosURL} pts y ${kilos} Kg de ${material}.\nNuevo saldo: ${personal[idxPersonal].puntos} Ecopoints.`);
+                
+                } else {
+                    // Suma genérica de puntos (Recarga normal)
+                    personal[idxPersonal].puntos = puntosActuales + puntosURL;
+                    alert(`✅ OPERACIÓN EXITOSA\n\nSe sumaron ${puntosURL} pts.\nNuevo saldo: ${personal[idxPersonal].puntos} Ecopoints.`);
+                }
+
+                // Guardamos en la base de datos y regresamos al menú
+                StorageService.guardarPersonal(personal);
+                window.location.href = StorageService.obtenerMenuUrl(); 
+
+            } else {
+                alert("⚠️ Error: El cliente ya no existe en la base de datos.");
+            }
+        }
+
+        // --- 7. EVENT LISTENERS ---
+        window.addEventListener("pageshow", StorageService.validarSesion);
+        
+        DOM.inputBusqueda.addEventListener('input', function() {
+            this.value = this.value.toUpperCase();
+        });
+        
+        DOM.inputBusqueda.addEventListener('keypress', (e) => { 
+            if(e.key === 'Enter') {
+                e.preventDefault();
+                buscarCliente(); 
+            }
+        });
+
+        DOM.btnBuscar.addEventListener('click', buscarCliente);
+        DOM.btnConfirmar.addEventListener('click', finalizarOperacion);
+
+        DOM.btnVolverAtras.addEventListener('click', (e) => {
+            e.preventDefault();
+            window.history.back();
+        });
+
+        DOM.btnVolverMenu.addEventListener('click', (e) => {
+            e.preventDefault();
+            window.location.href = StorageService.obtenerMenuUrl();
+        });
+
+        // Inicializar
+        renderizarInterfaz();
+    });
+</script>
+</body>
+</html>

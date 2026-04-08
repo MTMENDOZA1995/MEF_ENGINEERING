@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>CONFIRMAR COMPRA DE MEMBRESIA | MEF Engineering & Soluciones</title>
+    <link rel="stylesheet" href="CrearLA.css" />
+    
+    <style>
+        /* =====================================================
+           IMPORTAR FUENTE (Google Fonts - Inter)
+        ===================================================== */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+        /* =====================================================
+           VARIABLES PRO
+        ===================================================== */
+        :root {
+            --mme-primary: #1d3b20;
+            --mme-primary-hover: #142d17;
+            --mme-accent: #2e7d32;
+            --bg-app: #f4f6f5;
+            --bg-card: #ffffff;
+            --text-main: #222222;
+            --text-label: #555555;
+            --border-color: #dcdcdc;
+            
+            --shadow-card: 0 10px 30px rgba(0, 0, 0, 0.08);
+            --shadow-btn: 0 4px 12px rgba(46, 125, 50, 0.2);
+            --transition-smooth: all 0.25s cubic-bezier(0.25, 0.8, 0.25, 1);
+            --font-base: 'Inter', -apple-system, sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-app);
+            font-family: var(--font-base);
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            min-height: 100svh;
+            -webkit-font-smoothing: antialiased;
+            padding: 20px;
+        }
+
+        .card {
+            width: 100%;
+            max-width: 420px;
+            background-color: var(--bg-card);
+            border-radius: 16px;
+            box-shadow: var(--shadow-card);
+            overflow: hidden;
+            border: 1.5px solid var(--mme-primary);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-header {
+            background-color: var(--mme-primary);
+            color: #ffffff;
+            padding: 20px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .menu-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin: 0;
+            text-align: center;
+        }
+
+        .card-header .icon-link {
+            position: absolute;
+            left: 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .card-header .icon {
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .card-header .icon:hover {
+            transform: scale(1.15);
+        }
+
+        .card-form {
+            padding: 24px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        /* =====================================================
+           ESTILO: DETALLE DEL PLAN SELECCIONADO
+        ===================================================== */
+        .detalle-plan {
+            background: linear-gradient(145deg, #f8fbf9, #ffffff);
+            border: 1.5px solid var(--mme-accent);
+            border-radius: 12px;
+            padding: 18px;
+            box-shadow: 0 4px 10px rgba(46, 125, 50, 0.08);
+            position: relative;
+        }
+
+        .detalle-plan h2 {
+            color: var(--mme-primary);
+            font-size: 1.1rem;
+            margin-bottom: 6px;
+            font-weight: 800;
+            text-align: center;
+        }
+
+        .detalle-plan p {
+            font-size: 0.85rem;
+            color: var(--text-label);
+            margin-bottom: 12px;
+            text-align: center;
+            line-height: 1.3;
+        }
+
+        .detalle-plan ul {
+            list-style: none;
+            font-size: 0.85rem;
+            color: var(--text-main);
+            margin-bottom: 12px;
+            padding: 0 10px;
+        }
+
+        .detalle-plan li {
+            margin-bottom: 6px;
+            display: flex;
+            align-items: flex-start;
+            gap: 6px;
+        }
+
+        .detalle-plan li::before {
+            content: "✔️";
+            font-size: 0.8rem;
+        }
+
+        .detalle-plan .precio-plan {
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: var(--mme-accent);
+            text-align: center;
+            background: #e8f5e9;
+            padding: 8px;
+            border-radius: 8px;
+            display: block;
+            width: 100%;
+        }
+
+        /* ===================================================== */
+
+        .card-form label {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--mme-primary);
+            margin-bottom: 6px;
+            display: block;
+            text-transform: uppercase;
+        }
+
+        .search-wrapper {
+            display: flex;
+            gap: 8px;
+        }
+
+        .card-form input {
+            width: 100%;
+            padding: 12px 14px;
+            font-size: 0.95rem;
+            font-family: var(--font-base);
+            color: var(--text-main);
+            border: 1.5px solid var(--border-color);
+            border-radius: 8px;
+            background-color: #fafbfa;
+            transition: var(--transition-smooth);
+            outline: none;
+        }
+
+        .card-form input:focus {
+            background-color: #ffffff;
+            border-color: var(--mme-accent);
+            box-shadow: inset 4px 0 0 var(--mme-primary), 0 0 0 3px rgba(46, 125, 50, 0.1);
+        }
+
+        .btn-search {
+            width: 55px;
+            background: var(--mme-primary);
+            border-radius: 8px;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+        }
+
+        .btn-search:hover {
+            background: var(--mme-primary-hover);
+        }
+
+        .btn-search img {
+            width: 22px;
+            
+        }
+
+        .info-cliente {
+            display: none;
+            background: #ffffff;
+            border: 1px solid var(--mme-accent);
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .info-cliente p {
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+            color: var(--text-main);
+        }
+
+        .info-cliente strong {
+            color: var(--mme-primary);
+        }
+
+        .alerta-activa {
+            display: none;
+            background: #ffebee;
+            color: #d32f2f;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-align: center;
+            margin-top: 15px;
+            border: 1px solid #ffcdd2;
+        }
+
+        .btn-confirmar {
+            width: 100%;
+            margin-top: 15px;
+            padding: 16px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            background: var(--mme-accent);
+            color: #ffffff;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            box-shadow: var(--shadow-btn);
+            display: none;
+        }
+
+        .btn-confirmar:hover {
+            background: var(--mme-primary-hover);
+            transform: translateY(-2px);
+        }
+
+        .btn-confirmar:active {
+            transform: scale(0.98);
+        }
+
+        .card-footer {
+            background-color: #f9fafa;
+            text-align: center;
+            padding: 15px;
+            border-top: 1px solid var(--border-color);
+            margin-top: auto;
+        }
+
+        .card-footer .logo {
+            width: 75px;
+            height: auto;
+            transition: transform 0.2s ease;
+        }
+
+        .card-footer a:hover .logo {
+            transform: scale(1.05);
+        }
+
+        @media (max-width: 480px) {
+            body { padding: 10px; align-items: flex-start; }
+            .card { border-radius: 12px; min-height: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+<main class="card">
+    <header class="card-header">
+      <a href="#" title="Volver atrás" class="icon-link" onclick="window.history.back(); return false;">
+        <img src="Iconos/VOLVER.png" alt="Volver atrás" class="icon" style="filter: brightness(0) invert(1);">
+      </a>
+      <h1 class="menu-title">CONFIRMAR COMPRA</h1>
+    </header>
+
+    <section class="card-form">
+        
+        <div id="detallePlanContainer" class="detalle-plan">
+            Cargando información del plan...
+        </div>
+
+        <div class="form-group">
+            <label for="busquedaCodigo">CÓDIGO DE CLIENTE (ID):</label>
+            <div class="search-wrapper">
+                <input type="text" id="busquedaCodigo" placeholder="Ej. P001" oninput="this.value = this.value.toUpperCase()">
+                <button type="button" class="btn-search" onclick="buscarCliente()" title="Buscar Cliente">
+                    <img src="Iconos/LUPA1.png" alt="Buscar">
+                </button>
+            </div>
+        </div>
+
+        <div id="resultadoBusqueda" class="info-cliente">
+            <p><strong>Nombre:</strong> <span id="resNombre">---</span></p>
+            <p><strong>DNI:</strong> <span id="resDni">---</span></p>
+            <p><strong>N° Celular:</strong> <span id="resCelular">---</span></p>
+            
+            <div id="msgYaTienePlan" class="alerta-activa">
+                ⚠️ ESTE CLIENTE YA CUENTA CON UNA MEMBRESÍA ACTIVA.
+            </div>
+
+            <button id="btnConfirmar" class="btn-confirmar" onclick="finalizarRegistro()">COMPRAR Y ACTIVAR</button>
+        </div>
+    </section>
+
+    <footer class="card-footer">
+      <a href="#" title="Volver al Menú Principal" onclick="volverAlMenu(event)">
+        <img src="Imagenes/ECFM.png" alt="Logo de MEF Engineering" class="logo" />
+      </a>
+    </footer>
+</main>
+
+<script>
+    'use strict';
+
+    // ==========================================
+    // 1. INICIALIZACIÓN Y DETALLE DEL PLAN
+    // ==========================================
+    const urlParams = new URLSearchParams(window.location.search);
+    const planURL = (urlParams.get('plan') || '').toLowerCase();
+    
+    // Base de datos de información visual
+    const infoPlanes = {
+        'basico': {
+            titulo: '🌱 ECO BÁSICO',
+            descripcion: 'El punto de partida ideal para acceder a nuestros servicios.',
+            beneficios: [
+                'Recibe 20 Créditos para servicios',
+                'Acceso general a la plataforma',
+                'Generación básica de Ecopoints'
+            ],
+            precio: 'S/ 15.00'
+        },
+        'aventura': {
+            titulo: '🌿 ECO AVENTURA',
+            descripcion: 'Perfecto para clientes frecuentes que buscan mayores recompensas.',
+            beneficios: [
+                'Recibe 30 Créditos para servicios',
+                'Multiplicador: +20% en Ecopoints',
+                'Descuentos exclusivos en tienda'
+            ],
+            precio: 'S/ 25.00'
+        },
+        'elite': {
+            titulo: '🌳 ECO ELITE',
+            descripcion: 'La experiencia VIP máxima para clientes comprometidos con SSOMA.',
+            beneficios: [
+                'Recibe 70 Créditos para servicios',
+                'Multiplicador: +50% en Ecopoints',
+                'Soporte prioritario y atención VIP'
+            ],
+            precio: 'S/ 50.00'
+        }
+    };
+
+    const contenedorPlan = document.getElementById('detallePlanContainer');
+    const planSeleccionado = infoPlanes[planURL];
+
+    if (planSeleccionado) {
+        contenedorPlan.innerHTML = `
+            <h2>${planSeleccionado.titulo}</h2>
+            <p>${planSeleccionado.descripcion}</p>
+            <ul>
+                ${planSeleccionado.beneficios.map(beneficio => `<li>${beneficio}</li>`).join('')}
+            </ul>
+            <div class="precio-plan">Valor a pagar: ${planSeleccionado.precio}</div>
+        `;
+    } else {
+        contenedorPlan.innerHTML = `<h2 style="color: #d32f2f;">⚠️ PLAN NO VÁLIDO</h2><p>Por favor, regresa a la pantalla anterior y selecciona un plan válido.</p>`;
+    }
+
+    const inputBusqueda = document.getElementById('busquedaCodigo');
+
+
+    // ==========================================
+    // 2. GESTIÓN DE SESIÓN Y SEGURIDAD
+    // ==========================================
+    function cerrarSesion(e, mensaje) {
+        if (e && typeof e.preventDefault === 'function') e.preventDefault();
+        if (mensaje) alert(mensaje);
+        
+        sessionStorage.clear();
+        localStorage.setItem("sesionActiva", "no");
+        window.location.replace("index.html");
+    }
+
+    function validarSesion() {
+        const activa = sessionStorage.getItem("sesionActiva");
+        if (activa !== "true") {
+            cerrarSesion(null, "⚠️ ACCESO DENEGADO. SESIÓN CERRADA.");
+        }
+    }
+
+    function volverAlMenu(e) {
+        if (e) e.preventDefault();
+        window.location.href = sessionStorage.getItem("menuUsuario") || "Botones.html";
+    }
+
+    window.addEventListener("DOMContentLoaded", validarSesion);
+    window.addEventListener("pageshow", validarSesion);
+
+    let timerInactividad;
+    const reiniciarTemporizador = () => {
+        clearTimeout(timerInactividad);
+        timerInactividad = setTimeout(() => {
+            cerrarSesion(null, "⏰ TIEMPO DE INACTIVIDAD EXCEDIDO. SESIÓN CERRADA.");
+        }, 1 * 60 * 1000); 
+    };
+
+    ["mousemove", "keydown", "click", "scroll", "touchstart"].forEach(evento => {
+        document.addEventListener(evento, reiniciarTemporizador, { passive: true });
+    });
+    reiniciarTemporizador();
+
+
+    // ==========================================
+    // 3. LÓGICA DE BÚSQUEDA Y COMPRA
+    // ==========================================
+    function buscarCliente() {
+        const codigo = inputBusqueda.value.trim().toUpperCase();
+        if (!codigo) return;
+
+        const personal = JSON.parse(localStorage.getItem('personal')) || [];
+        const clientePersonal = personal.find(p => p.codigo === codigo);
+
+        if (clientePersonal) {
+            document.getElementById('resultadoBusqueda').style.display = 'block';
+            document.getElementById('resNombre').innerText = `${clientePersonal.nombres} ${clientePersonal.apellidos}`;
+            document.getElementById('resDni').innerText = clientePersonal.dni;
+            
+            // ⚠️ CORRECCIÓN: Mostramos el celular en vez del cargo
+            document.getElementById('resCelular').innerText = clientePersonal.celular || 'No registrado';
+
+            // Validar si ya tiene un plan activo
+            if (clientePersonal.membresiaActual && clientePersonal.membresiaActual.trim() !== "") {
+                document.getElementById('msgYaTienePlan').style.display = 'block';
+                document.getElementById('btnConfirmar').style.display = 'none';
+            } else {
+                document.getElementById('msgYaTienePlan').style.display = 'none';
+                document.getElementById('btnConfirmar').style.display = 'block';
+            }
+        } else {
+            document.getElementById('resultadoBusqueda').style.display = 'none';
+            const irARegistrar = confirm("⚠️ CLIENTE NO ENCONTRADO.\n¿Ir al módulo de Registro de Personal ahora?");
+            if (irARegistrar) window.location.href = 'RegistroP.html'; 
+        }
+    }
+
+    inputBusqueda.addEventListener('keypress', (e) => {
+        if(e.key === 'Enter') {
+            e.preventDefault();
+            buscarCliente();
+        }
+    });
+
+    function finalizarRegistro() {
+        if (!planSeleccionado) {
+            alert("⛔ ERROR: No hay un plan válido seleccionado.");
+            return;
+        }
+
+        const codigoCliente = inputBusqueda.value.trim().toUpperCase();
+
+        const fechaActualLocal = new Date();
+        fechaActualLocal.setMinutes(fechaActualLocal.getMinutes() - fechaActualLocal.getTimezoneOffset());
+        const fechaMovimiento = fechaActualLocal.toISOString().split('T')[0];
+
+        // ⚠️ CORRECCIÓN: El plan Básico ahora da 20 créditos como dice el texto
+        const configPlanes = {
+            'basico':   { creditos: 20, puntos: 0 },
+            'aventura': { creditos: 30, puntos: 0 },
+            'elite':    { creditos: 70, puntos: 0 }
+        };
+
+        const beneficios = configPlanes[planURL] || { creditos: 0, puntos: 0 };
+        
+        let personal = JSON.parse(localStorage.getItem('personal')) || [];
+        let idxPersonal = personal.findIndex(p => p.codigo === codigoCliente);
+
+        if (idxPersonal !== -1) {
+            
+            // Doble validación de seguridad
+            if (personal[idxPersonal].membresiaActual && personal[idxPersonal].membresiaActual.trim() !== "") {
+                alert("⛔ ERROR: El cliente ya posee una membresía activa.");
+                return;
+            }
+            
+            // Asignación de beneficios
+            personal[idxPersonal].membresiaActual = planURL.toUpperCase();
+            personal[idxPersonal].creditos = beneficios.creditos;
+            personal[idxPersonal].puntos = (personal[idxPersonal].puntos || 0) + beneficios.puntos;
+            personal[idxPersonal].fechaMovimiento = fechaMovimiento; 
+
+            // Guardar cambios
+            localStorage.setItem('personal', JSON.stringify(personal));
+            
+            alert(`✅ COMPRA EXITOSA\n\nPlan: ${planURL.toUpperCase()} activado correctamente.\nSe abonaron ${beneficios.creditos} CRÉDITOS a la cuenta de ${personal[idxPersonal].nombres}.`);
+            
+            // Opcional: Redirigir al inicio o dejar que el usuario navegue solo
+            window.history.back(); // Regresa a la pantalla de planes
+        } else {
+            alert("⚠️ ERROR: No se pudo procesar. El cliente desapareció de la base de datos.");
+        }
+    }
+</script>
+
+</body>
+</html>

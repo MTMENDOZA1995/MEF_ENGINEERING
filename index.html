@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>INICIAR SESIÓN | MEF ENGINEERING & SOLUCIONES</title>
+    <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+    <main class="login-card">
+        
+        <header class="card-header">
+            <h1>SISTEMA DE ASISTENCIAS</h1>
+        </header>
+
+        <section class="card-body">
+            <div class="logo-box">
+                <img src="Imagenes/ECFM.png" alt="Logo de Eco Frame Max" />
+            </div>
+
+            <form id="loginForm" autocomplete="off" novalidate>
+                
+                <div class="form-group">
+                    <label for="usuario">USUARIO (ID):</label>
+                    <input 
+                        type="text" 
+                        id="usuario" 
+                        name="usuario" 
+                        placeholder="INGRESE SU ID" 
+                        required 
+                        oninput="this.value = this.value.toUpperCase()" 
+                    />
+                </div>
+
+                <div class="form-group">
+                    <label for="contrasena">CONTRASEÑA:</label>
+                    <input 
+                        type="password" 
+                        id="contrasena" 
+                        name="contrasena" 
+                        placeholder="INGRESE SU CLAVE" 
+                        required 
+                    />
+                </div>
+
+                <button type="submit" class="login-btn">INGRESAR AL SISTEMA</button>
+            </form>
+        </section>
+
+        <footer class="card-footer">
+            <p>&copy; 2026 MEF ENGINEERING & SOLUCIONES</p>
+        </footer>
+        
+    </main>
+
+    <script src="script.js"></script>
+
+</body>
+</html>

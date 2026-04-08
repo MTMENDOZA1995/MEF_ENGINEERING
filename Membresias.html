@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>MEMBRESÍAS | MEF Engineering & Soluciones</title>
+    <style>
+        /* =====================================================
+           VARIABLES Y RESET
+        ===================================================== */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+        :root {
+            --primary-color: #1d3b20;
+            --primary-hover: #143117;
+            --danger-color: #8b0000;
+            --danger-hover: #660000;
+            --bg-color: #f4f6f5;
+            --white: #ffffff;
+            --text-dark: #333333;
+            --shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            min-height: 100svh;
+            color: var(--text-dark);
+            padding: 20px;
+        }
+
+        /* =====================================================
+           TARJETA DEL MENÚ
+        ===================================================== */
+        .menu-container {
+            width: 100%;
+            max-width: 400px;
+            background-color: var(--white);
+            border: 1.5px solid var(--primary-color);
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ENCABEZADO */
+        .menu-header {
+            background-color: var(--primary-color);
+            color: var(--white);
+            padding: 18px 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .menu-header .icon-link {
+            position: absolute;
+            left: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .menu-header .icon {
+            width: 26px;
+            height: 26px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .menu-header .icon:hover {
+            transform: scale(1.15);
+            filter: brightness(1.2);
+        }
+
+        .menu-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 0;
+        }
+
+        /* BOTONES DE NAVEGACIÓN */
+        .menu-buttons {
+            padding: 35px 25px;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .menu-buttons button {
+            width: 100%;
+            padding: 16px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+        }
+
+        .btn-comprar {
+            background-color: var(--primary-color);
+            color: var(--white);
+        }
+
+        .btn-comprar:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(29, 59, 32, 0.2);
+        }
+
+        .btn-cancelar {
+            background-color: var(--white);
+            color: var(--danger-color);
+            border: 2px solid var(--danger-color) !important;
+        }
+
+        .btn-cancelar:hover {
+            background-color: var(--danger-color);
+            color: var(--white);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(139, 0, 0, 0.2);
+        }
+
+        /* PIE DE PÁGINA */
+        .card-footer {
+            background-color: #fafafa;
+            padding: 15px;
+            border-top: 1px solid #eeeeee;
+            text-align: center;
+            margin-top: auto;
+        }
+
+        .card-footer .logo {
+            width: 75px;
+            height: auto;
+            margin: 0 auto;
+            transition: var(--transition);
+        }
+
+        .card-footer a:hover .logo {
+            transform: scale(1.05);
+        }
+
+        /* RESPONSIVE MÓVIL */
+        @media (max-width: 480px) {
+            body { padding: 15px; }
+            .menu-container { border-radius: 16px; }
+            .menu-buttons { padding: 30px 20px; }
+            .menu-buttons button { padding: 18px; font-size: 1rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <main class="menu-container">
+        
+        <header class="menu-header">
+            <a href="#" title="Cerrar sesión de forma segura" class="icon-link" onclick="cerrarSesion(event)">
+                <img src="Iconos/SALIR.png" alt="Cerrar sesión" class="icon">
+            </a>
+            <h1 class="menu-title">MEMBRESÍAS</h1>
+        </header>
+
+        <nav class="menu-buttons" aria-label="Navegación principal">
+            <button class="btn-comprar" onclick="window.location.href='TiposMembresia.html'">
+                COMPRAR MEMBRESÍA
+            </button>
+            
+            <button class="btn-cancelar" onclick="verificarPassword()">
+                CANCELAR MEMBRESÍA
+            </button>
+        </nav>
+
+        <footer class="card-footer">
+            <a href="#" title="Volver al Menú Principal" onclick="volverAlMenu(event)">
+                <img src="Imagenes/ECFM.png" alt="Logo de MEF Engineering" class="logo" />
+            </a>
+        </footer>
+
+    </main>
+
+<script>
+    'use strict';
+
+    // ==========================================
+    // 1. PROTECCIÓN POR CONTRASEÑA
+    // ==========================================
+    function verificarPassword() {
+        const passwordAutorizada = "C8KM1Y0F1I3K1S6H"; 
+        
+        const intento = prompt("🔒 ACCESO RESTRINGIDO\n\nPor favor, ingrese la contraseña de administrador para cancelar membresías:");
+
+        // Si el usuario presiona "Cancelar" o deja en blanco
+        if (intento === null || intento.trim() === "") {
+            return; 
+        }
+
+        // Validación estricta
+        if (intento.trim() === passwordAutorizada) {
+            window.location.href = 'CancelarMembresia.html';
+        } else {
+            alert("⛔ CONTRASEÑA INCORRECTA. Acceso denegado.");
+        }
+    }
+
+    // ==========================================
+    // 2. GESTIÓN DE SESIÓN Y NAVEGACIÓN
+    // ==========================================
+    function cerrarSesion(e) {
+        if (e && typeof e.preventDefault === 'function') e.preventDefault();
+        alert("🔒 Sesión finalizada de forma segura.");
+        sessionStorage.clear();
+        localStorage.setItem("sesionActiva", "no");
+        window.location.replace("index.html");
+    }
+
+    function validarSesion() {
+        if (sessionStorage.getItem("sesionActiva") !== "true") {
+            cerrarSesion();
+        }
+    }
+
+    function volverAlMenu(e) {
+        if (e && typeof e.preventDefault === 'function') e.preventDefault();
+        window.location.href = sessionStorage.getItem("menuUsuario") || "Botones.html";
+    }
+
+    window.addEventListener("DOMContentLoaded", validarSesion);
+    window.addEventListener("pageshow", validarSesion);
+
+    // ==========================================
+    // 3. CONTROL DE INACTIVIDAD (1 MINUTO)
+    // ==========================================
+    let timerInactividad;
+    const reiniciarTemporizador = () => {
+        clearTimeout(timerInactividad);
+        timerInactividad = setTimeout(() => {
+            alert("⏰ TIEMPO DE INACTIVIDAD EXCEDIDO. SESIÓN CERRADA.");
+            cerrarSesion();
+        }, 1 * 60 * 1000); 
+    };
+
+    ["mousemove", "keydown", "click", "scroll", "touchstart"].forEach(evento => {
+        document.addEventListener(evento, reiniciarTemporizador, { passive: true });
+    });
+    reiniciarTemporizador();
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>MENÚ PRINCIPAL | MEF Engineering & Soluciones</title>
+
+    <style>
+        /* =====================================================
+           IMPORTAR FUENTE Y VARIABLES
+        ===================================================== */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+        :root {
+            --primary-color: #1d3b20;
+            --primary-hover: #050a06;
+            --bg-color: #f9fcfc;
+            --white: #f8f6f6;
+            --text-dark: #333333;
+            --shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+            --transition: all 0.25s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            min-height: 100svh;
+            color: var(--text-dark);
+            padding: 20px;
+        }
+
+        /* =====================================================
+           CONTENEDOR GLOBAL (TARJETA)
+        ===================================================== */
+        .menu-container {
+            width: 100%;
+            max-width: 400px;
+            background-color: var(--white);
+            border: 1.5px solid var(--primary-color);
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ENCABEZADO */
+        .menu-header {
+            background-color: var(--primary-color);
+            color: var(--white);
+            padding: 18px 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .menu-header .icon-link {
+            position: absolute;
+            left: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .menu-header .icon {
+            width: 26px;
+            height: 26px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .menu-header .icon:hover {
+            transform: scale(1.15);
+            filter: brightness(1.2);
+        }
+
+        .menu-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 0;
+        }
+
+        /* =====================================================
+           BOTONES COMPACTOS DE NAVEGACIÓN
+        ===================================================== */
+        .menu-buttons {
+            padding: 30px 25px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px; /* Reducido para compactar */
+        }
+
+        .menu-buttons button {
+            width: 100%;
+            padding: 14px; /* Padding reducido para afinar el botón */
+            font-size: 0.9rem; /* Fuente un poco más pequeña */
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            background-color: var(--primary-color);
+            color:#f9fcfc;;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: 0 4px 10px rgba(29, 59, 32, 0.15);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .menu-buttons button:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(29, 59, 32, 0.25);
+        }
+
+        .menu-buttons button:active {
+            transform: scale(0.98);
+        }
+
+        /* =====================================================
+           PIE DE PÁGINA
+        ===================================================== */
+        .card-footer {
+            background-color: #ffffff;
+            padding: 15px;
+            border-top: 1px solid #fcfbfb;
+            text-align: center;
+            margin-top: auto;
+        }
+
+        .card-footer .logo {
+            width: 80px;
+            height: auto;
+            margin-bottom: 5px;
+            transition: var(--transition);
+        }
+
+        .card-footer a:hover .logo {
+            transform: scale(1.05);
+        }
+
+        .card-footer p {
+            font-size: 0.75rem;
+            color: var(--primary-color);
+            margin: 0;
+            letter-spacing: 0.5px;
+        }
+
+        /* =====================================================
+           RESPONSIVE MÓVIL
+        ===================================================== */
+        @media (max-width: 480px) {
+            body { padding: 15px; align-items: flex-start; }
+            .menu-container { border-radius: 16px; min-height: 100%; border: none; }
+            .menu-buttons { padding: 25px 20px; }
+            .menu-buttons button { padding: 15px; } /* Ajuste fino táctil para iOS/Android */
+        }
+    </style>
+</head>
+<body>
+
+    <main class="menu-container">
+        
+        <header class="menu-header">
+            <a href="#" title="Cerrar sesión de forma segura" class="icon-link" onclick="cerrarSesion(event)">
+                <img src="Iconos/SALIR.png" alt="Cerrar sesión" class="icon">
+            </a>
+            <h1 class="menu-title">MENÚ GENERAL</h1>
+        </header>
+
+        <nav class="menu-buttons" aria-label="Navegación principal">
+            <button onclick="window.location.href='ListaEventos.html'">REGISTRAR LISTA</button>
+            <button onclick="window.location.href='CrearEvento.html'">CREAR EVENTO</button>
+            <button onclick="window.location.href='RegistroPersonal.html'">REGISTRAR PERSONAL</button>
+            <button onclick="window.location.href='RegistroUsuarios.html'">REGISTRAR USUARIOS</button>
+            <button onclick="window.location.href='Membresias.html'">MEMBRESÍAS</button>
+            <button onclick="window.location.href='Ecopoints.html'">ECOPOINTS</button>
+            <button onclick="window.location.href='EscanearNFC.html'">ESCANEAR NFC</button>
+            <button onclick="window.location.href='ListaTablas.html'">LISTA DE TABLAS</button>
+        </nav>
+
+        <footer class="card-footer">
+            <img src="Imagenes/ECFM.png" alt="Logo de MEF Engineering" class="logo">
+            <p><strong>MEF ENGINEERING & SOLUCIONES</strong></p>
+        </footer>
+
+    </main>
+
+<script>
+    'use strict';
+
+    // ==========================================
+    // 1. GESTIÓN DE SESIÓN Y SEGURIDAD
+    // ==========================================
+    function cerrarSesion(e) {
+        if (e && typeof e.preventDefault === 'function') {
+            e.preventDefault();
+        }
+        alert("🔒 Sesión finalizada de forma segura.");
+        sessionStorage.clear();
+        localStorage.setItem("sesionActiva", "no");
+        window.location.replace("index.html"); 
+    }
+
+    function validarSesion() {
+        const activa = sessionStorage.getItem("sesionActiva");
+        if (activa !== "true") {
+            cerrarSesion();
+        }
+    }
+
+    // Validaciones del ciclo de vida de la página
+    window.addEventListener("DOMContentLoaded", validarSesion);
+    window.addEventListener("pageshow", validarSesion);
+
+    // ==========================================
+    // 2. CONTROL ESTRICTO DE INACTIVIDAD (1 MIN)
+    // ==========================================
+    let timerInactividad;
+    const reiniciarTemporizador = () => {
+        clearTimeout(timerInactividad);
+        timerInactividad = setTimeout(() => {
+            alert("⏰ TIEMPO DE INACTIVIDAD EXCEDIDO. SESIÓN CERRADA.");
+            cerrarSesion();
+        }, 1 * 60 * 1000); 
+    };
+
+    // Listeners optimizados
+    ["mousemove", "keydown", "click", "scroll", "touchstart"].forEach(evento => {
+        document.addEventListener(evento, reiniciarTemporizador, { passive: true });
+    });
+    reiniciarTemporizador();
+
+</script>
+
+</body>
+</html>

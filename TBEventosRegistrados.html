@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>EVENTOS REGISTRADOS | MEF Engineering & Soluciones</title>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+        /* VARIABLES GLOBALES */
+        :root {
+            --color-principal: #1d3b20;
+            --color-fondo: #f4f6f5;
+            --color-texto: #333;
+            --color-hover: #e8f5e9;
+            --color-par: #ffffff;
+            --color-impar: #fbfdfb;
+        }
+
+        * { 
+            box-sizing: border-box; 
+            margin: 0; 
+            padding: 0; 
+        }
+
+        body {
+            padding: 40px;
+            font-family: 'Inter', -apple-system, sans-serif;
+            background-color: var(--color-fondo);
+            color: var(--color-texto);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* NAVEGACIÓN SUPERIOR */
+        .icon-bar {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 20px;
+            width: 100%;
+            max-width: 1000px;
+            margin-bottom: 30px;
+        }
+
+        .icon-bar a img {
+            width: 28px;
+            height: 28px;
+            cursor: pointer;
+            transition: transform 0.2s ease, opacity 0.2s ease;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+        }
+
+        .icon-bar a img:hover {
+            transform: scale(1.15);
+            opacity: 0.8;
+        }
+
+        /* CONTENEDOR RESPONSIVO DE TABLA */
+        .table-container {
+            width: 100%;
+            max-width: 1000px;
+            overflow-x: auto;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+            background-color: #fff;
+            border: 1px solid #e0e0e0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 700px; /* Evita que las columnas colapsen en móviles */
+        }
+
+        caption {
+            background: linear-gradient(135deg, var(--color-principal), #142d17);
+            color: #fff;
+            font-size: 1.2rem;
+            font-weight: 700;
+            padding: 18px;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            text-align: center;
+        }
+
+        thead {
+            background-color: #e8f5e9;
+            border-bottom: 2px solid #2e7d32;
+        }
+
+        th, td {
+            padding: 16px 14px;
+            font-size: 0.9rem;
+            text-align: center;
+            border-bottom: 1px solid #f0f0f0;
+            white-space: nowrap; 
+        }
+
+        th {
+            color: var(--color-principal);
+            text-transform: uppercase;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        tbody tr:nth-child(even) {
+            background-color: var(--color-par);
+        }
+
+        tbody tr:nth-child(odd) {
+            background-color: var(--color-impar);
+        }
+
+        tbody tr:hover {
+            background-color: var(--color-hover);
+        }
+
+        .acciones {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .icon-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.2s ease;
+            border-radius: 8px;
+        }
+
+        .icon-btn:hover {
+            transform: scale(1.15) translateY(-2px);
+            background-color: rgba(46, 125, 50, 0.1);
+        }
+
+        .icon-btn img {
+            width: 22px;
+            height: 22px;
+            pointer-events: none;
+        }
+
+        /* ADAPTACIÓN MÓVIL */
+        @media (max-width: 600px) {
+            body { padding: 15px 10px; }
+            .icon-bar { justify-content: center; margin-bottom: 20px; gap: 25px; }
+            caption { font-size: 1rem; padding: 15px; }
+            th, td { padding: 12px 10px; font-size: 0.85rem; }
+            .icon-btn img { width: 20px; height: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="icon-bar" aria-label="Navegación principal">
+        <a href="#" title="Volver al Menú Principal" onclick="volverAlMenu(event)">
+            <img src="Iconos/MENU1.webp" alt="Menú Principal">
+        </a>
+        <a href="CrearEvento.html" title="Crear Nuevo Evento">
+            <img src="Iconos/VOLVER.png" alt="Crear Evento">
+        </a>
+        <a href="#" title="Cerrar Sesión Segura" onclick="cerrarSesion(event)">
+            <img src="Iconos/SALIR.png" alt="Cerrar sesión">
+        </a>
+    </nav>
+
+    <main class="table-container">
+        <table>
+            <caption>Gestor de Eventos Registrados</caption>
+            <thead>
+                <tr>
+                    <th>NOMBRE DEL EVENTO</th>
+                    <th>FECHA</th>
+                    <th>HORA</th>
+                    <th>CLAVE</th>
+                    <th>ACCIONES</th>
+                </tr>
+            </thead>
+            <tbody id="tablaCrearLA">
+                </tbody>
+        </table>
+    </main>
+
+<script>
+    'use strict';
+
+    // ==========================================
+    // 1. GESTIÓN DE SESIÓN Y NAVEGACIÓN
+    // ==========================================
+    function cerrarSesion(e) {
+        if (e && typeof e.preventDefault === 'function') e.preventDefault();
+        alert("🔒 Sesión finalizada de forma segura.");
+        sessionStorage.clear();
+        localStorage.setItem("sesionActiva", "no");
+        window.location.replace("index.html");
+    }
+
+    function validarSesion() {
+        if (sessionStorage.getItem("sesionActiva") !== "true") {
+            cerrarSesion();
+        }
+    }
+
+    function volverAlMenu(e) {
+        if (e && typeof e.preventDefault === 'function') e.preventDefault();
+        window.location.href = sessionStorage.getItem("menuUsuario") || "Botones.html";
+    }
+
+    // Inicializar validaciones
+    window.addEventListener("DOMContentLoaded", validarSesion);
+    window.addEventListener("pageshow", validarSesion);
+
+    // Temporizador de inactividad (1 Minuto)
+    let timerInactividad;
+    const reiniciarTemporizador = () => {
+        clearTimeout(timerInactividad);
+        timerInactividad = setTimeout(() => {
+            alert("⏰ INACTIVIDAD DETECTADA. SESIÓN CERRADA.");
+            cerrarSesion();
+        }, 1 * 60 * 1000); 
+    };
+
+    ["mousemove", "keydown", "click", "scroll", "touchstart"].forEach(evento => {
+        document.addEventListener(evento, reiniciarTemporizador, { passive: true });
+    });
+    reiniciarTemporizador();
+
+
+    // ==========================================
+    // 2. LÓGICA DE DATOS Y TABLA
+    // ==========================================
+    // NOTA: Se mantiene la key 'CrearLA' en el localStorage para no perder los datos antiguos.
+    const STORAGE_KEY = 'CrearLA';
+
+    function obtenerEventos() {
+        return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+    }
+
+    function guardarEventos(eventos) {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(eventos));
+    }
+
+    function cargarEventos() {
+        const tabla = document.getElementById('tablaCrearLA');
+        const eventos = obtenerEventos();
+        tabla.innerHTML = '';
+
+        if (eventos.length === 0) {
+            tabla.innerHTML = `<tr><td colspan="5" style="text-align:center; padding:20px; font-style:italic; color:#666;">No hay eventos registrados actualmente.</td></tr>`;
+            return;
+        }
+
+        eventos.forEach((evento, index) => {
+            const fila = document.createElement('tr');
+            
+            // Lógica segura para mostrar asteriscos basados en la longitud de la clave real
+            let longitudClave = 6; 
+            try {
+                // Intenta desencriptar para contar los caracteres reales
+                longitudClave = atob(evento.Clave).length;
+            } catch (error) {
+                // Fallback si la clave se guardó sin encriptar
+                longitudClave = (evento.Clave || "******").length;
+            }
+
+            fila.innerHTML = `
+                <td><strong>${evento.NombreEvento || '---'}</strong></td>
+                <td>${evento.FechaEvento || '---'}</td>
+                <td>${evento.HoraEntrante || '---'}</td>
+                <td style="letter-spacing: 2px; color: #555;">${'*'.repeat(longitudClave)}</td>
+                <td class="acciones">
+                    <button class="icon-btn" title="Editar Evento" onclick="editarEvento(${index})">
+                        <img src="Iconos/EDITAR.png" alt="Editar">
+                    </button>
+                    <button class="icon-btn" title="Eliminar Evento" onclick="eliminarEvento(${index})">
+                        <img src="Iconos/ELIMINAR.png" alt="Eliminar">
+                    </button>
+                    <button class="icon-btn" title="Ver Panel de Asistencias" onclick="verAsistencias(${index})">
+                        <img src="Iconos/VER.png" alt="Ver">
+                    </button>
+                </td>
+            `;
+            tabla.appendChild(fila);
+        });
+    }
+
+
+    // ==========================================
+    // 3. FUNCIONES DE ACCIÓN (CRUD)
+    // ==========================================
+    function eliminarEvento(index) {
+        const eventos = obtenerEventos();
+        const eventoAEliminar = eventos[index];
+        
+        const confirmacion = confirm(`⚠️ ADVERTENCIA CRÍTICA:\n\n¿Estás seguro de que deseas eliminar permanentemente el evento:\n[ ${eventoAEliminar.NombreEvento} ]?\n\nEsta acción no se puede deshacer.`);
+        
+        if (!confirmacion) return;
+
+        // Limpiar el registro de asistencias atado a ese evento
+        localStorage.removeItem(`asistencia_${eventoAEliminar.NombreEvento}`);
+
+        // Eliminar el evento y recargar tabla
+        eventos.splice(index, 1);
+        guardarEventos(eventos);
+        cargarEventos();
+    }
+
+    function editarEvento(index) {
+        const eventos = obtenerEventos();
+        const evento = eventos[index];
+
+        if (!evento) {
+            alert("⚠️ ERROR: No se encontró el evento solicitado.");
+            return;
+        }
+
+        // Guardar el caché temporal para la página de edición
+        localStorage.setItem('eventoEditar', JSON.stringify(evento));
+        localStorage.setItem('eventoEditarIndex', index.toString());
+        window.location.href = 'EditarEvento.html';
+    }
+
+    function verAsistencias(index) {
+        const eventos = obtenerEventos();
+        const eventoSeleccionado = eventos[index];
+
+        if (!eventoSeleccionado) {
+            alert('⚠️ ERROR: No se encontró el evento.');
+            return;
+        }
+
+        // Guardar el evento en memoria para que el Panel de Asistencias sepa cuál abrir
+        localStorage.setItem('eventoSeleccionado', JSON.stringify(eventoSeleccionado));
+        
+        // Redirigir a la tabla maestra de asistencias (Corregido el .html extra)
+        window.location.href = 'TBRegistroAsistencias.html';
+    }
+
+    // --- INICIALIZAR LA TABLA AL CARGAR EL DOM ---
+    document.addEventListener("DOMContentLoaded", cargarEventos);
+
+</script>
+
+</body>
+</html>

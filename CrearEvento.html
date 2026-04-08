@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>CREAR EVENTO | MEF Engineering & Soluciones</title>
+    <link rel="stylesheet" href="CrearEvento.css" />
+</head>
+<body>
+
+    <main class="container">
+        
+        <header class="card-header">
+            <div class="header-content">
+                <a href="TBEventosRegistrados.html" title="Ver Eventos Registrados" class="icon-link">
+                    <img src="Iconos/LUPA1.png" alt="Ver eventos registrados" class="icon" />
+                </a>
+                <h1>CREAR EVENTO</h1>
+            </div>
+        </header>
+
+        <section class="card-body">
+            <form id="formCrearEvento" class="form" autocomplete="off" novalidate>
+                
+                <div class="form-group">
+                    <label for="nombre">NOMBRE DEL EVENTO:</label>
+                    <input 
+                        type="text" 
+                        id="nombre" 
+                        name="nombre" 
+                        placeholder="Ej. REUNIÓN MENSUAL" 
+                        required 
+                        oninput="this.value = this.value.toUpperCase()" 
+                        autofocus
+                    />
+                </div>
+
+                <div class="form-group">
+                    <label for="fecha">FECHA DEL EVENTO:</label>
+                    <input 
+                        type="date" 
+                        id="fecha" 
+                        name="fecha" 
+                        required 
+                    />
+                </div>
+
+                <div class="form-group">
+                    <label for="hora">HORA DE ENTRADA:</label>
+                    <input 
+                        type="time" 
+                        id="hora" 
+                        name="hora" 
+                        required 
+                    />
+                </div>
+
+                <div class="form-group">
+                    <label for="clave">CLAVE DE SEGURIDAD (Asistencia):</label>
+                    <input 
+                        type="password" 
+                        id="clave" 
+                        name="clave" 
+                        placeholder="MÍNIMO 6 CARACTERES (LETRAS Y NÚMEROS)" 
+                        minlength="6" 
+                        required 
+                    />
+                </div>
+
+                <button type="submit" id="btnGuardar" class="submit-btn">CREAR Y GUARDAR EVENTO</button>
+            </form>
+        </section>
+
+        <footer class="card-footer">
+            <a href="#" title="Volver al Menú Principal" onclick="volverAlMenu(event)">
+                <img src="Imagenes/ECFM.png" alt="Logo de MEF Engineering" class="logo" />
+            </a>
+        </footer>
+
+    </main>
+
+<script>
+    'use strict';
+
+    // ==========================================
+    // 1. GESTIÓN DE SESIÓN, NAVEGACIÓN Y SEGURIDAD
+    // ==========================================
+    function cerrarSesion(e) {
+        if (e && typeof e.preventDefault === 'function') e.preventDefault();
+        alert("🔒 Sesión finalizada de forma segura.");
+        sessionStorage.clear();
+        localStorage.setItem("sesionActiva", "no");
+        window.location.replace("index.html");
+    }
+
+    function validarSesion() {
+        const activa = sessionStorage.getItem("sesionActiva");
+        if (activa !== "true") {
+            cerrarSesion();
+        }
+    }
+
+    function volverAlMenu(e) {
+        if (e && typeof e.preventDefault === 'function') e.preventDefault();
+        const menuDestino = sessionStorage.getItem("menuUsuario") || "Botones.html";
+        window.location.href = menuDestino;
+    }
+
+    // Validar al cargar y al mostrar la página
+    window.addEventListener("DOMContentLoaded", validarSesion);
+    window.addEventListener("pageshow", validarSesion);
+
+    // Control estricto de inactividad (Configurado a 1 minuto)
+    let timerInactividad;
+    const reiniciarTemporizador = () => {
+        clearTimeout(timerInactividad);
+        timerInactividad = setTimeout(() => {
+            alert("⏰ INACTIVIDAD DETECTADA. SESIÓN CERRADA.");
+            cerrarSesion();
+        }, 1 * 60 * 1000); 
+    };
+
+    ["mousemove", "keydown", "click", "scroll", "touchstart"].forEach(evento => {
+        document.addEventListener(evento, reiniciarTemporizador, { passive: true });
+    });
+    reiniciarTemporizador();
+
+
+    // ==========================================
+    // 2. LÓGICA DE CREACIÓN DE EVENTO
+    // ==========================================
+    document.addEventListener("DOMContentLoaded", () => {
+        const form = document.getElementById("formCrearEvento");
+        const inputFecha = document.getElementById("fecha");
+
+        // UX: Prevenir la creación de eventos en fechas pasadas
+        const hoy = new Date().toISOString().split("T")[0];
+        inputFecha.setAttribute("min", hoy);
+
+        form.addEventListener("submit", (event) => {
+            event.preventDefault();
+
+            // Extracción y limpieza de datos
+            const nombre = document.getElementById("nombre").value.trim().toUpperCase();
+            const fecha = inputFecha.value.trim();
+            const hora = document.getElementById("hora").value.trim();
+            // La clave NO debe pasarse a mayúsculas forzosamente por seguridad
+            const clave = document.getElementById("clave").value.trim(); 
+
+            // 1. Validación de campos vacíos
+            if (!nombre || !fecha || !hora || !clave) {
+                alert("⚠️ POR FAVOR, COMPLETA TODOS LOS CAMPOS.");
+                return;
+            }
+
+            // 2. Validación de seguridad de la clave
+            const letras = clave.replace(/[^A-Za-z]/g, "").length;
+            const numeros = clave.replace(/[^0-9]/g, "").length;
+
+            if (clave.length < 6 || letras <= numeros || letras === 0 || numeros === 0) {
+                alert("⚠️ SEGURIDAD DÉBIL:\nLa clave debe tener al menos 6 caracteres, contener letras y números, y tener más letras que números.");
+                return;
+            }
+
+            // 3. Obtener lista actual para validar duplicados
+            // OJO: La base de datos sigue llamándose "CrearLA". Te aconsejo mantenerlo así para no romper otros archivos.
+            const eventos = JSON.parse(localStorage.getItem("CrearLA")) || [];
+            
+            // Verificar si ya existe un evento con el mismo nombre en la misma fecha
+            const existe = eventos.some(e => 
+                e.NombreEvento.toUpperCase() === nombre && 
+                e.FechaEvento === fecha
+            );
+
+            if (existe) {
+                alert("⚠️ YA EXISTE UN EVENTO CON ESE NOMBRE PROGRAMADO PARA ESTA MISMA FECHA.");
+                return;
+            }
+
+            // 4. Crear y encriptar objeto de evento
+            const nuevoEvento = {
+                id: Date.now().toString(), // Generar un ID único basado en el timestamp
+                NombreEvento: nombre,
+                FechaEvento: fecha,
+                HoraEntrante: hora,
+                Clave: btoa(clave) // Encriptación en Base64 básica
+            };
+
+            // 5. Guardar en base de datos local
+            eventos.push(nuevoEvento);
+            localStorage.setItem("CrearLA", JSON.stringify(eventos));
+
+            alert("✅ EVENTO CREADO Y GUARDADO CORRECTAMENTE.");
+            form.reset();
+            
+            // 6. Redirección final al nuevo nombre de tu tabla
+            window.location.href = "TBEventosRegistrados.html";
+        });
+    });
+</script>
+
+</body>
+</html>

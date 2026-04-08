@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ESCANEAR NFC | MEF Engineering & Soluciones</title>
+
+    <style>
+        /* =====================================================
+           VARIABLES Y RESET
+        ===================================================== */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+        :root {
+            --primary-color: #1d3b20;
+            --primary-hover: #143117;
+            --bg-color: #f4f6f5;
+            --white: #ffffff;
+            --text-dark: #333333;
+            --text-light: #666666;
+            --shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            min-height: 100svh;
+            color: var(--text-dark);
+            padding: 20px;
+        }
+
+        /* =====================================================
+           TARJETA PRINCIPAL (CONTENEDOR GLOBAL)
+        ===================================================== */
+        .menu-container {
+            width: 100%;
+            max-width: 420px;
+            background-color: var(--white);
+            border: 1.5px solid var(--primary-color);
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ENCABEZADO */
+        .menu-header {
+            background-color: var(--primary-color);
+            color: var(--white);
+            padding: 18px 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .menu-header .icon-link {
+            position: absolute;
+            left: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .menu-header .icon {
+            width: 26px;
+            height: 26px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .menu-header .icon:hover {
+            transform: scale(1.15);
+            filter: brightness(1.2);
+        }
+
+        .menu-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 0;
+        }
+
+        /* =====================================================
+           TARJETAS DE OPCIONES (NFC)
+        ===================================================== */
+        .menu-cards {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            padding: 25px 20px;
+        }
+
+        .card-menu {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            background: var(--white);
+            border-radius: 12px;
+            padding: 16px;
+            cursor: pointer;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+            border: 1.5px solid #e0e0e0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            min-height: 90px;
+        }
+
+        /* EFECTO HOVER Y CLICK */
+        .card-menu:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 25px rgba(29, 59, 32, 0.15);
+            border-color: var(--primary-color);
+        }
+
+        .card-menu:active {
+            transform: scale(0.97);
+        }
+
+        /* BORDE ACTIVO LATERAL (EFECTO PREMIUM) */
+        .card-menu::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 5px;
+            height: 100%;
+            background: linear-gradient(180deg, var(--primary-color), #43a047);
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .card-menu:hover::before {
+            opacity: 1;
+        }
+
+        /* =====================================================
+           IMÁGENES (ICONOS)
+        ===================================================== */
+        .img-container {
+            width: 60px;
+            height: 60px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #f4f6f5, #e8f5e9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-shrink: 0;
+            transition: var(--transition);
+        }
+
+        .card-menu img {
+            width: 60%;
+            height: auto;
+            object-fit: contain;
+            transition: var(--transition);
+        }
+
+        /* ANIMACIÓN ICONO AL PASAR EL MOUSE */
+        .card-menu:hover .img-container {
+            background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+        }
+        
+        .card-menu:hover img {
+            transform: scale(1.15) rotate(5deg);
+        }
+
+        /* =====================================================
+           TEXTOS
+        ===================================================== */
+        .text-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            flex-grow: 1;
+        }
+
+        .card-menu h3 {
+            font-size: 15px;
+            margin: 0 0 4px 0;
+            color: var(--primary-color);
+            font-weight: 800;
+            letter-spacing: 0.5px;
+        }
+
+        .card-menu p {
+            font-size: 12px;
+            margin: 0;
+            color: var(--text-light);
+            line-height: 1.3;
+        }
+
+        /* =====================================================
+           PIE DE PÁGINA
+        ===================================================== */
+        .card-footer {
+            background-color: #fafafa;
+            padding: 15px;
+            border-top: 1px solid #eeeeee;
+            text-align: center;
+            margin-top: auto;
+        }
+
+        .card-footer .logo {
+            width: 75px;
+            height: auto;
+            margin: 0 auto;
+            transition: var(--transition);
+        }
+
+        .card-footer a:hover .logo {
+            transform: scale(1.05);
+        }
+
+        /* =====================================================
+           RESPONSIVE MÓVIL
+        ===================================================== */
+        @media (max-width: 480px) {
+            body { padding: 15px; align-items: flex-start; }
+            .menu-container { border-radius: 16px; min-height: 100%; border: none; }
+            .menu-cards { padding: 20px 15px; gap: 14px; }
+            .card-menu { padding: 14px; gap: 12px; }
+            .img-container { width: 50px; height: 50px; }
+            .card-menu h3 { font-size: 14px; }
+            .card-menu p { font-size: 11px; }
+        }
+    </style>
+</head>
+<body>
+
+    <main class="menu-container">
+        
+        <header class="menu-header">
+            <a href="#" title="Cerrar sesión de forma segura" class="icon-link" onclick="cerrarSesion(event)">
+                <img src="Iconos/SALIR.png" alt="Cerrar sesión" class="icon">
+            </a>
+            <h1 class="menu-title">ESCANEAR NFC</h1>
+        </header>
+
+        <nav class="menu-cards" aria-label="Opciones de Escaneo">
+
+            <div class="card-menu" onclick="window.location.href='CanjearMembresia.html'">
+                <div class="img-container">
+                    <img src="Iconos/MEMBRESIA.png" alt="Membresía" onerror="this.style.display='none'">
+                </div>
+                <div class="text-container">
+                    <h3>CANJEAR MEMBRESÍA</h3>
+                    <p>Usa los créditos de tu plan</p>
+                </div>
+            </div>
+
+            <div class="card-menu" onclick="window.location.href='CanjearEcoPoints.html'">
+                <div class="img-container">
+                    <img src="Iconos/ECOPOINTS.png" alt="Ecopoints" onerror="this.style.display='none'">
+                </div>
+                <div class="text-container">
+                    <h3>CANJEAR ECOPOINTS</h3>
+                    <p>Usa tus puntos ecológicos</p>
+                </div>
+            </div>
+
+        </nav>
+
+        <footer class="card-footer">
+            <a href="#" title="Volver al Menú Principal" onclick="volverAlMenu(event)">
+                <img src="Imagenes/ECFM.png" alt="Logo de MEF Engineering" class="logo">
+            </a>
+        </footer>
+
+    </main>
+
+<script>
+    'use strict';
+
+    // ==========================================
+    // 1. GESTIÓN DE SESIÓN Y NAVEGACIÓN
+    // ==========================================
+    function cerrarSesion(e) {
+        if (e && typeof e.preventDefault === 'function') e.preventDefault();
+        alert("🔒 Sesión finalizada de forma segura.");
+        sessionStorage.clear();
+        localStorage.setItem("sesionActiva", "no");
+        window.location.replace("index.html");
+    }
+
+    function validarSesion() {
+        if (sessionStorage.getItem("sesionActiva") !== "true") {
+            cerrarSesion();
+        }
+    }
+
+    function volverAlMenu(e) {
+        if (e && typeof e.preventDefault === 'function') e.preventDefault();
+        window.location.href = sessionStorage.getItem("menuUsuario") || "Botones.html";
+    }
+
+    window.addEventListener("DOMContentLoaded", validarSesion);
+    window.addEventListener("pageshow", validarSesion);
+
+    // ==========================================
+    // 2. CONTROL DE INACTIVIDAD (1 MINUTO)
+    // ==========================================
+    let timerInactividad;
+    const reiniciarTemporizador = () => {
+        clearTimeout(timerInactividad);
+        timerInactividad = setTimeout(() => {
+            alert("⏰ TIEMPO DE INACTIVIDAD EXCEDIDO. SESIÓN CERRADA.");
+            cerrarSesion();
+        }, 1 * 60 * 1000); 
+    };
+
+    ["mousemove", "keydown", "click", "scroll", "touchstart"].forEach(evento => {
+        document.addEventListener(evento, reiniciarTemporizador, { passive: true });
+    });
+    reiniciarTemporizador();
+
+</script>
+
+</body>
+</html>

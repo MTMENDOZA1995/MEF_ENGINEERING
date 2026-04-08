@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>EVENTOS DISPONIBLES | MEF Engineering & Soluciones</title>
+    <link rel="stylesheet" href="ListaEventos.css">
+</head>
+<body>
+
+    <main class="menu-container">
+        
+        <header class="menu-header">
+            <a href="#" title="Cerrar sesión de forma segura" class="icon-link" onclick="cerrarSesion(event)">
+                <img src="Iconos/SALIR.png" alt="Cerrar sesión" class="icon">
+            </a>
+            <h2>LISTA DE EVENTOS</h2>
+        </header>
+
+        <nav class="menu-buttons" id="contenedorEventos" aria-label="Lista de eventos disponibles">
+            </nav>
+
+        <footer class="menu-footer">
+            <a href="#" title="Volver al Menú Principal" onclick="volverAlMenu(event)">
+                <img src="Imagenes/ECFM.png" alt="Logo MEF Engineering" class="logo">
+            </a>
+        </footer>
+
+    </main>
+
+<script>
+    'use strict';
+
+    // ==========================================
+    // 1. GESTIÓN DE SESIÓN Y NAVEGACIÓN
+    // ==========================================
+    function cerrarSesion(e) {
+        if (e && typeof e.preventDefault === 'function') e.preventDefault();
+        alert("🔒 Sesión finalizada de forma segura.");
+        sessionStorage.clear();
+        localStorage.setItem("sesionActiva", "no");
+        window.location.replace("index.html");
+    }
+
+    function validarSesion() {
+        if (sessionStorage.getItem("sesionActiva") !== "true") {
+            cerrarSesion();
+        }
+    }
+
+    function volverAlMenu(e) {
+        if (e && typeof e.preventDefault === 'function') e.preventDefault();
+        window.location.href = sessionStorage.getItem("menuUsuario") || "Botones.html";
+    }
+
+    window.addEventListener("DOMContentLoaded", validarSesion);
+    window.addEventListener("pageshow", validarSesion);
+
+    // Límite estricto de inactividad a 1 minuto
+    let timerInactividad;
+    const reiniciarTemporizador = () => {
+        clearTimeout(timerInactividad);
+        timerInactividad = setTimeout(() => {
+            alert("⏰ INACTIVIDAD DETECTADA. SESIÓN CERRADA.");
+            cerrarSesion();
+        }, 1 * 60 * 1000); 
+    };
+
+    ["mousemove", "keydown", "click", "scroll", "touchstart"].forEach(evento => {
+        document.addEventListener(evento, reiniciarTemporizador, { passive: true });
+    });
+    reiniciarTemporizador();
+
+
+    // ==========================================
+    // 2. RENDERIZADO DE EVENTOS Y SEGURIDAD
+    // ==========================================
+    document.addEventListener("DOMContentLoaded", () => {
+        const contenedor = document.getElementById("contenedorEventos");
+        
+        // ⚠️ CORRECCIÓN: La base de datos donde se guardan los eventos se llama "CrearLA"
+        const eventos = JSON.parse(localStorage.getItem("CrearLA")) || [];
+
+        contenedor.innerHTML = '';
+
+        // Si no hay eventos creados
+        if (eventos.length === 0) {
+            contenedor.innerHTML = `
+                <div style="text-align:center; padding: 30px 15px; background: #fff; border-radius: 12px; border: 1px solid #e0e0e0; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
+                    <p style="color: #666; font-weight: 600; font-size: 0.95rem; margin: 0;">NO HAY EVENTOS REGISTRADOS PARA HOY.</p>
+                </div>
+            `;
+            return;
+        }
+
+        // Crear botón por cada evento
+        eventos.forEach(evento => {
+            const boton = crearBotonEvento(evento);
+            contenedor.appendChild(boton);
+        });
+
+        function crearBotonEvento(evento) {
+            const boton = document.createElement("button");
+            boton.className = "evento-btn"; // Clase controlada por tu CSS
+            
+            const nombreLimpio = (evento.NombreEvento || "EVENTO SIN NOMBRE").trim().toUpperCase();
+
+            boton.innerHTML = `
+                <img src="Iconos/MANOSOST.png" alt="Icono Evento" class="icon-left">
+                <span class="texto">${nombreLimpio}</span>
+                <img src="Iconos/NEXTSOST.png" alt="Ingresar" class="icon-right">
+            `;
+
+            boton.addEventListener("click", () => solicitarClave(evento));
+            return boton;
+        }
+
+        // Función de seguridad (Prompt de Clave)
+        function solicitarClave(evento) {
+            const claveIngresada = prompt(`ACCESO RESTRINGIDO\n\nINGRESE LA CLAVE DE SEGURIDAD PARA EL EVENTO:\n"${evento.NombreEvento.toUpperCase()}"`);
+
+            // Si el usuario da a Cancelar o deja en blanco
+            if (claveIngresada === null || claveIngresada.trim() === "") {
+                return; 
+            }
+
+            // Desencriptación Base64
+            let claveReal = "";
+            try {
+                claveReal = atob(evento.Clave);
+            } catch (error) {
+                // Fallback por si hay datos viejos en el caché sin encriptar
+                claveReal = evento.Clave; 
+            }
+
+            // ⚠️ CORRECCIÓN: La comparación debe ser exacta (sensible a mayúsculas/minúsculas)
+            if (claveIngresada.trim() === claveReal) {
+                
+                // Acceso concedido
+                localStorage.setItem("eventoSeleccionado", JSON.stringify(evento));
+                
+                // ⚠️ CORRECCIÓN: Tu archivo ahora se llama RegistrarLista.html
+                window.location.href = "RegistrarLista.html";
+                
+            } else {
+                // Acceso denegado
+                alert("❌ CLAVE INCORRECTA. ACCESO DENEGADO.");
+            }
+        }
+    });
+</script>
+
+</body>
+</html>

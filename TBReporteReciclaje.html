@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>REPORTE DE RECICLAJE | MEF Engineering & Soluciones</title>
+    <link rel="stylesheet" href="botones.css">
+    <link rel="stylesheet" href="CrearLA.css" />
+
+    <style>
+        /* =====================================================
+           IMPORTAR FUENTE Y VARIABLES
+        ===================================================== */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+        :root {
+            --mme-primary: #1d3b20;
+            --mme-primary-hover: #142d17;
+            --mme-accent: #2e7d32;
+            --bg-app: #f4f6f5;
+            --bg-card: #ffffff;
+            --text-main: #333333;
+            --border-color: #dcdcdc;
+            --shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background-color: var(--bg-app);
+            margin: 0;
+            padding: 0;
+            color: var(--text-main);
+        }
+
+        /* =====================================================
+           CONTENEDOR PRINCIPAL
+        ===================================================== */
+        .menu-container {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            max-width: 1100px; /* Ancho amplio para tabla grande */
+            margin: 0 auto;
+            min-height: 100vh;
+            min-height: 100svh;
+            background: var(--bg-app);
+        }
+
+        /* ENCABEZADO */
+        .menu-header {
+            background-color: var(--mme-primary);
+            color: #ffffff;
+            padding: 20px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .menu-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            margin: 0;
+            text-transform: uppercase;
+        }
+
+        .icon-link {
+            position: absolute;
+            left: 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .icon {
+            width: 24px;
+            height: 24px;
+            filter: brightness(0) invert(1);
+            transition: transform 0.2s ease;
+        }
+
+        .icon:hover {
+            transform: scale(1.15);
+        }
+
+        section {
+            padding: 25px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            flex-grow: 1;
+        }
+
+        /* =====================================================
+           BUSCADOR
+        ===================================================== */
+        .search-wrapper {
+            display: flex;
+            gap: 8px;
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .search-wrapper input {
+            width: 100%;
+            padding: 14px 14px 14px 40px; /* Espacio para el ícono */
+            font-size: 0.95rem;
+            font-family: 'Inter', sans-serif;
+            border: 1.5px solid var(--border-color);
+            border-radius: 8px;
+            outline: none;
+            transition: all 0.3s ease;
+            background: #ffffff;
+        }
+
+        .search-wrapper input:focus {
+            border-color: var(--mme-accent);
+            box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.1);
+        }
+
+        /* Ícono de Lupa dentro del input */
+        .search-wrapper::before {
+            content: "🔍";
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.1rem;
+            opacity: 0.5;
+        }
+
+        /* =====================================================
+           DISEÑO DE LA TABLA DE REPORTES
+        ===================================================== */
+        .table-wrapper {
+            background: var(--bg-card);
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            border: 1px solid var(--border-color);
+            overflow-x: auto; /* Fundamental para móviles */
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 1050px; /* Para que las 11 columnas no se aplasten */
+            font-size: 0.85rem;
+        }
+
+        thead {
+            background-color: #e8f5e9;
+            border-bottom: 2px solid var(--mme-accent);
+        }
+
+        th {
+            color: var(--mme-primary);
+            font-weight: 700;
+            text-align: center;
+            padding: 16px 12px;
+            white-space: nowrap;
+            letter-spacing: 0.5px;
+        }
+
+        td {
+            padding: 14px 12px;
+            border-bottom: 1px solid #f0f0f0;
+            color: #444;
+            text-align: center;
+            vertical-align: middle;
+            white-space: nowrap;
+        }
+
+        /* Alineación específica para el nombre */
+        th:nth-child(2), td:nth-child(2) {
+            text-align: left;
+        }
+
+        tbody tr {
+            transition: background-color 0.2s ease;
+        }
+
+        tbody tr:nth-child(even) {
+            background-color: #fafbfa;
+        }
+
+        tbody tr:hover {
+            background-color: #f1f8f4;
+        }
+
+        .codigo-td {
+            font-weight: 800;
+            color: var(--mme-primary);
+        }
+
+        /* Insignia para los kilos */
+        .kilos-badge {
+            background: var(--bg-app);
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-weight: 600;
+            color: #555;
+            border: 1px solid #eee;
+            display: inline-block;
+            min-width: 60px;
+        }
+
+        /* Destacar Kilos > 0 */
+        .kilos-badge.tiene-kilos {
+            background: #e3f2fd;
+            color: #1565c0;
+            border-color: #bbdefb;
+        }
+
+        /* Insignia de Puntos Totales */
+        .puntos-total {
+            font-weight: 800;
+            color: #e65100;
+            background: #fff3e0;
+            padding: 6px 10px;
+            border-radius: 6px;
+            display: inline-block;
+        }
+
+        /* =====================================================
+           FOOTER
+        ===================================================== */
+        .card-footer {
+            background-color: var(--bg-card);
+            text-align: center;
+            padding: 15px;
+            border-top: 1px solid var(--border-color);
+            margin-top: auto;
+        }
+
+        .card-footer .logo {
+            width: 85px;
+            opacity: 0.9;
+            transition: transform 0.2s ease;
+        }
+
+        .card-footer a:hover .logo {
+            transform: scale(1.05);
+        }
+
+        /* =====================================================
+           RESPONSIVE MÓVIL
+        ===================================================== */
+        @media (max-width: 600px) {
+            section { padding: 15px 10px; }
+            .menu-title { font-size: 1rem; }
+            .table-wrapper { border-radius: 8px; }
+        }
+    </style>
+</head>
+<body>
+
+    <main class="menu-container">
+        
+        <header class="menu-header">
+            <a href="#" class="icon-link" onclick="window.history.back(); return false;" title="Volver">
+                <img src="Iconos/VOLVER.png" alt="Volver" class="icon">
+            </a>
+            <h1 class="menu-title">REPORTE RECICLAJE</h1>
+        </header>
+
+        <section>
+            
+            <div class="search-wrapper">
+                <input type="text" id="buscadorTabla" placeholder="Buscar por Nombre o Código..." onkeyup="filtrarTabla()">
+            </div>
+
+            <div class="table-wrapper">
+                <table id="tablaReporte">
+                    <thead>
+                        <tr>
+                            <th>CÓDIGO</th>
+                            <th>NOMBRE DEL CLIENTE</th>
+                            <th>PLÁSTICO (PET)</th>
+                            <th>PAPEL</th>
+                            <th>CARTÓN</th>
+                            <th>METALES</th>
+                            <th>COBRE</th>
+                            <th>BRONCE</th>
+                            <th>ALUMINIO</th>
+                            <th>RAEE</th>
+                            <th>TOTAL ECOPOINTS</th>
+                        </tr>
+                    </thead>
+                    <tbody id="cuerpoTabla">
+                        </tbody>
+                </table>
+            </div>
+
+        </section>
+
+        <footer class="card-footer">
+            <a href="#" title="Volver al Menú Principal" onclick="volverAlMenu(event)">
+                <img src="Imagenes/ECFM.png" alt="Logo de MEF Engineering" class="logo" />
+            </a>
+        </footer>
+
+    </main>
+
+<script>
+    'use strict';
+
+    // ==========================================
+    // 1. CARGAR DATOS EN LA TABLA
+    // ==========================================
+    function cargarTabla() {
+        const personal = JSON.parse(localStorage.getItem('personal')) || [];
+        const tbody = document.getElementById('cuerpoTabla');
+        tbody.innerHTML = '';
+
+        if (personal.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="11" style="text-align:center; padding: 30px; font-style:italic; color:#777;">No hay clientes registrados en la base de datos.</td></tr>`;
+            return;
+        }
+
+        personal.forEach(cliente => {
+            // Buscamos TODOS los kilos si existen, si no, ponemos 0
+            const kgPlastico = cliente.kilosPlastico || 0;
+            const kgPapel = cliente.kilosPapel || 0;
+            const kgCarton = cliente.kilosCarton || 0;
+            const kgMetales = cliente.kilosMetales || 0;
+            const kgCobre = cliente.kilosCobre || 0;
+            const kgBronce = cliente.kilosBronce || 0;
+            const kgAluminio = cliente.kilosAluminio || 0;
+            const kgRaee = cliente.kilosRaee || 0;
+            const puntos = cliente.puntos || 0;
+
+            // Función auxiliar para colorear si hay kilos registrados
+            const cls = (val) => val > 0 ? "kilos-badge tiene-kilos" : "kilos-badge";
+
+            // Construimos la fila
+            let fila = document.createElement('tr');
+            fila.innerHTML = `
+                <td class="codigo-td">${cliente.codigo || '-'}</td>
+                <td><strong>${cliente.nombres || ''}</strong> ${cliente.apellidos || ''}</td>
+                <td><span class="${cls(kgPlastico)}">${kgPlastico} Kg</span></td>
+                <td><span class="${cls(kgPapel)}">${kgPapel} Kg</span></td>
+                <td><span class="${cls(kgCarton)}">${kgCarton} Kg</span></td>
+                <td><span class="${cls(kgMetales)}">${kgMetales} Kg</span></td>
+                <td><span class="${cls(kgCobre)}">${kgCobre} Kg</span></td>
+                <td><span class="${cls(kgBronce)}">${kgBronce} Kg</span></td>
+                <td><span class="${cls(kgAluminio)}">${kgAluminio} Kg</span></td>
+                <td><span class="${cls(kgRaee)}">${kgRaee} Kg</span></td>
+                <td><span class="puntos-total">${puntos} pts</span></td>
+            `;
+            tbody.appendChild(fila);
+        });
+    }
+
+    // ==========================================
+    // 2. FILTRAR TABLA (Buscador)
+    // ==========================================
+    function filtrarTabla() {
+        let input = document.getElementById("buscadorTabla");
+        let filtro = input.value.toUpperCase();
+        let tabla = document.getElementById("tablaReporte");
+        let tr = tabla.getElementsByTagName("tr");
+
+        for (let i = 1; i < tr.length; i++) { // Saltamos el thead
+            let tdCodigo = tr[i].getElementsByTagName("td")[0];
+            let tdNombre = tr[i].getElementsByTagName("td")[1];
+            
+            if (tdCodigo || tdNombre) {
+                let textoCodigo = tdCodigo.textContent || tdCodigo.innerText;
+                let textoNombre = tdNombre.textContent || tdNombre.innerText;
+                
+                if (textoCodigo.toUpperCase().indexOf(filtro) > -1 || textoNombre.toUpperCase().indexOf(filtro) > -1) {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }       
+        }
+    }
+
+    // ==========================================
+    // 3. GESTIÓN DE SESIÓN, INACTIVIDAD Y NAVEGACIÓN
+    // ==========================================
+    function cerrarSesion(e) {
+        if (e && typeof e.preventDefault === 'function') e.preventDefault();
+        alert("🔒 Sesión finalizada de forma segura.");
+        sessionStorage.clear();
+        localStorage.setItem("sesionActiva", "no");
+        window.location.replace("index.html");
+    }
+
+    function validarSesion() {
+        if (sessionStorage.getItem("sesionActiva") !== "true") {
+            cerrarSesion();
+        }
+    }
+
+    function volverAlMenu(e) {
+        if (e) e.preventDefault();
+        window.location.href = sessionStorage.getItem("menuUsuario") || "Botones.html";
+    }
+
+    window.addEventListener("DOMContentLoaded", () => {
+        validarSesion();
+        cargarTabla(); 
+    });
+    window.addEventListener("pageshow", validarSesion);
+
+    // Control estricto de inactividad: 1 Minuto
+    let timerInactividad;
+    const reiniciarTemporizador = () => {
+        clearTimeout(timerInactividad);
+        timerInactividad = setTimeout(() => {
+            alert("⏰ TIEMPO DE INACTIVIDAD EXCEDIDO. SESIÓN CERRADA.");
+            cerrarSesion();
+        }, 1 * 60 * 1000); 
+    };
+
+    ["mousemove", "keydown", "click", "scroll", "touchstart"].forEach(evento => {
+        document.addEventListener(evento, reiniciarTemporizador, { passive: true });
+    });
+    reiniciarTemporizador();
+
+</script>
+
+</body>
+</html>

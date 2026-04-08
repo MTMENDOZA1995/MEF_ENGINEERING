@@ -1,0 +1,279 @@
+/* RESET GENERAL */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* CUERPO GENERAL */
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(to bottom, #f8f9fa, #e6ecf0);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+/* CONTENEDOR PRINCIPAL */
+.menu-container {
+  width: 400px;
+  background-color: #ffffff;
+  border-radius: 10px;
+  border: 1.5px solid #1d3b20;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+  overflow: hidden;
+}
+
+/* ENCABEZADO */
+.menu-header {
+  background-color: #1d3b20;
+  color: white;
+  padding: 12px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+
+
+.menu-header .icon {
+  font-size: 22px;
+  margin-right: 10px;
+    width: 30px;
+  height: 30px;
+}
+
+/* BOTONES */
+.menu-buttons {
+  padding: 25px 30px;
+}
+
+.menu-buttons button {
+  width: 100%;
+  padding: 14px 10px;
+  margin-bottom: 15px;
+  background-color: #ffffff;
+  border: 2px solid #1d3b20;
+  color: #1d3b20;
+  font-size: 15px;
+  font-weight: 600;
+  text-transform: uppercase;
+  border-radius: 6px;
+  transition: all 0.3s ease-in-out;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.menu-buttons button:hover {
+  background-color: #1d3b20;
+  color: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+}
+
+/* PIE DE MENÚ */
+.menu-footer {
+  text-align: center;
+  padding: 3px;
+  border-top: 1px solid #ddd;
+  color: #1d3b20;
+  font-weight: bold;
+  background-color: #f4f6f5;
+}
+
+.menu-footer img.logo {
+  width: 80px;
+  height: auto;
+  margin-bottom: 5px;
+}
+
+
+
+.evento-btn {
+  width: 100%;
+  max-width: 400px;
+  padding: 12px 20px;
+  background-color: #ffffff;
+  border: 2px solid #1d3b20;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: bold;
+  color: #1d3b20;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s ease;
+}
+
+.evento-btn:hover {
+  background-color: #1d3b20;
+  color: #ffffff;
+  transform: translateY(-2px);
+}
+
+.evento-btn .icon-left,
+.evento-btn .icon-right {
+  width: 22px;
+  height: 22px;
+}
+
+.evento-btn .texto {
+  flex-grow: 1;
+  text-align: center;
+}
+
+/* ============ PIE DE PÁGINA ============ */
+.card-footer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 8px;
+  background-color: #f9f9f9;
+  border-top: 1px solid #ddd;
+  gap: 10px;
+}
+
+.card-footer img {
+  height: 45px;
+}
+
+.card-footer span {
+  color: #1d3b20;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+/* ========== RESPONSIVE PROFESIONAL PARA SAMSUNG S24 Y OTROS CELULARES ========== */
+@media screen and (max-width: 480px) {
+  html, body {
+    margin: 0;
+    padding: 0;
+    width: 100vw;
+    height: 100svh; /* Altura real visible en móviles modernos */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f4f4f4;
+    overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
+    -webkit-user-select: none;
+    user-select: none;
+    touch-action: manipulation;
+  }
+
+  .menu-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    min-height: 100%;
+    background-color: #ffffff;
+    border-radius: 0 !important;
+    box-shadow: none;
+    overflow: hidden;
+  }
+
+  .menu-header {
+    font-size: 1rem;
+    padding: 16px;
+    background-color: #1d3b20;
+    color: white;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    flex-shrink: 0;
+    border-radius: 0 !important;
+  }
+
+  .menu-header .icon-ecfm {
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
+  }
+
+  .menu-buttons {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 20px 16px;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    gap: 16px;
+  }
+
+  .menu-buttons button,
+  .evento-btn {
+    width: 100%;
+    font-size: 1rem;
+    padding: 14px;
+    border-radius: 8px;
+    border: 2px solid #1d3b20;
+    background-color: #ffffff;
+    color: #1d3b20;
+    font-weight: 600;
+    text-transform: uppercase;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    text-align: center;
+  }
+
+  .menu-buttons button:hover,
+  .evento-btn:hover {
+    background-color: #1d3b20;
+    color: #ffffff;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  .evento-btn {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+  }
+
+  .evento-btn .texto {
+    flex: 1;
+    text-align: center;
+    font-weight: 600;
+  }
+
+  .evento-btn .icon-left,
+  .evento-btn .icon-right {
+    width: 24px;
+    height: 24px;
+  }
+
+  .menu-footer,
+  .card-footer {
+    flex-shrink: 0; /* ✅ Asegura visibilidad total del footer */
+    padding: 12px;
+    font-size: 0.85rem;
+    text-align: center;
+    background-color: #f4f6f5;
+    border-top: 1px solid #ccc;
+    color: #1d3b20;
+    border-radius: 0 !important;
+  }
+
+  .menu-footer img.logo,
+  .card-footer img.logo {
+    width: 70px;
+    height: auto;
+    display: block;
+    margin: 6px auto 4px;
+  }
+
+  .menu-footer span,
+  .card-footer span {
+    display: block;
+    font-weight: bold;
+    font-size: 0.9rem;
+    line-height: 1.4;
+  }
+}

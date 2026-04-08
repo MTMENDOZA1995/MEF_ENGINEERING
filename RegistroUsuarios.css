@@ -1,0 +1,290 @@
+/* =====================================================
+   RESET BÁSICO
+===================================================== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* =====================================================
+   ESTILO GENERAL DEL BODY
+===================================================== */
+body {
+  background-color: #f4f4f4;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+/* =====================================================
+   TARJETA PRINCIPAL
+===================================================== */
+.card {
+  width: 400px;
+  background-color: #ffffff;
+  border: 1.5px solid #1d3b20;
+  border-radius: 10px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+/* =====================================================
+   ENCABEZADO DE LA TARJETA
+===================================================== */
+.card-header {
+  background-color: #1d3b20;
+  color: #ffffff;
+  padding: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px 8px 0 0;
+}
+
+.card-header .header-content {
+  display: flex;
+  align-items: center;
+  gap: 25px;
+}
+
+.card-header .icon {
+  width: 28px;
+  height: 28px;
+  cursor: pointer;
+  transition: transform 0.2s ease, filter 0.2s ease;
+  filter: brightness(1) contrast(1);
+}
+
+.card-header .icon:hover {
+  transform: scale(1.1);
+  filter: brightness(1.2);
+}
+
+/* =====================================================
+   FORMULARIO DE REGISTRO
+===================================================== */
+.card-form {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+/* Campos en línea (fila doble) */
+.card-form .row {
+  display: flex;
+  gap: 12px;
+}
+
+.card-form .row .form-group {
+  flex: 1;
+}
+
+/* Etiquetas */
+.card-form label {
+  font-size: 15px;
+  font-weight: bold;
+  color: #1d3b20;
+  margin-bottom: 3px;
+  display: block;
+}
+
+/* Inputs */
+.card-form input {
+  width: 100%;
+  padding: 8px;
+  font-size: 13px;
+  border: 1.5px solid #ccc;
+  border-left: 4px solid #1d3b20;
+  border-radius: 4px;
+  background-color: #fefefe;
+}
+
+/* Botón */
+.card-form button {
+  margin-top: 1px;
+  padding: 10px;
+  font-size: 14px;
+  font-weight: bold;
+  background-color: #1d3b20;
+  color: #ffffff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.card-form button:hover {
+  background-color: #143117;
+}
+
+/* Elemento Select adicional */
+.form-group select {
+  width: 100%;
+  padding: 8px 12px;
+  font-size: 14px;
+  border: 2px solid #ccd5cc;
+  border-left: 5px solid #1d3b20;
+  border-radius: 6px;
+  background-color: #fff;
+  transition: border-color 0.3s ease;
+}
+
+.form-group select:focus {
+  outline: none;
+  border-color: #1d3b20;
+}
+
+/* =====================================================
+   PIE DE TARJETA / FOOTER
+===================================================== */
+.card-footer {
+  background-color: #ffffff;
+  color: #1d3b20;
+  text-align: center;
+  padding: 5px;
+  font-size: 1px;
+  font-weight: bold;
+  border-top: 1px solid #ccc;
+}
+
+.card-footer .logo {
+  width: 80px;
+  height: auto;
+  display: block;
+  margin: 0 auto 6px;
+}
+
+/* ============================================= 
+   RESPONSIVE PROFESIONAL PARA MÓVILES
+============================================= */
+@media (max-width: 480px) {
+  html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    min-height: 100svh;
+    background-color: #f4f4f4;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    overflow-x: hidden;
+    -webkit-user-select: none;
+    user-select: none;
+    touch-action: manipulation;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .card {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 100%;
+    margin: 0 auto;
+    background: #ffffff;
+    border-radius: 0 !important;
+    box-shadow: none;
+    min-height: 100%;
+  }
+
+  .card-header {
+    padding: 16px;
+    font-size: 0.8rem; /* TAMAÑO DE LA LETRA DEL ENCABEZADO */
+    font-weight: 600;
+    text-align: center;
+    background-color: #1d3b20;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0 !important;
+  }
+
+  .card-header .header-content {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .card-header .icon {
+    width: 28px;
+    height: 28px;
+    object-fit: contain;
+  }
+
+  .card-form {
+    flex: 1;
+    padding: 20px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    justify-content: flex-start;
+  }
+
+  .card-form label {
+    font-size: 0.85rem;
+    color: #333;
+  }
+
+  .card-form input,
+  .card-form select {
+    font-size: 0.85rem;
+    padding: 12px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    outline: none;
+    width: 100%;
+  }
+
+  .card-form input:focus,
+  .card-form select:focus {
+    border-color: #1d3b20;
+    box-shadow: 0 0 0 2px rgba(29, 59, 32, 0.15);
+  }
+
+  .card-form button {
+    font-size: 0.9rem;
+    padding: 14px;
+    border-radius: 8px;
+    background-color: #1d3b20;
+    color: #fff;
+    border: none;
+    font-weight: 600;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  }
+
+  .card-form button:hover {
+    background-color: #163016;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  .card-footer {
+    padding: 12px;
+    font-size: 0.8rem;
+    text-align: center;
+    background-color: #f1f1f1;
+    color: #555;
+    border-top: 1px solid #ccc;
+    flex-shrink: 0;
+  }
+
+  .card-footer .logo {
+    width: 60px;
+    height: auto;
+    display: block;
+    margin: 8px auto 6px;
+  }
+}

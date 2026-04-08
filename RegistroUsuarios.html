@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>REGISTRAR USUARIO | MEF Engineering & Soluciones</title>
+    <link rel="stylesheet" href="RegistroUsuarios.css">
+    <style>
+        /* Estilos específicos para el input de contraseña con ícono */
+        .password-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        .password-wrapper input {
+            width: 100%;
+            padding-right: 40px; /* Deja espacio para que el texto no pise el ícono */
+        }
+        .toggle-password {
+            position: absolute;
+            right: 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 4px;
+            border-radius: 50%;
+            transition: background-color 0.2s ease;
+        }
+        .toggle-password:hover {
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+        .toggle-password img {
+            width: 20px;
+            height: 20px;
+            opacity: 0.6;
+            transition: opacity 0.2s ease;
+        }
+        .toggle-password:hover img {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+
+    <main class="card">
+        
+        <header class="card-header">
+            <div class="header-content">
+                <a href="TBRegistroUsuarios.html" title="Ver usuarios registrados" class="icon-link">
+                    <img src="Iconos/LUPA1.png" alt="Ver usuarios registrados" class="icon">
+                </a>
+                <h1>REGISTRAR USUARIO</h1>
+            </div>
+        </header>
+
+        <section class="card-body">
+            <form class="card-form" id="formRegistroUsuario" autocomplete="off" novalidate>
+                
+                <div class="form-group">
+                    <label for="codigo">CÓDIGO DE PERSONAL:</label>
+                    <input 
+                        type="text" 
+                        id="codigo" 
+                        name="codigo" 
+                        placeholder="Ej. P001 (Presione Enter o salga del campo)" 
+                        required 
+                        oninput="this.value = this.value.toUpperCase()"
+                        autofocus
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="dni">DNI:</label>
+                    <input type="text" id="dni" name="dni" placeholder="Autollenado" readonly tabindex="-1">
+                </div>
+
+                <div class="form-group">
+                    <label for="apellidos">APELLIDOS:</label>
+                    <input type="text" id="apellidos" name="apellidos" placeholder="Autollenado" readonly tabindex="-1">
+                </div>
+
+                <div class="form-group">
+                    <label for="nombres">NOMBRES:</label>
+                    <input type="text" id="nombres" name="nombres" placeholder="Autollenado" readonly tabindex="-1">
+                </div>
+
+                <div class="form-group">
+                    <label for="cargo">CARGO (ROL):</label>
+                    <select id="cargo" name="cargo" required>
+                        <option value="" disabled selected>Seleccione un cargo...</option>
+                        <option value="ADMINISTRADOR">ADMINISTRADOR</option>
+                        <option value="SUPERVISOR">SUPERVISOR</option>
+                        <option value="ASISTENTE">ASISTENTE</option>
+                        <option value="OPERARIO">OPERARIO</option>
+                    </select>
+                </div> 
+
+                <div class="form-group">
+                    <label for="id">ID DE USUARIO (Login):</label>
+                    <input 
+                        type="text" 
+                        id="id" 
+                        name="id" 
+                        placeholder="Ej. MMENDOZA" 
+                        required 
+                        oninput="this.value = this.value.toUpperCase()" 
+                    />
+                </div>
+
+                <div class="form-group">
+                    <label for="clave">CONTRASEÑA:</label>
+                    <div class="password-wrapper">
+                        <input 
+                            type="password" 
+                            id="clave" 
+                            name="clave" 
+                            placeholder="Mín. 7 caracteres (Letras y números)" 
+                            minlength="7" 
+                            maxlength="20" 
+                            required 
+                        />
+                        <span class="toggle-password" id="togglePassword" title="Mostrar/Ocultar contraseña">
+                            <img src="Iconos/VER.png" id="eyeIcon" alt="Mostrar">
+                        </span>
+                    </div>
+                </div>
+
+                <button type="submit" class="submit-btn">CREAR USUARIO</button>
+            </form>
+        </section>
+
+        <footer class="card-footer">
+            <a href="#" title="Volver al Menú Principal" onclick="volverAlMenu(event)">
+                <img src="Imagenes/ECFM.png" alt="Logo MEF Engineering" class="logo">
+            </a>
+        </footer>
+        
+    </main>
+
+<script>
+    'use strict';
+
+    // ==========================================
+    // 1. GESTIÓN DE SESIÓN Y NAVEGACIÓN
+    // ==========================================
+    function cerrarSesion(e) {
+        if (e && typeof e.preventDefault === 'function') e.preventDefault();
+        alert("🔒 Sesión finalizada de forma segura.");
+        sessionStorage.clear();
+        localStorage.setItem("sesionActiva", "no");
+        window.location.replace("index.html");
+    }
+
+    function validarSesion() {
+        if (sessionStorage.getItem("sesionActiva") !== "true") {
+            cerrarSesion();
+        }
+    }
+
+    function volverAlMenu(e) {
+        if (e && typeof e.preventDefault === 'function') e.preventDefault();
+        window.location.href = sessionStorage.getItem("menuUsuario") || "Botones.html";
+    }
+
+    window.addEventListener("DOMContentLoaded", validarSesion);
+    window.addEventListener("pageshow", validarSesion);
+
+    // Inactividad estricta a 1 minuto
+    let timerInactividad;
+    const reiniciarTemporizador = () => {
+        clearTimeout(timerInactividad);
+        timerInactividad = setTimeout(() => {
+            alert("⏰ INACTIVIDAD DETECTADA. SESIÓN CERRADA.");
+            cerrarSesion();
+        }, 1 * 60 * 1000); 
+    };
+
+    ["mousemove", "keydown", "click", "scroll", "touchstart"].forEach(evento => {
+        document.addEventListener(evento, reiniciarTemporizador, { passive: true });
+    });
+    reiniciarTemporizador();
+
+
+    // ==========================================
+    // 2. LÓGICA PRINCIPAL (AUTOCOMPLETADO, OJITO Y REGISTRO)
+    // ==========================================
+    document.addEventListener("DOMContentLoaded", () => {
+        
+        const form = document.getElementById('formRegistroUsuario');
+        const inputCodigo = document.getElementById('codigo');
+        const inputClave = document.getElementById('clave');
+        const togglePassword = document.getElementById('togglePassword');
+        const eyeIcon = document.getElementById('eyeIcon');
+
+        // --- LÓGICA DEL OJITO (MOSTRAR/OCULTAR CONTRASEÑA) ---
+        togglePassword.addEventListener('click', function () {
+            const isPassword = inputClave.getAttribute('type') === 'password';
+            
+            // Intercambiar entre texto y contraseña
+            inputClave.setAttribute('type', isPassword ? 'text' : 'password');
+            
+            // Feedback visual: Si se ve, el icono brilla más
+            eyeIcon.style.opacity = isPassword ? "1" : "0.6";
+        });
+
+
+        // --- LÓGICA DE AUTOCOMPLETADO DE PERSONAL ---
+        const limpiarCampos = () => {
+            ['dni', 'apellidos', 'nombres'].forEach(id => {
+                document.getElementById(id).value = '';
+            });
+        };
+
+        const cargarDatosPersonal = () => {
+            const codigo = inputCodigo.value.trim().toUpperCase();
+            
+            if (!codigo) {
+                limpiarCampos();
+                return false;
+            }
+
+            const personal = JSON.parse(localStorage.getItem('personal')) || [];
+            const persona = personal.find(p => p.codigo === codigo);
+
+            if (persona) {
+                document.getElementById('dni').value = persona.dni || '';
+                document.getElementById('apellidos').value = persona.apellidos || '';
+                document.getElementById('nombres').value = persona.nombres || '';
+                return true;
+            } else {
+                limpiarCampos();
+                inputCodigo.value = ''; 
+                alert("⚠️ CÓDIGO NO ENCONTRADO.\nPara crear un usuario, el trabajador debe estar registrado primero en el módulo de 'Personal'.");
+                inputCodigo.focus();
+                return false;
+            }
+        };
+
+        inputCodigo.addEventListener('blur', cargarDatosPersonal);
+        
+        inputCodigo.addEventListener('keypress', function(e) {
+            if(e.key === 'Enter') {
+                e.preventDefault(); 
+                if (cargarDatosPersonal()) {
+                    document.getElementById('cargo').focus(); // Salta al selector de rol
+                }
+            }
+        });
+
+
+        // --- PROCESAR EL REGISTRO FINAL ---
+        form.addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            // 1. Validar que el autocompletado haya traído datos
+            if (!document.getElementById('dni').value) {
+                alert("⚠️ ERROR: Faltan los datos del personal. Ingrese un código válido primero.");
+                inputCodigo.focus();
+                return;
+            }
+
+            const idTexto = document.getElementById('id').value.trim().toUpperCase();
+            const claveTexto = inputClave.value.trim();
+            const cargoSelect = document.getElementById('cargo').value;
+
+            // 2. Validar selección de rol
+            if (!cargoSelect) {
+                alert("⚠️ POR FAVOR, SELECCIONE EL CARGO (ROL) PARA ESTE USUARIO.");
+                document.getElementById('cargo').focus();
+                return;
+            }
+
+            // 3. Validar campos de acceso vacíos
+            if (!idTexto || !claveTexto) {
+                alert("⚠️ POR FAVOR, CREA UN ID Y UNA CONTRASEÑA PARA ESTE USUARIO.");
+                return;
+            }
+
+            // 4. Validación estricta de contraseña
+            if (!/^(?=.*[A-Za-z])(?=.*\d).{7,}$/.test(claveTexto)) {
+                alert("⚠️ SEGURIDAD DÉBIL:\nLa contraseña debe tener al menos 7 caracteres e incluir una mezcla de letras y números.");
+                inputClave.focus();
+                return;
+            }
+
+            const usuarios = JSON.parse(localStorage.getItem('usuarios')) || [];
+
+            // 5. Validar duplicados (Código)
+            if (usuarios.some(u => u.codigo === inputCodigo.value.trim().toUpperCase())) {
+                alert("⚠️ ESTE TRABAJADOR YA TIENE UNA CUENTA DE USUARIO CREADA.");
+                return;
+            }
+
+            // 6. Validar duplicados (ID Login)
+            if (usuarios.some(u => u.id === idTexto)) {
+                alert(`⚠️ EL ID DE USUARIO "${idTexto}" YA EXISTE.\nPor favor, invente un ID diferente (ej. agregue un número o la inicial del segundo nombre).`);
+                document.getElementById('id').focus();
+                return;
+            }
+
+            // 7. Construcción y guardado
+            const nuevoUsuario = {
+                codigo: inputCodigo.value.trim().toUpperCase(),
+                dni: document.getElementById('dni').value.trim(),
+                apellidos: document.getElementById('apellidos').value.trim().toUpperCase(),
+                nombres: document.getElementById('nombres').value.trim().toUpperCase(),
+                cargo: cargoSelect,
+                id: idTexto,
+                clave: btoa(claveTexto) // ⚠️ ENCRIPTACIÓN BASE64 DE LA CONTRASEÑA
+            };
+
+            usuarios.push(nuevoUsuario);
+            localStorage.setItem('usuarios', JSON.stringify(usuarios));
+
+            alert(`✅ USUARIO CREADO CON ÉXITO.\n\nNombre: ${nuevoUsuario.nombres}\nID de Acceso: ${nuevoUsuario.id}\nRol del Sistema: ${nuevoUsuario.cargo}`);
+            
+            this.reset();
+            // Restablecer el icono del ojo por si se quedó como texto
+            inputClave.setAttribute('type', 'password');
+            eyeIcon.style.opacity = "0.6";
+
+            window.location.href = 'RegistroUsuarios.html';
+        });
+    });
+</script>
+
+</body>
+</html>

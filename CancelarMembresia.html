@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>CANCELAR MEMBRESÍA | MEF Engineering & Soluciones</title>
+    
+    <style>
+        /* =====================================================
+           IMPORTAR FUENTE (Google Fonts - Inter)
+        ===================================================== */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+        /* =====================================================
+           VARIABLES PRO
+        ===================================================== */
+        :root {
+            --mme-primary: #1d3b20;
+            --mme-primary-hover: #142d17;
+            --mme-accent: #2e7d32;
+            --danger-color: #c62828;
+            --danger-hover: #b71c1c;
+            --bg-app: #f4f6f5;
+            --bg-card: #ffffff;
+            --text-main: #222222;
+            --text-label: #555555;
+            --border-color: #dcdcdc;
+            
+            --shadow-card: 0 10px 30px rgba(0, 0, 0, 0.08);
+            --shadow-btn: 0 4px 12px rgba(198, 40, 40, 0.25);
+            --transition-smooth: all 0.25s cubic-bezier(0.25, 0.8, 0.25, 1);
+            --font-base: 'Inter', -apple-system, sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-app);
+            font-family: var(--font-base);
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            min-height: 100svh;
+            -webkit-font-smoothing: antialiased;
+            padding: 20px;
+        }
+
+        .card {
+            width: 100%;
+            max-width: 420px;
+            background-color: var(--bg-card);
+            border-radius: 16px;
+            box-shadow: var(--shadow-card);
+            overflow: hidden;
+            border: 1.5px solid var(--mme-primary);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-header {
+            background-color: var(--mme-primary);
+            color: #ffffff;
+            padding: 20px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .menu-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin: 0;
+            text-align: center;
+        }
+
+        .card-header .icon-link {
+            position: absolute;
+            left: 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .card-header .icon {
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .card-header .icon:hover {
+            transform: scale(1.15);
+        }
+
+        .card-form {
+            padding: 24px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .card-form label {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--mme-primary);
+            margin-bottom: 6px;
+            display: block;
+            text-transform: uppercase;
+        }
+
+        .search-wrapper {
+            display: flex;
+            gap: 8px;
+        }
+
+        .card-form input {
+            width: 100%;
+            padding: 12px 14px;
+            font-size: 0.95rem;
+            font-family: var(--font-base);
+            color: var(--text-main);
+            border: 1.5px solid var(--border-color);
+            border-radius: 8px;
+            background-color: #fafbfa;
+            transition: var(--transition-smooth);
+            outline: none;
+        }
+
+        .card-form input:focus {
+            background-color: #ffffff;
+            border-color: var(--mme-accent);
+            box-shadow: inset 4px 0 0 var(--mme-primary), 0 0 0 3px rgba(46, 125, 50, 0.1);
+        }
+
+        .btn-search {
+            width: 55px;
+            background: var(--mme-primary);
+            border-radius: 8px;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+        }
+
+        .btn-search:hover {
+            background: var(--mme-primary-hover);
+        }
+
+        .btn-search img {
+            width: 22px;
+        
+        }
+
+        /* Resultados de búsqueda */
+        .info-cliente {
+            display: none;
+            background: #ffffff;
+            border: 1.5px solid var(--danger-color);
+            padding: 18px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(198, 40, 40, 0.05);
+        }
+
+        .info-cliente p {
+            font-size: 0.95rem;
+            margin-bottom: 8px;
+            color: var(--text-main);
+        }
+
+        .info-cliente strong {
+            color: var(--mme-primary);
+        }
+
+        .alerta-activa {
+            display: none;
+            background: #f1f8f4;
+            color: var(--mme-accent);
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-align: center;
+            margin-top: 15px;
+            border: 1px solid #c8e6c9;
+        }
+
+        /* BOTÓN DE CANCELACIÓN (PELIGRO) */
+        .btn-confirmar {
+            width: 100%;
+            margin-top: 18px;
+            padding: 16px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            background: var(--danger-color);
+            color: #ffffff;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            box-shadow: var(--shadow-btn);
+            display: none;
+        }
+
+        .btn-confirmar:hover {
+            background: var(--danger-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(198, 40, 40, 0.35);
+        }
+
+        .btn-confirmar:active {
+            transform: scale(0.98);
+        }
+
+        .card-footer {
+            background-color: #f9fafa;
+            text-align: center;
+            padding: 15px;
+            border-top: 1px solid var(--border-color);
+            margin-top: auto;
+        }
+
+        .card-footer .logo {
+            width: 75px;
+            height: auto;
+            transition: transform 0.2s ease;
+        }
+
+        .card-footer a:hover .logo {
+            transform: scale(1.05);
+        }
+
+        @media (max-width: 480px) {
+            body { padding: 10px; align-items: flex-start; }
+            .card { border-radius: 12px; min-height: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+<main class="card">
+    <header class="card-header">
+      <a href="#" title="Cerrar sesión" class="icon-link" onclick="cerrarSesion(event, '🔒 Sesión finalizada de forma segura.')">
+        <img src="Iconos/SALIR.png" alt="Cerrar sesión" class="icon">
+      </a>
+      <h1 class="menu-title">CANCELAR MEMBRESÍA</h1>
+    </header>
+
+    <div class="card-form">
+        <div class="form-group">
+            <label for="busquedaCodigo">CÓDIGO (Cliente):</label>
+            <div class="search-wrapper">
+                <input type="text" id="busquedaCodigo" placeholder="Ingresar Código" oninput="this.value = this.value.toUpperCase()" autofocus>
+                <button type="button" class="btn-search" onclick="buscarCliente()" title="Buscar Plan">
+                    <img src="Iconos/LUPA1.png" alt="Buscar">
+                </button>
+            </div>
+        </div>
+
+        <div id="resultadoBusqueda" class="info-cliente">
+            <p><strong>Nombre:</strong> <span id="resNombre">---</span></p>
+            <p><strong>DNI:</strong> <span id="resDni">---</span></p>
+            <p><strong>N° Celular:</strong> <span id="resCelular">---</span></p>
+            <p><strong>Plan Actual:</strong> <span id="resPlan" style="color: var(--danger-color); font-weight: 800;">---</span></p>
+            
+            <div id="msgYaTienePlan" class="alerta-activa">
+                ℹ️ ESTE CLIENTE NO TIENE NINGUNA MEMBRESÍA ACTIVA PARA CANCELAR.
+            </div>
+
+            <button id="btnConfirmar" class="btn-confirmar" onclick="cancelarMembresia()">CANCELAR MEMBRESÍA</button>
+        </div>
+    </div>
+
+    <footer class="card-footer">
+      <a href="#" title="Volver al Menú Principal" onclick="volverAlMenu(event)">
+        <img src="Imagenes/ECFM.png" alt="Logo de MEF Engineering" class="logo" />
+      </a>
+    </footer>
+</main>
+
+<script>
+    'use strict';
+
+    // ==========================================
+    // 1. INICIALIZACIÓN DE DATOS
+    // ==========================================
+    const inputBusqueda = document.getElementById('busquedaCodigo');
+
+    // ==========================================
+    // 2. GESTIÓN DE SESIÓN Y SEGURIDAD
+    // ==========================================
+    function cerrarSesion(e, mensaje) {
+        if (e && typeof e.preventDefault === 'function') {
+            e.preventDefault();
+        }
+        if (mensaje) alert(mensaje);
+        
+        sessionStorage.clear();
+        localStorage.setItem("sesionActiva", "no");
+        window.location.replace("index.html");
+    }
+
+    function validarSesion() {
+        const activa = sessionStorage.getItem("sesionActiva");
+        if (activa !== "true") {
+            cerrarSesion(null, "⚠️ ACCESO DENEGADO. SESIÓN CERRADA.");
+        }
+    }
+
+    function volverAlMenu(e) {
+        if (e) e.preventDefault();
+        window.location.href = sessionStorage.getItem("menuUsuario") || "Botones.html";
+    }
+
+    window.addEventListener("DOMContentLoaded", validarSesion);
+    window.addEventListener("pageshow", validarSesion);
+
+    let timerInactividad;
+    const reiniciarTemporizador = () => {
+        clearTimeout(timerInactividad);
+        timerInactividad = setTimeout(() => {
+            cerrarSesion(null, "⏰ TIEMPO DE INACTIVIDAD EXCEDIDO. SESIÓN CERRADA.");
+        }, 1 * 60 * 1000); 
+    };
+
+    ["mousemove", "keydown", "click", "scroll", "touchstart"].forEach(evento => {
+        document.addEventListener(evento, reiniciarTemporizador, { passive: true });
+    });
+    reiniciarTemporizador();
+
+    // ==========================================
+    // 3. LÓGICA DE BÚSQUEDA Y CANCELACIÓN (CORREGIDA)
+    // ==========================================
+    function buscarCliente() {
+        const codigo = inputBusqueda.value.trim().toUpperCase();
+        if (!codigo) return;
+
+        // ⚠️ CORRECCIÓN: Buscamos en la base de datos correcta (personal), 
+        // ya que ahí se guardan las membresías según ConfirmarCompra.html
+        const personal = JSON.parse(localStorage.getItem('personal')) || [];
+        const clientePersonal = personal.find(p => p.codigo === codigo);
+
+        if (clientePersonal) {
+            document.getElementById('resultadoBusqueda').style.display = 'block';
+            document.getElementById('resNombre').innerText = `${clientePersonal.nombres} ${clientePersonal.apellidos}`;
+            document.getElementById('resDni').innerText = clientePersonal.dni;
+            
+            // ⚠️ CORRECCIÓN: Mostrar celular
+            document.getElementById('resCelular').innerText = clientePersonal.celular || 'No registrado';
+
+            // Verificamos si tiene un plan activo en la base de personal
+            if (clientePersonal.membresiaActual && clientePersonal.membresiaActual.trim() !== "") {
+                document.getElementById('resPlan').innerText = clientePersonal.membresiaActual.toUpperCase();
+                document.getElementById('msgYaTienePlan').style.display = 'none';
+                document.getElementById('btnConfirmar').style.display = 'block';
+            } else {
+                document.getElementById('resPlan').innerText = "NINGUNO";
+                document.getElementById('msgYaTienePlan').style.display = 'block';
+                document.getElementById('btnConfirmar').style.display = 'none';
+            }
+        } else {
+            document.getElementById('resultadoBusqueda').style.display = 'none';
+            alert("⚠️ CLIENTE NO ENCONTRADO en la base de datos.");
+        }
+    }
+
+    inputBusqueda.addEventListener('keypress', (e) => {
+        if(e.key === 'Enter') buscarCliente();
+    });
+
+    function cancelarMembresia() {
+        const codigoCliente = inputBusqueda.value.trim().toUpperCase();
+        
+        // ⚠️ CORRECCIÓN: Modificamos la base de datos correcta
+        let personal = JSON.parse(localStorage.getItem('personal')) || [];
+        let idxPersonal = personal.findIndex(p => p.codigo === codigoCliente);
+
+        if (idxPersonal !== -1 && personal[idxPersonal].membresiaActual) {
+            
+            // Ventana de confirmación por seguridad
+            const confirmar = confirm(`¿Estás seguro de que deseas CANCELAR la membresía de ${personal[idxPersonal].nombres}?\n\nPerderá sus créditos actuales, pero mantendrá sus Ecopoints.`);
+            
+            if (confirmar) {
+                // Obtenemos la fecha de la cancelación
+                const fechaActualLocal = new Date();
+                fechaActualLocal.setMinutes(fechaActualLocal.getMinutes() - fechaActualLocal.getTimezoneOffset());
+                const fechaMovimiento = fechaActualLocal.toISOString().split('T')[0];
+
+                // Borramos el plan y los créditos, conservamos los puntos
+                personal[idxPersonal].membresiaActual = "";
+                personal[idxPersonal].creditos = 0;
+                personal[idxPersonal].fechaMovimiento = fechaMovimiento; 
+
+                // Guardamos los cambios
+                localStorage.setItem('personal', JSON.stringify(personal));
+                
+                alert(`✅ MEMBRESÍA CANCELADA CON ÉXITO.\nLos créditos se han restablecido a 0.`);
+                window.location.href = 'Membresias.html'; // ⚠️ Ajusta esta ruta a tu panel principal de membresías si es diferente
+            }
+        } else {
+            alert("⛔ ERROR: Este cliente no tiene un registro de membresía activo.");
+        }
+    }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>REGISTRO DE ASISTENCIAS | MEF Engineering & Soluciones</title>
+    <style>
+        /* VARIABLES GLOBALES */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+        :root {
+            --color-principal: #1d3b20;
+            --color-fondo: #f5f7fa;
+            --color-tabla: #fff;
+            --color-texto: #333;
+            --color-hover: #e6f4ea;
+            --color-par: #f9f9f9;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            padding: 20px;
+            font-family: 'Inter', -apple-system, sans-serif;
+            background-color: var(--color-fondo);
+            color: var(--color-texto);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        main {
+            width: 100%;
+            max-width: 1200px;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 1.5rem;
+            color: var(--color-principal);
+            margin-bottom: 2rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .icon-bar {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            margin-bottom: 20px;
+            width: 100%;
+            max-width: 1200px;
+        }
+
+        .icon-bar a img {
+            width: 28px;
+            height: 28px;
+            cursor: pointer;
+            transition: transform 0.2s ease, opacity 0.2s ease;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+        }
+
+        .icon-bar a img:hover {
+            transform: scale(1.15);
+            opacity: 0.8;
+        }
+
+        .contenedor-select {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            background: #ffffff;
+            padding: 15px 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            border: 1px solid #e0e0e0;
+        }
+
+        .contenedor-select label {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--color-principal);
+            text-transform: uppercase;
+        }
+
+        select {
+            padding: 0.6rem 1rem;
+            border: 1.5px solid #ccc;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-family: 'Inter', sans-serif;
+            background-color: #fff;
+            color: var(--color-texto);
+            min-width: 280px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+            cursor: pointer;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        select:focus {
+            border-color: #2e7d32;
+        }
+
+        /* CONTENEDOR DE TABLA RESPONSIVA */
+        .table-container {
+            width: 100%;
+            overflow-x: auto;
+            border-radius: 12px;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+            background-color: var(--color-tabla);
+            margin-bottom: 2rem;
+            border: 1px solid #e0e0e0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 900px;
+        }
+
+        thead {
+            background-color: var(--color-principal);
+            color: #fff;
+        }
+
+        th, td {
+            padding: 14px 12px;
+            text-align: center;
+            font-size: 0.85rem;
+            border-bottom: 1px solid #f0f0f0;
+            white-space: nowrap;
+        }
+
+        th {
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+        }
+
+        tbody tr:nth-child(even) { background-color: var(--color-par); }
+        tbody tr:hover { background-color: var(--color-hover); }
+
+        td[colspan] {
+            font-style: italic;
+            color: #777;
+            padding: 20px;
+        }
+
+        .boton-accion {
+            width: 45px;
+            height: 45px;
+            padding: 8px;
+            border: none;
+            border-radius: 8px;
+            background-color: transparent;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .boton-accion:hover { 
+            transform: scale(1.1) translateY(-2px); 
+            background-color: rgba(46, 125, 50, 0.1);
+        }
+
+        .boton-accion img {
+            width: 26px;
+            height: 26px;
+            object-fit: contain;
+            pointer-events: none;
+        }
+
+        /* ADAPTACIÓN MÓVIL */
+        @media (max-width: 600px) {
+            body { padding: 15px 10px; }
+            h1 { font-size: 1.2rem; }
+            .icon-bar { justify-content: center; gap: 25px; }
+            .contenedor-select { flex-direction: column; align-items: stretch; padding: 15px; }
+            select { width: 100%; min-width: 100%; }
+            .acciones-wrapper { display: flex; justify-content: center; gap: 15px; }
+            th, td { padding: 10px 8px; font-size: 0.8rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="icon-bar" aria-label="Navegación superior">
+        <a href="#" title="Volver al Menú Principal" onclick="volverAlMenu(event)">
+            <img src="Iconos/MENU1.webp" alt="Menú">
+        </a>
+        <a href="TBEventosRegistrados.html" title="Regresar a Lista de Eventos">
+            <img src="Iconos/VOLVER.png" alt="Volver">
+        </a>
+        <a href="#" title="Cerrar Sesión de forma segura" onclick="cerrarSesion(event)">
+            <img src="Iconos/SALIR.png" alt="Cerrar sesión">
+        </a>
+    </nav>
+
+    <main>
+        <h1>REGISTRO GENERAL DE ASISTENCIAS</h1>
+
+        <div class="contenedor-select">
+            <label for="eventoSelect">EVENTO:</label>
+            <select id="eventoSelect">
+                <option disabled selected value="">Seleccione un evento</option>
+            </select>
+
+            <div class="acciones-wrapper">
+                <button id="btnEliminarEvento" class="boton-accion" title="Eliminar Registro de Asistencia">
+                    <img src="Iconos/ELIDATOS.png" alt="Eliminar" />
+                </button>
+                <button id="btnDescargarDatos" class="boton-accion" title="Descargar Reporte en Excel">
+                    <img src="Iconos/DESCARGAR1.webp" alt="Descargar" />
+                </button>
+            </div>
+        </div>
+
+        <div class="table-container">
+            <table id="tablaAsistencias">
+                <thead>
+                    <tr>
+                        <th>CÓDIGO</th>
+                        <th>DNI</th>
+                        <th>APELLIDOS Y NOMBRES</th>
+                        <th>CARGO</th>
+                        <th>FECHA</th>
+                        <th>HORA ENTRADA</th>
+                        <th>HORA SALIDA</th>
+                        <th>TARDANZA</th>
+                        <th>TIEMPO TOTAL</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td colspan="9">SELECCIONE UN EVENTO PARA VER LOS REGISTROS.</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+<script>
+    'use strict';
+
+    // ==========================================
+    // 1. GESTIÓN DE SESIÓN Y SEGURIDAD
+    // ==========================================
+    function cerrarSesion(e) {
+        if (e && typeof e.preventDefault === 'function') e.preventDefault();
+        alert("🔒 Sesión finalizada de forma segura.");
+        sessionStorage.clear();
+        localStorage.setItem("sesionActiva", "no");
+        window.location.replace("index.html");
+    }
+
+    function validarSesion() {
+        if (sessionStorage.getItem("sesionActiva") !== "true") {
+            cerrarSesion();
+        }
+    }
+
+    function volverAlMenu(e) {
+        if (e && typeof e.preventDefault === 'function') e.preventDefault();
+        window.location.href = sessionStorage.getItem("menuUsuario") || "Botones.html";
+    }
+
+    window.addEventListener("DOMContentLoaded", validarSesion);
+    window.addEventListener("pageshow", validarSesion);
+
+    let timerInactividad;
+    const reiniciarTemporizador = () => {
+        clearTimeout(timerInactividad);
+        timerInactividad = setTimeout(() => {
+            alert("⏰ INACTIVIDAD DETECTADA. SESIÓN CERRADA.");
+            cerrarSesion();
+        }, 1 * 60 * 1000); // 1 minuto
+    };
+
+    ["mousemove", "keydown", "click", "scroll", "touchstart"].forEach(evento => {
+        document.addEventListener(evento, reiniciarTemporizador, { passive: true });
+    });
+    reiniciarTemporizador();
+
+    // ==========================================
+    // 2. LÓGICA DE TABLA Y EXCEL
+    // ==========================================
+    document.addEventListener("DOMContentLoaded", () => {
+        const eventoSelect = document.getElementById("eventoSelect");
+        const tbody = document.querySelector("#tablaAsistencias tbody");
+        const btnEliminar = document.getElementById("btnEliminarEvento");
+        const btnDescargar = document.getElementById("btnDescargarDatos");
+
+        const PREFIJO_CLAVE = "asistencia_";
+
+        // Muestra un mensaje en la tabla ocupando las 9 columnas
+        const mostrarMensaje = (mensaje) => {
+            tbody.innerHTML = `<tr><td colspan="9">${mensaje}</td></tr>`;
+        };
+
+        // 1. Cargar lista de eventos en el <select>
+        const cargarEventosEnSelect = () => {
+            const claves = Object.keys(localStorage).filter(clave => clave.startsWith(PREFIJO_CLAVE));
+
+            if (claves.length === 0) {
+                mostrarMensaje("NO HAY REGISTROS DE ASISTENCIA DISPONIBLES EN LA BASE DE DATOS.");
+                return;
+            }
+
+            claves.forEach(clave => {
+                const nombreEvento = clave.replace(PREFIJO_CLAVE, "");
+                const opcion = new Option(nombreEvento.toUpperCase(), clave);
+                eventoSelect.appendChild(opcion);
+            });
+
+            // --- AUTO-CARGA INTELIGENTE ---
+            // Si venimos del botón "Ver Asistencias" de la tabla de eventos, auto-seleccionamos
+            const eventoEnCache = JSON.parse(localStorage.getItem('eventoSeleccionado'));
+            if (eventoEnCache && eventoEnCache.NombreEvento) {
+                const clavePreseleccionada = PREFIJO_CLAVE + eventoEnCache.NombreEvento;
+                
+                // Verificar si existe la opción en el select
+                const existeOpcion = Array.from(eventoSelect.options).some(opt => opt.value === clavePreseleccionada);
+                
+                if (existeOpcion) {
+                    eventoSelect.value = clavePreseleccionada;
+                    cargarAsistencias(); // Cargamos la tabla automáticamente
+                }
+                // Limpiamos el caché para que no se quede pegado si entra manualmente después
+                localStorage.removeItem('eventoSeleccionado');
+            }
+        };
+
+        // 2. Dibujar la tabla con los datos del evento seleccionado
+        const cargarAsistencias = () => {
+            const claveEvento = eventoSelect.value;
+            
+            if (!claveEvento || claveEvento === "") {
+                mostrarMensaje("SELECCIONE UN EVENTO PARA VER LOS REGISTROS.");
+                return;
+            }
+
+            const registros = JSON.parse(localStorage.getItem(claveEvento)) || [];
+
+            if (registros.length === 0) {
+                mostrarMensaje("EL EVENTO SELECCIONADO AÚN NO TIENE ASISTENCIAS REGISTRADAS.");
+                return;
+            }
+
+            // Construir filas de forma eficiente
+            const htmlFilas = registros.map(r => `
+                <tr>
+                    <td><strong>${r.codigo || '-'}</strong></td>
+                    <td>${r.dni || '-'}</td>
+                    <td>${(r.apellidos || '')} ${(r.nombres || '')}</td>
+                    <td>${r.cargo || '-'}</td>
+                    <td>${r.fecha || '-'}</td>
+                    <td>${r.entrada || '-'}</td>
+                    <td>${r.salida || '-'}</td>
+                    <td>${r.tardanza || '-'}</td>
+                    <td><strong>${r.horasTrabajadas || '-'}</strong></td>
+                </tr>
+            `).join('');
+
+            tbody.innerHTML = htmlFilas;
+        };
+
+        // 3. Eliminar el registro completo de un evento
+        const eliminarEvento = () => {
+            const claveEvento = eventoSelect.value;
+
+            if (!claveEvento || claveEvento === "") {
+                alert("⚠️ POR FAVOR, SELECCIONA UN EVENTO DE LA LISTA PRIMERO.");
+                return;
+            }
+
+            const nombreEvento = claveEvento.replace(PREFIJO_CLAVE, "").toUpperCase();
+
+            if (!confirm(`⚠️ ADVERTENCIA ⚠️\n\n¿Estás absolutamente seguro de querer eliminar TODO el registro de asistencia del evento:\n"${nombreEvento}"?\n\nEsta acción NO se puede deshacer.`)) {
+                return;
+            }
+
+            // Borrar de base de datos
+            localStorage.removeItem(claveEvento);
+            
+            // Borrar del selector HTML
+            const opcionAEliminar = eventoSelect.querySelector(`option[value="${claveEvento}"]`);
+            if (opcionAEliminar) opcionAEliminar.remove();
+            
+            // Resetear la vista
+            eventoSelect.selectedIndex = 0;
+            mostrarMensaje("SELECCIONE UN EVENTO PARA VER LOS REGISTROS.");
+            
+            alert(`✅ EL REGISTRO DE ASISTENCIA DEL EVENTO "${nombreEvento}" HA SIDO ELIMINADO.`);
+        };
+
+        // 4. Exportar a Excel (XLSX)
+        const descargarDatos = () => {
+            const claveEvento = eventoSelect.value;
+
+            if (!claveEvento || claveEvento === "") {
+                alert("⚠️ POR FAVOR, SELECCIONA UN EVENTO DE LA LISTA ANTES DE DESCARGAR.");
+                return;
+            }
+
+            const registros = JSON.parse(localStorage.getItem(claveEvento)) || [];
+
+            if (registros.length === 0) {
+                alert("⚠️ NO HAY DATOS DE ASISTENCIA PARA EXPORTAR EN ESTE EVENTO.");
+                return;
+            }
+
+            const nombreEvento = claveEvento.replace(PREFIJO_CLAVE, "").toUpperCase();
+
+            // Mapear los datos al formato Excel
+            const datosExcel = registros.map(r => ({
+                "CÓDIGO": r.codigo || "-",
+                "DNI": r.dni || "-",
+                "APELLIDOS Y NOMBRES": `${r.apellidos || ''} ${r.nombres || ''}`.trim(),
+                "CARGO": r.cargo || "-",
+                "FECHA": r.fecha || "-",
+                "HORA ENTRADA": r.entrada || "-",
+                "HORA SALIDA": r.salida || "-",
+                "TARDANZA": r.tardanza || "-",
+                "TIEMPO TOTAL": r.horasTrabajadas || "-"
+            }));
+
+            try {
+                // Crear hoja y empezar en A2
+                const hoja = XLSX.utils.json_to_sheet(datosExcel, { origin: "A2" });
+
+                // Título en la celda A1
+                XLSX.utils.sheet_add_aoa(hoja, [[`REPORTE DE ASISTENCIA OFICIAL - EVENTO: ${nombreEvento}`]], { origin: "A1" });
+
+                // Ajustar ancho de columnas
+                hoja["!cols"] = [
+                    { wch: 12 },  // A: Código
+                    { wch: 12 },  // B: DNI
+                    { wch: 45 },  // C: Nombres
+                    { wch: 30 },  // D: Cargo
+                    { wch: 15 },  // E: Fecha
+                    { wch: 15 },  // F: Entrada
+                    { wch: 15 },  // G: Salida
+                    { wch: 18 },  // H: Tardanza
+                    { wch: 20 },  // I: Tiempo Total
+                ];
+
+                const libro = XLSX.utils.book_new();
+                XLSX.utils.book_append_sheet(libro, hoja, "Asistencias");
+
+                const nombreArchivo = `Reporte_Asistencia_${nombreEvento.replace(/\s+/g, "_")}.xlsx`;
+                XLSX.writeFile(libro, nombreArchivo);
+            
+            } catch (error) {
+                console.error(error);
+                alert("❌ Ocurrió un error al intentar generar el archivo Excel. Asegúrese de tener conexión a internet.");
+            }
+        };
+
+        // --- EVENT LISTENERS ---
+        eventoSelect.addEventListener("change", cargarAsistencias);
+        btnEliminar.addEventListener("click", eliminarEvento);
+        btnDescargar.addEventListener("click", descargarDatos);
+
+        // Inicializar
+        cargarEventosEnSelect();
+    });
+</script>
+
+</body>
+</html>
