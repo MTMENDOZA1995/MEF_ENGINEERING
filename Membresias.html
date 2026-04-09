@@ -164,12 +164,50 @@
             transform: scale(1.05);
         }
 
-        /* RESPONSIVE MÓVIL */
-        @media (max-width: 480px) {
-            body { padding: 15px; }
-            .menu-container { border-radius: 16px; }
-            .menu-buttons { padding: 30px 20px; }
-            .menu-buttons button { padding: 18px; font-size: 1rem; }
+        /* =====================================================
+           RESPONSIVE MÓVIL PROFESIONAL (PANTALLA COMPLETA)
+        ===================================================== */
+        @media screen and (max-width: 480px) {
+            html, body {
+                margin: 0;
+                padding: 0;
+                width: 100vw;
+                height: 100svh; /* Altura real en móviles modernos */
+                overflow: hidden; /* Evita scroll externo */
+                background-color: var(--white);
+            }
+            
+            .menu-container {
+                width: 100%;
+                max-width: none;
+                height: 100svh; /* Ocupa el 100% de la pantalla */
+                border-radius: 0; /* Quita los bordes curvos */
+                border: none;
+                box-shadow: none;
+                display: flex;
+                flex-direction: column;
+            }
+
+            .menu-header {
+                flex-shrink: 0; /* El encabezado nunca se encoge */
+            }
+
+            .menu-buttons {
+                flex: 1; /* Empuja el footer hacia abajo */
+                padding: 30px 20px;
+                overflow-y: auto; /* Scroll interno en caso de pantallas muy pequeñas */
+                -webkit-overflow-scrolling: touch;
+            }
+
+            .menu-buttons button {
+                padding: 18px; 
+                font-size: 1rem;
+            }
+
+            .card-footer {
+                flex-shrink: 0; /* El footer siempre fijo al fondo */
+                border-top: 1px solid #eaeaea;
+            }
         }
     </style>
 </head>
