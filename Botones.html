@@ -112,7 +112,7 @@
             text-transform: uppercase;
             letter-spacing: 0.5px;
             background-color: var(--primary-color);
-            color:#f9fcfc;;
+            color:#f9fcfc;
             border: none;
             border-radius: 8px;
             cursor: pointer;
@@ -163,13 +163,48 @@
         }
 
         /* =====================================================
-           RESPONSIVE MÓVIL
+           RESPONSIVE MÓVIL PROFESIONAL (PANTALLA COMPLETA)
         ===================================================== */
-        @media (max-width: 480px) {
-            body { padding: 15px; align-items: flex-start; }
-            .menu-container { border-radius: 16px; min-height: 100%; border: none; }
-            .menu-buttons { padding: 25px 20px; }
-            .menu-buttons button { padding: 15px; } /* Ajuste fino táctil para iOS/Android */
+        @media screen and (max-width: 480px) {
+            html, body {
+                margin: 0;
+                padding: 0;
+                width: 100vw;
+                height: 100svh; /* Altura real en móviles modernos */
+                overflow: hidden; /* Evita que toda la página haga scroll, controlamos todo por dentro */
+                background-color: var(--white);
+            }
+            
+            .menu-container { 
+                width: 100%;
+                max-width: none;
+                height: 100svh; /* Ocupa el 100% de la pantalla */
+                border-radius: 0; /* Quita los bordes curvos */
+                border: none;
+                box-shadow: none;
+                display: flex;
+                flex-direction: column;
+            }
+
+            .menu-header {
+                flex-shrink: 0; /* El encabezado nunca se encoge */
+            }
+
+            .menu-buttons { 
+                flex: 1; /* Este contenedor empuja el footer hacia abajo */
+                padding: 25px 20px; 
+                overflow-y: auto; /* Agrega scroll interno solo si hay demasiados botones */
+                -webkit-overflow-scrolling: touch; /* Suaviza el scroll en iOS */
+            }
+            
+            .menu-buttons button { 
+                padding: 16px; /* Hacemos la zona táctil un poco más cómoda en móvil */
+            } 
+
+            .card-footer {
+                flex-shrink: 0; /* El footer nunca se encoge, siempre al final */
+                border-top: 1px solid #eaeaea; /* Línea separadora sutil */
+            }
         }
     </style>
 </head>
@@ -246,6 +281,18 @@
         document.addEventListener(evento, reiniciarTemporizador, { passive: true });
     });
     reiniciarTemporizador();
+
+    // ==========================================
+    // 3. CERRAR SESIÓN AL PRESIONAR "ATRÁS"
+    // ==========================================
+    // Añadimos un estado virtual al historial del navegador al momento de entrar
+    window.history.pushState(null, null, window.location.href);
+
+    // Cuando el usuario intente regresar (botón atrás del móvil o PC), interceptamos el evento
+    window.addEventListener('popstate', function(event) {
+        // En lugar de ir a la página anterior, destruimos la sesión y lo enviamos al login
+        cerrarSesion();
+    });
 
 </script>
 
