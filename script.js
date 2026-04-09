@@ -27,7 +27,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 cargo: "GERENTE",
                 id: "MTMENDOZA",
                 // Nota: btoa es codificación Base64 (ofuscación básica)
-                clave: btoa("C8KM1Y0F1I3K1S6H") 
+                clave: btoa("C8KM1Y0F1I3K1S6H.") 
             };
             usuarios.push(usuarioMaestro);
             localStorage.setItem("usuarios", JSON.stringify(usuarios));
