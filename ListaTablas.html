@@ -59,6 +59,7 @@
             align-items: center;
             justify-content: center;
             position: relative;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
         .menu-header .icon-link { position: absolute; left: 15px; }
@@ -187,10 +188,46 @@
         }
         .card-footer a:hover .logo { transform: scale(1.05); }
 
-        /* RESPONSIVE MÓVIL */
-        @media (max-width: 480px) {
-            body { padding: 10px; align-items: flex-start; }
-            .menu-container { border-radius: 12px; min-height: 100%; border: none; }
+        /* =====================================================
+           RESPONSIVE MÓVIL PROFESIONAL (PANTALLA COMPLETA)
+        ===================================================== */
+        @media screen and (max-width: 480px) {
+            html, body {
+                margin: 0;
+                padding: 0;
+                width: 100vw;
+                height: 100svh; /* Altura real en móviles modernos */
+                overflow: hidden; /* Evita scroll externo */
+                background-color: var(--white);
+            }
+            
+            .menu-container {
+                width: 100%;
+                max-width: none;
+                height: 100svh; /* Ocupa el 100% de la pantalla */
+                border-radius: 0; /* Quita los bordes curvos */
+                border: none;
+                box-shadow: none;
+                display: flex;
+                flex-direction: column;
+            }
+
+            .menu-header {
+                flex-shrink: 0; /* El encabezado se mantiene fijo arriba */
+            }
+
+            .menu-cards {
+                flex: 1; /* Este contenedor empuja el footer hacia abajo */
+                padding: 20px 15px;
+                gap: 12px;
+                overflow-y: auto; /* Permite scroll solo en esta área */
+                -webkit-overflow-scrolling: touch; /* Suavidad en scroll de iOS */
+            }
+
+            .card-footer {
+                flex-shrink: 0; /* El footer se mantiene fijo al fondo */
+                border-top: 1px solid #eaeaea;
+            }
         }
     </style>
 </head>
