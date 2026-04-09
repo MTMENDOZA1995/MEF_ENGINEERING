@@ -298,9 +298,43 @@
             transform: scale(1.05);
         }
 
-        @media (max-width: 480px) {
-            body { padding: 10px; align-items: flex-start; }
-            .card { border-radius: 12px; min-height: 100%; }
+        /* =====================================================
+           RESPONSIVE MÓVIL PROFESIONAL (PANTALLA COMPLETA)
+        ===================================================== */
+        @media screen and (max-width: 480px) {
+            html, body {
+                margin: 0;
+                padding: 0;
+                width: 100vw;
+                height: 100svh; /* Altura real en móviles modernos */
+                overflow: hidden; /* Evita scroll externo */
+                background-color: var(--bg-card);
+            }
+            
+            .card {
+                width: 100%;
+                max-width: none;
+                height: 100svh; /* Ocupa el 100% de la pantalla */
+                border-radius: 0; /* Quita los bordes curvos */
+                border: none;
+                box-shadow: none;
+                display: flex;
+                flex-direction: column;
+            }
+
+            .card-header {
+                flex-shrink: 0; /* El encabezado se mantiene fijo arriba */
+            }
+
+            .card-form {
+                flex: 1; /* Este contenedor empuja el footer hacia abajo */
+                overflow-y: auto; /* Permite scroll interno */
+                -webkit-overflow-scrolling: touch; /* Suavidad en scroll de iOS */
+            }
+
+            .card-footer {
+                flex-shrink: 0; /* El footer se mantiene fijo al fondo */
+            }
         }
     </style>
 </head>
