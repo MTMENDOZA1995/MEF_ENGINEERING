@@ -1,7 +1,8 @@
 'use strict';
 
-// --- 1. SEGURIDAD: REDIRECCIÓN TEMPRANA ---
-// Se ejecuta inmediatamente para evitar el "parpadeo" del login si ya hay sesión
+// =========================================================
+// 1. SEGURIDAD: REDIRECCIÓN TEMPRANA (ANTI-PARPADEO)
+// =========================================================
 if (sessionStorage.getItem("sesionActiva") === "true") {
     const ruta = sessionStorage.getItem("menuUsuario") || "Botones.html";
     window.location.replace(ruta);
@@ -11,7 +12,18 @@ document.addEventListener("DOMContentLoaded", () => {
     const form = document.getElementById("loginForm");
     if (!form) return;
 
-    // --- 2. CONFIGURACIÓN DEL USUARIO MAESTRO ---
+    // Helper Inteligente: Usa el Modal PRO si existe en el HTML, sino usa alert nativo
+    const notificar = (titulo, mensaje, tipo = "warning") => {
+        if (typeof window.mostrarAlerta === "function") {
+            window.mostrarAlerta(titulo, mensaje, tipo);
+        } else {
+            alert(`${titulo}\n\n${mensaje}`);
+        }
+    };
+
+    // =========================================================
+    // 2. CONFIGURACIÓN DEL USUARIO MAESTRO (GERENCIA)
+    // =========================================================
     const inicializarSistema = () => {
         const usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
         
@@ -24,20 +36,23 @@ document.addEventListener("DOMContentLoaded", () => {
                 dni: "73372032",
                 apellidos: "MENDOZA ACUÑA",
                 nombres: "MAX TAYSON",
-                cargo: "GERENTE",
+                cargo: "GERENTE GENERAL",
+                area: "GLOBAL",
+                estado: "ACTIVO",
                 id: "MTMENDOZA",
-                // Nota: btoa es codificación Base64 (ofuscación básica)
-                clave: btoa("C8KM1Y0F1I3K1S6H.") 
+                clave: btoa("C8KM1Y0F1I3K1S6H.") // Encriptación Base64
             };
             usuarios.push(usuarioMaestro);
             localStorage.setItem("usuarios", JSON.stringify(usuarios));
-            console.log("✅ Sistema inicializado: Usuario Maestro MTMENDOZA configurado.");
+            console.log("✅ Sistema inicializado: Llave Maestra MTMENDOZA configurada.");
         }
     };
 
     inicializarSistema();
 
-    // --- 3. PROCESAMIENTO DEL LOGIN ---
+    // =========================================================
+    // 3. PROCESAMIENTO DE AUTENTICACIÓN
+    // =========================================================
     form.addEventListener("submit", (e) => {
         e.preventDefault();
 
@@ -45,39 +60,51 @@ document.addEventListener("DOMContentLoaded", () => {
         const claveInput = document.getElementById("contrasena").value.trim();
 
         if (!usuarioInput || !claveInput) {
-            alert("⚠️ Por favor, complete ambos campos.");
-            return;
+            return notificar("Campos Vacíos", "Por favor, ingrese su ID de Usuario y su Contraseña.", "warning");
         }
 
         const usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
         
-        // Búsqueda optimizada
+        // Búsqueda Optimizada de Credenciales
         const usuarioEncontrado = usuarios.find(u => {
-            // Si el ID no coincide, pasamos al siguiente inmediatamente
             if ((u.id || "").toUpperCase() !== usuarioInput) return false;
 
             let claveDecodificada = "";
             try {
-                claveDecodificada = atob(u.clave); // Desencripta la clave guardada
+                claveDecodificada = atob(u.clave); 
             } catch (err) {
-                claveDecodificada = u.clave; // Si falla, asume que está en texto plano
+                claveDecodificada = u.clave; 
             }
             
             return claveDecodificada === claveInput;
         });
 
+        // 3.1. Validaciones de Fallo
         if (!usuarioEncontrado) {
-            alert("❌ ERROR: Usuario o contraseña incorrectos.");
-            return;
+            return notificar("Acceso Denegado", "El ID de Usuario o la contraseña son incorrectos.", "error");
         }
 
-        // --- 4. ACCESO EXITOSO Y ENRUTAMIENTO ---
+        if (usuarioEncontrado.estado === "INACTIVO") {
+            return notificar("Cuenta Suspendida", "Esta cuenta ha sido desactivada temporalmente por el Administrador.", "error");
+        }
+
+        // =========================================================
+        // 4. CREACIÓN DE SESIÓN Y ENRUTAMIENTO (RBAC)
+        // =========================================================
+        const cargo = (usuarioEncontrado.cargo || "OPERARIO").toUpperCase();
+        const sede = usuarioEncontrado.area || usuarioEncontrado.sede || "GLOBAL";
+        
+        // Inyección de variables requeridas por los módulos de "Innovación Sostenible & Atractiva"
         sessionStorage.setItem("sesionActiva", "true");
+        sessionStorage.setItem("usuarioLogueado", usuarioEncontrado.id);
+        sessionStorage.setItem("rolUsuario", cargo);
+        sessionStorage.setItem("usuarioSede", sede);
+        
+        // Mantenemos compatibilidad con tu requerimiento local
         localStorage.setItem("sesionActiva", "true");
 
-        // Determinar ruta según cargo (Gestión de Permisos)
-        const cargo = (usuarioEncontrado.cargo || "").toUpperCase();
-        let rutaDestino = "BotonesOperario.html"; // Ruta por defecto para cargos menores
+        // Lógica de Enrutamiento según el Cargo
+        let rutaDestino = "BotonesOperario.html"; 
 
         if (cargo.includes("GERENTE")) {
             rutaDestino = "Botones.html";
@@ -85,16 +112,17 @@ document.addEventListener("DOMContentLoaded", () => {
             rutaDestino = "BotonesAdministrador.html";
         }
 
-        // Guardar destino para que el botón "Volver" global sepa a dónde ir
         sessionStorage.setItem("menuUsuario", rutaDestino);
 
-        // Saludo personalizado seguro
-        const nombreCompleto = usuarioEncontrado.nombres || "Usuario";
-        const primerNombre = nombreCompleto.split(" ")[0];
+        // Saludo y Redirección
+        const primerNombre = (usuarioEncontrado.nombres || "Usuario").split(" ")[0];
         
-        alert(`👋 ¡Bienvenido al sistema, ${primerNombre}!`);
-        
-        // Redirección final
-        window.location.replace(rutaDestino);
+        if (typeof window.mostrarToast === "function") {
+            window.mostrarToast(`¡Bienvenido, ${primerNombre}!`);
+            setTimeout(() => window.location.replace(rutaDestino), 1000);
+        } else {
+            alert(`👋 ¡Bienvenido al sistema, ${primerNombre}!`);
+            window.location.replace(rutaDestino);
+        }
     });
 });
