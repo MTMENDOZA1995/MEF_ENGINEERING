@@ -1,424 +1,379 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>ECOPOINTS | MEF Engineering & Soluciones</title>
 
-    <style>
-        /* =====================================================
-           VARIABLES Y RESET
-        ===================================================== */
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+    <!-- FUENTES E ICONOS DE GOOGLE -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
 
+    <style>
+        /* ==========================================
+           SISTEMA DE DISEÑO MEF ENGINEERING (COMPACTO)
+           ========================================== */
         :root {
             --primary-color: #1d3b20;
-            --primary-hover: #143117;
-            --bg-color: #f4f6f5;
-            --white: #ffffff;
-            --text-dark: #333333;
-            --text-light: #666666;
-            --shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
-            --transition: all 0.3s ease;
+            --primary-hover: #0a1f0d;
+            --bg-color: #f4f6f8;
+            --surface: #ffffff;
+            --text-dark: #202223;
+            --text-subdued: #6d7175;
+            --border: #c9cccf;
+            --interactive: #2c6ecb;
+            --critical: #d82c0d;
+            --warning: #b98900;
+            --success: #108043;
+            --shadow-card: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.03);
+            --radius: 10px;
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+            -webkit-tap-highlight-color: transparent;
         }
 
+        /* LAYOUT FIJO ESTRICTO */
         body {
             background-color: var(--bg-color);
-            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            color: var(--text-dark);
+            height: 100vh;
+            height: 100svh;
+            width: 100vw;
+            overflow: hidden; 
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
-            min-height: 100svh;
-            color: var(--text-dark);
-            padding: 20px;
+            padding: 15px;
         }
 
-        /* =====================================================
-           TARJETA PRINCIPAL (CONTENEDOR GLOBAL)
-        ===================================================== */
-        .menu-container {
+        .container {
             width: 100%;
-            max-width: 420px;
-            background-color: var(--white);
-            border: 1.5px solid var(--primary-color);
-            border-radius: 12px;
-            box-shadow: var(--shadow);
+            max-width: 380px; 
+            background-color: var(--surface);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-card);
+            border: 1px solid var(--border);
             overflow: hidden;
             display: flex;
             flex-direction: column;
+            height: 100%;
+            max-height: 700px; 
         }
 
-        /* ENCABEZADO */
-        .menu-header {
+        .card-header {
             background-color: var(--primary-color);
-            color: var(--white);
-            padding: 18px 15px;
+            color: #ffffff;
+            padding: 12px 16px;
             display: flex;
             align-items: center;
-            justify-content: center;
-            position: relative;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            justify-content: space-between;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            flex-shrink: 0;
+            z-index: 10;
         }
 
-        .menu-header .icon-link {
-            position: absolute;
-            left: 15px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
+        .card-header .spacer { width: 28px; }
 
-        .menu-header .icon {
-            width: 26px;
-            height: 26px;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-
-        .menu-header .icon:hover {
-            transform: scale(1.15);
-            filter: brightness(1.2);
-        }
-
-        .menu-title {
-            font-size: 1.1rem;
+        .card-header h1 {
+            font-size: 0.95rem;
             font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 0.5px;
             margin: 0;
+            text-align: center;
+            flex-grow: 1;
         }
 
-        /* =====================================================
-           CONTENEDOR DE SERVICIOS (CARDS INTERNAS)
-        ===================================================== */
+        .icon-btn {
+            background: rgba(255,255,255,0.05);
+            color: white;
+            border: none;
+            padding: 4px;
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+        
+        .icon-btn:hover { background: rgba(255,255,255,0.2); transform: scale(1.05); }
+        .card-header .material-icons-outlined { font-size: 20px; }
+
         .planes-section {
             display: flex;
             flex-direction: column;
-            gap: 16px;
-            padding: 25px 20px;
+            gap: 12px;
+            padding: 20px 16px;
+            overflow-y: auto; 
+            flex-grow: 1;
+            background-color: var(--bg-color);
         }
+        .planes-section::-webkit-scrollbar { width: 0px; background: transparent; }
 
         .card-membresia {
-            background: var(--white);
+            background: var(--surface);
             padding: 12px;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.06);
-            border: 1.5px solid #e0e0e0;
-            transition: var(--transition);
+            border-radius: var(--radius);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            border: 1px solid var(--border);
+            transition: all 0.2s ease;
             position: relative;
             overflow: hidden;
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 12px;
             cursor: pointer;
-            min-height: 110px;
         }
 
-        /* EFECTO TOUCH / HOVER */
         .card-membresia:hover {
-            box-shadow: 0 6px 18px rgba(29, 59, 32, 0.15);
+            box-shadow: 0 8px 16px rgba(29, 59, 32, 0.12);
             border-color: var(--primary-color);
             transform: translateY(-2px);
         }
 
-        .card-membresia:active {
-            transform: scale(0.98);
-        }
+        .card-membresia:active { transform: scale(0.98); }
 
-        /* =====================================================
-           IMÁGENES
-        ===================================================== */
+        .card-membresia::before {
+            content: ""; position: absolute; left: 0; top: 0; width: 4px; height: 100%;
+            background: var(--border); transition: all 0.2s ease;
+        }
+        .card-membresia:hover::before { background: var(--primary-color); }
+
         .img-container {
-            width: 80px;
-            height: 80px;
-            border-radius: 10px;
-            background-color: #f4f6f5; 
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-shrink: 0;
-            overflow: hidden;
+            width: 60px; height: 60px; border-radius: 8px; background-color: #f8fafc; 
+            display: flex; justify-content: center; align-items: center; flex-shrink: 0;
+            overflow: hidden; border: 1px solid #e2e8f0; margin-left: 6px; 
         }
 
-        .servicio-img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
+        .servicio-img { width: 80%; height: 80%; object-fit: contain; transition: transform 0.3s ease; }
+        .card-membresia:hover .servicio-img { transform: scale(1.1); }
 
-        /* =====================================================
-           TEXTOS Y PRECIOS
-        ===================================================== */
-        .info-container {
-            display: flex;
-            flex-direction: column;
-            flex-grow: 1;
-            justify-content: center;
-        }
+        .info-container { display: flex; flex-direction: column; flex-grow: 1; justify-content: center; }
 
-        .card-membresia h2 {
-            font-size: 15px;
-            margin: 0 0 4px 0;
-            color: var(--primary-color);
-            font-weight: 800;
-            letter-spacing: 0.5px;
-        }
-
-        .card-membresia p {
-            font-size: 12px;
-            margin: 0 0 8px 0;
-            color: var(--text-light);
-            line-height: 1.3;
-        }
+        .card-membresia h2 { font-size: 13px; margin: 0 0 2px 0; color: var(--text-dark); font-weight: 800; letter-spacing: 0.5px; display: flex; align-items: center; gap: 4px; }
+        .card-membresia p { font-size: 11px; margin: 0 0 6px 0; color: var(--text-subdued); line-height: 1.2; }
 
         .precio {
-            font-size: 14px;
-            font-weight: 800;
-            color: #2e7d32;
-            background: #e8f5e9;
-            padding: 4px 10px;
-            border-radius: 6px;
-            display: inline-block;
-            align-self: flex-start;
+            font-size: 11px; font-weight: 800; padding: 3px 8px; border-radius: 6px;
+            display: inline-block; align-self: flex-start; text-transform: uppercase;
         }
+        .precio-base { color: var(--success); background: #e8f5e9; border: 1px solid #c8e6c9; }
+        .precio-gratis { color: #1976d2; background: #e3f2fd; border: 1px solid #bbdefb; }
+        .precio-variable { color: #ef6c00; background: #fff8e1; border: 1px solid #ffecb3; }
 
-        /* Variantes de precios/badges según la tarjeta */
-        .gratis {
-            color: #1976d2;
-            background: #e3f2fd;
-        }
-        
-        .variable {
-            color: #ef6c00;
-            background: #fff8e1;
-        }
+        .destacado { border-color: var(--interactive); background: linear-gradient(to right, #ffffff, #f4f8fe); }
+        .destacado::before { background: var(--interactive); }
+        .destacado:hover { border-color: var(--interactive); }
 
-        /* =====================================================
-           ETIQUETAS (BADGES)
-        ===================================================== */
         .badge {
-            position: absolute;
-            top: 0;
-            right: 0;
-            font-size: 10px;
-            padding: 4px 12px;
-            border-bottom-left-radius: 10px;
-            background: var(--primary-color);
-            color: white;
-            font-weight: 700;
-            letter-spacing: 0.5px;
-            z-index: 2;
+            position: absolute; top: 0; right: 0; font-size: 9px; padding: 4px 10px;
+            border-bottom-left-radius: 8px; color: white; font-weight: 800; letter-spacing: 0.5px;
+            z-index: 2; box-shadow: -2px 2px 5px rgba(0,0,0,0.05);
         }
+        .nuevo-badge { background: var(--interactive); }
 
-        .nuevo-badge {
-            background: #1976d2;
-            color: #fff;
-        }
+        .icon-ir { color: var(--border); transition: all 0.2s; }
+        .card-membresia:hover .icon-ir { color: var(--primary-color); transform: translateX(3px); }
 
-        .destacado {
-            border-color: var(--primary-color);
-            background: linear-gradient(to right, #ffffff, #f9fbf9);
-        }
-
-        /* =====================================================
-           PIE DE PÁGINA
-        ===================================================== */
         .card-footer {
-            background-color: #fafafa;
-            padding: 15px;
-            border-top: 1px solid #eeeeee;
-            text-align: center;
-            margin-top: auto;
+            background-color: var(--surface); text-align: center; padding: 12px;
+            border-top: 1px solid var(--border); flex-shrink: 0; display: flex; justify-content: center; align-items: center;
         }
+        .card-footer .logo { height: 25px; width: auto; display: block; opacity: 0.8; pointer-events: none; }
 
-        .card-footer .logo {
-            width: 75px;
-            height: auto;
-            margin: 0 auto;
-            transition: var(--transition);
+        /* MODALES */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(32, 34, 35, 0.8);
+            display: none; justify-content: center; align-items: center; z-index: 1000; opacity: 0; animation: fadeIn 0.2s forwards; padding: 15px;
         }
-
-        .card-footer a:hover .logo {
-            transform: scale(1.05);
+        .modal-content {
+            background: var(--surface); width: 100%; max-width: 320px; border-radius: var(--radius); box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            overflow: hidden; transform: scale(0.95); animation: scaleUp 0.2s forwards; text-align: center;
         }
+        .modal-header { padding: 20px 16px 10px; display: flex; flex-direction: column; align-items: center; gap: 6px; font-size: 15px; font-weight: 700;}
+        .modal-body { padding: 0 16px 16px; color: var(--text-subdued); font-size: 13px; line-height: 1.4;}
+        .modal-footer { padding: 12px 16px; background: #fafbfb; border-top: 1px solid var(--border); display: flex; justify-content: center;}
+        .modal-header.error { color: var(--critical); }
+        .modal-header.warning { color: var(--warning); }
+        .modal-header .material-icons-outlined { font-size: 40px; margin-bottom: 2px;}
+        .btn-modal { background-color: var(--primary-color); color: white; border: none; padding: 8px 16px; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; width: 100%; transition: 0.2s; }
+        .btn-modal:hover { background-color: var(--primary-hover); }
 
-        /* =====================================================
-           RESPONSIVE MÓVIL PROFESIONAL (PANTALLA COMPLETA)
-        ===================================================== */
+        @keyframes fadeIn { to { opacity: 1; } }
+        @keyframes scaleUp { to { transform: scale(1); } }
+
         @media screen and (max-width: 480px) {
-            html, body {
-                margin: 0;
-                padding: 0;
-                width: 100vw;
-                height: 100svh; /* Altura real en móviles modernos */
-                overflow: hidden; /* Evita scroll externo */
-                background-color: var(--white);
-            }
-            
-            .menu-container {
-                width: 100%;
-                max-width: none;
-                height: 100svh; /* Ocupa el 100% de la pantalla */
-                border-radius: 0; /* Quita los bordes curvos */
-                border: none;
-                box-shadow: none;
-                display: flex;
-                flex-direction: column;
-            }
-
-            .menu-header {
-                flex-shrink: 0; /* El encabezado se mantiene fijo arriba */
-            }
-
-            .planes-section {
-                flex: 1; /* Este contenedor empuja el footer hacia abajo */
-                padding: 20px 15px;
-                gap: 14px;
-                overflow-y: auto; /* Permite scroll solo en esta área si hay muchas cards */
-                -webkit-overflow-scrolling: touch; /* Suavidad en scroll de iOS */
-            }
-
-            .card-membresia {
-                min-height: 100px; /* Ajuste sutil para encajar mejor en móviles pequeños */
-            }
-
-            .card-footer {
-                flex-shrink: 0; /* El footer se mantiene fijo al fondo */
-                border-top: 1px solid #eaeaea;
-            }
+            body { padding: 0; background-color: var(--bg-color); }
+            .container { max-width: none; height: 100svh; max-height: none; border-radius: 0; border: none; box-shadow: none; }
         }
     </style>
-
 </head>
 <body>
 
-    <main class="menu-container">
+    <main class="container">
         
-        <header class="menu-header">
-            <a href="#" class="icon-link" onclick="cerrarSesion(event)">
-                <img src="Iconos/SALIR.png" alt="Cerrar sesión" class="icon">
-            </a>
-            <h1 class="menu-title">ECOPOINTS</h1>
+        <header class="card-header">
+            <div class="spacer"></div>
+            <h1>ECOPOINTS</h1>
+            <button class="icon-btn" title="Volver atrás" onclick="window.history.back();">
+                <span class="material-icons-outlined">close</span>
+            </button>
         </header>
 
         <section class="planes-section">
 
-            <div class="card-membresia" onclick="comprar(event, 'recarga')">
+            <div class="card-membresia" onclick="comprar('recarga')">
                 <div class="img-container">
-                    <img src="Iconos/RECARGA ECOPOINTS.png" alt="Icono Recarga" class="servicio-img" onerror="this.style.display='none'">
+                    <img src="Iconos/RECARGA ECOPOINTS.png" alt="Recarga" class="servicio-img" onerror="this.style.display='none'">
                 </div>
-                
                 <div class="info-container">
-                    <h2>🌱 RECARGA ECOPOINTS</h2>
+                    <h2 style="color: var(--primary-color);">🌱 RECARGA ECOPOINTS</h2>
                     <p>Compra puntos para usar en el sistema</p>
-                    <div class="precio">Desde S/ 15.00</div>
+                    <div class="precio precio-base">Desde S/ 15.00</div>
                 </div>
+                <span class="material-icons-outlined icon-ir">chevron_right</span>
             </div>
 
-            <div class="card-membresia destacado" onclick="comprar(event, 'gana')">
+            <div class="card-membresia destacado" onclick="comprar('gana')">
                 <div class="badge nuevo-badge">NUEVO</div>
-                
                 <div class="img-container">
-                    <img src="Iconos/GANA ECOPOINTS.png" alt="Icono Gana Puntos" class="servicio-img" onerror="this.style.display='none'">
+                    <img src="Iconos/GANA ECOPOINTS.png" alt="Gana Puntos" class="servicio-img" onerror="this.style.display='none'">
                 </div>
-
                 <div class="info-container">
-                    <h2>🌿 GANA ECOPOINTS</h2>
-                    <p>Participa en actividades ecológicas y gana puntos</p>
-                    <div class="precio gratis">GRATIS</div>
+                    <h2 style="color: var(--interactive);">🌿 GANA ECOPOINTS</h2>
+                    <p>Participa en actividades y gana puntos</p>
+                    <div class="precio precio-gratis">GRATIS</div>
                 </div>
+                <span class="material-icons-outlined icon-ir">chevron_right</span>
             </div>
 
-            <div class="card-membresia" onclick="comprar(event, 'recicla')">
-                
+            <div class="card-membresia" onclick="comprar('recicla')">
                 <div class="img-container">
-                    <img src="Iconos/RECICLA ECOPOINTS.png" alt="Icono Recicla" class="servicio-img" onerror="this.style.display='none'">
+                    <img src="Iconos/RECICLA ECOPOINTS.png" alt="Recicla" class="servicio-img" onerror="this.style.display='none'">
                 </div>
-
                 <div class="info-container">
-                    <h2>🌳 RECICLA ECOPOINTS</h2>
-                    <p>Entrega residuos y recibe puntos según el peso</p>
-                    <div class="precio variable">Según KG</div>
+                    <h2 style="color: #e65100;">🌳 RECICLA ECOPOINTS</h2>
+                    <p>Entrega residuos y recibe puntos por KG</p>
+                    <!-- ETIQUETA DINÁMICA DE CONFIGURACIÓN -->
+                    <div id="precio-dinamico" class="precio precio-variable">Cargando valores...</div>
                 </div>
+                <span class="material-icons-outlined icon-ir">chevron_right</span>
             </div>
 
         </section>
 
         <footer class="card-footer">
-            <a href="#" title="Volver al Menú Principal" onclick="volverAlMenu(event)">
-                <img src="Imagenes/ECFM.png" alt="Logo de MEF Engineering" class="logo" />
-            </a>
+            <img src="Imagenes/ECFM.png" alt="Logo de MEF Engineering" class="logo" onerror="this.style.display='none'">
         </footer>
 
     </main>
+
+    <div id="modal-alerta" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header error" id="alerta-header">
+                <span class="material-icons-outlined" id="alerta-icon">gpp_bad</span>
+                <span id="alerta-titulo">Atención</span>
+            </div>
+            <div class="modal-body" id="alerta-mensaje"></div>
+            <div class="modal-footer">
+                <button class="btn-modal" onclick="cerrarModalAlerta()">Entendido</button>
+            </div>
+        </div>
+    </div>
 
 <script>
     'use strict';
 
     // ==========================================
-    // 1. GESTIÓN DE SESIÓN, INACTIVIDAD Y NAVEGACIÓN
+    // 0. CONEXIÓN DINÁMICA CON CONFIGURACIÓN
     // ==========================================
-    function cerrarSesion(e) {
-        if (e && typeof e.preventDefault === 'function') e.preventDefault();
-        alert("🔒 Sesión finalizada de forma segura.");
+    function cargarValoresDinamicos() {
+        const residuosConfig = JSON.parse(localStorage.getItem('config_residuos'));
+        const lblPrecio = document.getElementById('precio-dinamico');
+
+        if (residuosConfig && residuosConfig.length > 0) {
+            // Busca el residuo que da más puntos para mostrarlo como enganche
+            const maxPuntos = Math.max(...residuosConfig.map(r => parseFloat(r.puntos) || 0));
+            lblPrecio.innerText = `Hasta ${maxPuntos} pts / KG`;
+        } else {
+            lblPrecio.innerText = "Según KG";
+        }
+    }
+
+    // ==========================================
+    // 1. SISTEMA VISUAL DE MODALES
+    // ==========================================
+    function mostrarAlerta(titulo, mensaje, tipo = 'error') {
+        const modal = document.getElementById('modal-alerta');
+        const header = document.getElementById('alerta-header');
+        const icon = document.getElementById('alerta-icon');
+        
+        document.getElementById('alerta-titulo').innerText = titulo;
+        document.getElementById('alerta-mensaje').innerText = mensaje;
+
+        header.className = 'modal-header ' + tipo; 
+        icon.innerText = tipo === 'error' ? 'gpp_bad' : 'warning';
+        modal.style.display = 'flex';
+    }
+
+    function cerrarModalAlerta() { document.getElementById('modal-alerta').style.display = 'none'; }
+
+    // ==========================================
+    // 2. GESTIÓN DE SESIÓN Y SEGURIDAD (KIOSKO)
+    // ==========================================
+    function cerrarSesion() {
         sessionStorage.clear();
         localStorage.setItem("sesionActiva", "no");
         window.location.replace("index.html");
     }
 
     function validarSesion() {
-        if (sessionStorage.getItem("sesionActiva") !== "true") {
-            cerrarSesion();
-        }
+        if (sessionStorage.getItem("sesionActiva") !== "true") cerrarSesion();
     }
 
-    function volverAlMenu(e) {
-        if (e && typeof e.preventDefault === 'function') e.preventDefault();
-        window.location.href = sessionStorage.getItem("menuUsuario") || "Botones.html";
-    }
-
-    // Validación en el ciclo de vida
-    window.addEventListener("DOMContentLoaded", validarSesion);
+    window.addEventListener("DOMContentLoaded", () => {
+        validarSesion();
+        cargarValoresDinamicos(); // Llama a la configuración
+    });
     window.addEventListener("pageshow", validarSesion);
 
-    // Control estricto de inactividad a 1 minuto
+    // Control estricto de inactividad (1 minuto)
     let timerInactividad;
     const reiniciarTemporizador = () => {
         clearTimeout(timerInactividad);
         timerInactividad = setTimeout(() => {
             alert("⏰ TIEMPO DE INACTIVIDAD EXCEDIDO. SESIÓN CERRADA.");
             cerrarSesion();
-        }, 1 * 60 * 1000); 
+        }, 60000); 
     };
 
-    ["mousemove", "keydown", "click", "scroll", "touchstart"].forEach(evento => {
-        document.addEventListener(evento, reiniciarTemporizador, { passive: true });
+    ["mousemove", "keydown", "click", "touchstart"].forEach(evt => document.addEventListener(evt, reiniciarTemporizador, { passive: true }));
+
+    // Bloqueo Anti-Inspección
+    document.addEventListener('contextmenu', e => e.preventDefault());
+    document.addEventListener('keydown', e => {
+        if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && ['I','J','C'].includes(e.key)) || (e.ctrlKey && e.key === 'U')) e.preventDefault();
     });
-    reiniciarTemporizador();
 
     // ==========================================
-    // 2. FUNCIÓN DE REDIRECCIÓN
+    // 3. NAVEGACIÓN
     // ==========================================
-    function comprar(event, tipo) {
-        if (event) event.preventDefault();
-        
+    function comprar(tipo) {
         const rutas = {
             'recarga': 'RecargaEcopoints.html',
             'gana': 'GanaEcopoints.html',
-            'recicla': 'ReciclarEcopoints.html'
+            'recicla': 'ReciclarEcopoints.html' // AQUÍ ESTARÁ LA LÓGICA MATEMÁTICA
         };
 
         if (rutas[tipo]) {
             window.location.href = rutas[tipo];
         } else {
-            alert("⚠️ Error: El tipo de botón no coincide con ninguna ruta válida.");
+            mostrarAlerta("En Construcción", "Este módulo estará disponible próximamente.", "warning");
         }
     }
 </script>
