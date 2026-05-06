@@ -3,425 +3,587 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>CONFIRMAR COMPRA DE MEMBRESIA | MEF Engineering & Soluciones</title>
-    <link rel="stylesheet" href="CrearLA.css" />
+    <title>CONFIRMAR COMPRA | MEF Engineering & Soluciones</title>
+    
+    <!-- FUENTES E ICONOS DE GOOGLE -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
     
     <style>
-        /* =====================================================
-           IMPORTAR FUENTE (Google Fonts - Inter)
-        ===================================================== */
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
-
-        /* =====================================================
-           VARIABLES PRO
-        ===================================================== */
+        /* ==========================================
+           SISTEMA DE DISEÑO MEF ENGINEERING (COMPACTO)
+           ========================================== */
         :root {
-            --mme-primary: #1d3b20;
-            --mme-primary-hover: #142d17;
-            --mme-accent: #2e7d32;
-            --bg-app: #f4f6f5;
-            --bg-card: #ffffff;
-            --text-main: #222222;
-            --text-label: #555555;
-            --border-color: #dcdcdc;
-            
-            --shadow-card: 0 10px 30px rgba(0, 0, 0, 0.08);
-            --shadow-btn: 0 4px 12px rgba(46, 125, 50, 0.2);
-            --transition-smooth: all 0.25s cubic-bezier(0.25, 0.8, 0.25, 1);
-            --font-base: 'Inter', -apple-system, sans-serif;
+            --primary-color: #1d3b20;
+            --primary-hover: #0a1f0d;
+            --bg-color: #f4f6f8;
+            --surface: #ffffff;
+            --text-dark: #202223;
+            --text-subdued: #6d7175;
+            --border: #c9cccf;
+            --interactive: #2c6ecb;
+            --critical: #d82c0d;
+            --warning: #b98900;
+            --success: #108043;
+            --shadow-card: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.03);
+            --radius: 10px;
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            -webkit-tap-highlight-color: transparent;
         }
 
+        /* LAYOUT FIJO */
         body {
-            background-color: var(--bg-app);
-            font-family: var(--font-base);
-            color: var(--text-main);
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+            height: 100vh;
+            height: 100svh;
+            overflow: hidden; 
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
-            min-height: 100svh;
-            -webkit-font-smoothing: antialiased;
-            padding: 20px;
-        }
-
-        .card {
-            width: 100%;
-            max-width: 420px;
-            background-color: var(--bg-card);
-            border-radius: 16px;
-            box-shadow: var(--shadow-card);
-            overflow: hidden;
-            border: 1.5px solid var(--mme-primary);
-            display: flex;
-            flex-direction: column;
-        }
-
-        .card-header {
-            background-color: var(--mme-primary);
-            color: #ffffff;
-            padding: 20px;
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .menu-title {
-            font-size: 1.1rem;
-            font-weight: 700;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            margin: 0;
-            text-align: center;
-        }
-
-        .card-header .icon-link {
-            position: absolute;
-            left: 20px;
-            display: flex;
-            align-items: center;
-        }
-
-        .card-header .icon {
-            width: 24px;
-            height: 24px;
-            cursor: pointer;
-            transition: transform 0.2s ease;
-        }
-
-        .card-header .icon:hover {
-            transform: scale(1.15);
-        }
-
-        .card-form {
-            padding: 24px 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 18px;
+            padding: 15px;
         }
 
         /* =====================================================
-           ESTILO: DETALLE DEL PLAN SELECCIONADO
+           CONTENEDOR GLOBAL (TARJETA FIJA Y REDUCIDA)
         ===================================================== */
+        .card {
+            width: 100%;
+            max-width: 400px; /* Tamaño compacto estandarizado */
+            background-color: var(--surface);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-card);
+            border: 1px solid var(--border);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            max-height: 800px;
+        }
+
+        /* =====================================================
+           ENCABEZADO (SOLO CON X A LA DERECHA)
+        ===================================================== */
+        .card-header {
+            background-color: var(--primary-color);
+            color: #ffffff;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            flex-shrink: 0;
+            z-index: 10;
+        }
+
+        .card-header .spacer {
+            width: 32px; /* Mantiene el título centrado compensando el botón derecho */
+        }
+
+        .card-header h1 {
+            font-size: 0.95rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            margin: 0;
+            text-align: center;
+            flex-grow: 1;
+        }
+
+        .icon-btn {
+            background: rgba(255,255,255,0.05);
+            color: white;
+            border: none;
+            padding: 4px;
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            text-decoration: none;
+        }
+        
+        .icon-btn:hover { background: rgba(255,255,255,0.2); transform: scale(1.05); }
+        .icon-btn .material-icons-outlined { font-size: 20px; }
+
+        /* =====================================================
+           CUERPO DEL FORMULARIO Y RESUMEN DEL PLAN
+        ===================================================== */
+        .card-form {
+            flex-grow: 1;
+            padding: 20px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            overflow-y: auto; /* Scroll interno solo si la pantalla es muy pequeña */
+            background-color: var(--surface);
+        }
+        .card-form::-webkit-scrollbar { width: 0px; background: transparent; }
+
+        /* DISEÑO PREMIUM PARA EL DETALLE DEL PLAN */
         .detalle-plan {
-            background: linear-gradient(145deg, #f8fbf9, #ffffff);
-            border: 1.5px solid var(--mme-accent);
+            background: linear-gradient(145deg, #f8fafc, #f1f5f9);
+            border: 1px solid var(--border);
             border-radius: 12px;
-            padding: 18px;
-            box-shadow: 0 4px 10px rgba(46, 125, 50, 0.08);
+            padding: 16px;
             position: relative;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+            text-align: center;
+        }
+
+        .detalle-plan::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--primary-color);
+            border-top-left-radius: 12px;
+            border-top-right-radius: 12px;
         }
 
         .detalle-plan h2 {
-            color: var(--mme-primary);
-            font-size: 1.1rem;
-            margin-bottom: 6px;
+            color: var(--primary-color);
+            font-size: 15px;
+            margin: 6px 0 4px 0;
             font-weight: 800;
-            text-align: center;
+            text-transform: uppercase;
         }
 
         .detalle-plan p {
-            font-size: 0.85rem;
-            color: var(--text-label);
+            font-size: 12px;
+            color: var(--text-subdued);
             margin-bottom: 12px;
-            text-align: center;
             line-height: 1.3;
         }
 
         .detalle-plan ul {
             list-style: none;
-            font-size: 0.85rem;
-            color: var(--text-main);
-            margin-bottom: 12px;
-            padding: 0 10px;
+            font-size: 12px;
+            color: var(--text-dark);
+            margin-bottom: 14px;
+            padding: 0;
+            text-align: left;
+            display: inline-block;
         }
 
         .detalle-plan li {
             margin-bottom: 6px;
             display: flex;
-            align-items: flex-start;
+            align-items: center;
+            gap: 6px;
+            font-weight: 500;
+        }
+        .detalle-plan li .material-icons-outlined { font-size: 16px; color: var(--success); }
+
+        .precio-plan {
+            font-size: 14px;
+            font-weight: 800;
+            color: var(--primary-color);
+            background: #e8f5e9;
+            padding: 8px 12px;
+            border-radius: 8px;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            gap: 6px;
+            border: 1px solid #c8e6c9;
+        }
+
+        /* =====================================================
+           BÚSQUEDA DEL CLIENTE (UNIFICADA)
+        ===================================================== */
+        .form-group {
+            display: flex;
+            flex-direction: column;
             gap: 6px;
         }
 
-        .detalle-plan li::before {
-            content: "✔️";
-            font-size: 0.8rem;
-        }
-
-        .detalle-plan .precio-plan {
-            font-size: 1.2rem;
-            font-weight: 800;
-            color: var(--mme-accent);
-            text-align: center;
-            background: #e8f5e9;
-            padding: 8px;
-            border-radius: 8px;
-            display: block;
-            width: 100%;
-        }
-
-        /* ===================================================== */
-
-        .card-form label {
-            font-size: 0.85rem;
+        .form-group label {
+            font-size: 11px;
             font-weight: 700;
-            color: var(--mme-primary);
-            margin-bottom: 6px;
-            display: block;
+            color: var(--primary-color);
             text-transform: uppercase;
+            letter-spacing: 0.2px;
         }
 
         .search-wrapper {
             display: flex;
-            gap: 8px;
-        }
-
-        .card-form input {
-            width: 100%;
-            padding: 12px 14px;
-            font-size: 0.95rem;
-            font-family: var(--font-base);
-            color: var(--text-main);
-            border: 1.5px solid var(--border-color);
+            background-color: var(--bg-color);
+            border: 1px solid var(--border);
             border-radius: 8px;
-            background-color: #fafbfa;
-            transition: var(--transition-smooth);
-            outline: none;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        .search-wrapper:focus-within {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(29, 59, 32, 0.1);
         }
 
-        .card-form input:focus {
-            background-color: #ffffff;
-            border-color: var(--mme-accent);
-            box-shadow: inset 4px 0 0 var(--mme-primary), 0 0 0 3px rgba(46, 125, 50, 0.1);
+        .form-input {
+            flex-grow: 1;
+            padding: 10px 12px;
+            border: none;
+            background: transparent;
+            font-size: 13px;
+            color: var(--text-dark);
+            outline: none;
+            letter-spacing: 1px;
         }
 
         .btn-search {
-            width: 55px;
-            background: var(--mme-primary);
-            border-radius: 8px;
+            width: 44px;
+            background: var(--primary-color);
+            color: white;
             border: none;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            transition: var(--transition-smooth);
+            transition: all 0.2s ease;
         }
+        .btn-search:hover { background: var(--primary-hover); }
+        .btn-search .material-icons-outlined { font-size: 20px; }
 
-        .btn-search:hover {
-            background: var(--mme-primary-hover);
-        }
-
-        .btn-search img {
-            width: 22px;
-            
-        }
-
+        /* =====================================================
+           RESULTADOS Y BOTONES
+        ===================================================== */
         .info-cliente {
             display: none;
             background: #ffffff;
-            border: 1px solid var(--mme-accent);
-            padding: 15px;
+            border: 1px solid var(--border);
+            padding: 14px;
             border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
         }
 
-        .info-cliente p {
-            font-size: 0.9rem;
-            margin-bottom: 8px;
-            color: var(--text-main);
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            padding: 6px 0;
+            border-bottom: 1px solid #f0f2f4;
         }
-
-        .info-cliente strong {
-            color: var(--mme-primary);
-        }
+        .info-row:last-child { border-bottom: none; padding-bottom: 0; }
+        .info-row span { color: var(--text-subdued); font-weight: 500;}
+        .info-row strong { color: var(--text-dark); font-weight: 700; text-align: right;}
 
         .alerta-activa {
             display: none;
-            background: #ffebee;
-            color: #d32f2f;
-            padding: 12px;
-            border-radius: 8px;
-            font-size: 0.85rem;
+            background: #fef2f2;
+            color: var(--critical);
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 12px;
             font-weight: 700;
             text-align: center;
-            margin-top: 15px;
-            border: 1px solid #ffcdd2;
+            margin-top: 12px;
+            border: 1px solid #fecaca;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
         }
 
         .btn-confirmar {
             width: 100%;
-            margin-top: 15px;
-            padding: 16px;
-            font-size: 0.95rem;
-            font-weight: 700;
-            letter-spacing: 1px;
+            margin-top: 12px;
+            padding: 12px;
+            font-size: 13px;
+            font-weight: 800;
+            letter-spacing: 0.5px;
             text-transform: uppercase;
-            background: var(--mme-accent);
+            background: var(--interactive);
             color: #ffffff;
             border: none;
-            border-radius: 10px;
+            border-radius: 6px;
             cursor: pointer;
-            transition: var(--transition-smooth);
-            box-shadow: var(--shadow-btn);
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 8px rgba(44, 110, 203, 0.2);
             display: none;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
         }
+        .btn-confirmar:hover { background: #1f57a4; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(44, 110, 203, 0.3); }
+        .btn-confirmar:active { transform: translateY(0); }
 
-        .btn-confirmar:hover {
-            background: var(--mme-primary-hover);
-            transform: translateY(-2px);
-        }
-
-        .btn-confirmar:active {
-            transform: scale(0.98);
-        }
-
+        /* =====================================================
+           PIE DE PÁGINA (ESTÁTICO Y REDUCIDO)
+        ===================================================== */
         .card-footer {
-            background-color: #f9fafa;
+            background-color: var(--surface);
             text-align: center;
-            padding: 15px;
-            border-top: 1px solid var(--border-color);
-            margin-top: auto;
+            padding: 10px; /* Footer compacto */
+            border-top: 1px solid var(--border);
+            flex-shrink: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
-        .card-footer .logo {
-            width: 75px;
-            height: auto;
-            transition: transform 0.2s ease;
-        }
-
-        .card-footer a:hover .logo {
-            transform: scale(1.05);
+        .card-footer .logo { 
+            height: 25px; /* Logo más pequeño */
+            width: auto; 
+            display: block; 
+            opacity: 0.8;
+            pointer-events: none; /* Bloquea interacciones */
         }
 
         /* =====================================================
-           RESPONSIVE MÓVIL PROFESIONAL (PANTALLA COMPLETA)
+           SISTEMA DE MODALES Y ALERTAS PRO
         ===================================================== */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(32, 34, 35, 0.85);
+            display: none; justify-content: center; align-items: center; z-index: 1000; opacity: 0; animation: fadeIn 0.2s forwards;
+            padding: 15px;
+        }
+        .modal-content {
+            background: var(--surface); width: 100%; max-width: 320px; border-radius: var(--radius); box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            overflow: hidden; transform: scale(0.95); animation: scaleUp 0.2s forwards; text-align: center;
+        }
+        .modal-header { padding: 20px 16px 10px; display: flex; flex-direction: column; align-items: center; gap: 6px; font-size: 15px; font-weight: 700;}
+        .modal-body { padding: 0 16px 16px; color: var(--text-subdued); font-size: 13px; line-height: 1.4; white-space: pre-wrap;}
+        .modal-footer { padding: 12px 16px; background: #fafbfb; border-top: 1px solid var(--border); display: flex; justify-content: center; gap: 10px;}
+        
+        .modal-header.error { color: var(--critical); }
+        .modal-header.warning { color: var(--warning); }
+        .modal-header .material-icons-outlined { font-size: 40px; margin-bottom: 2px;}
+
+        .btn-modal {
+            background-color: var(--primary-color); color: white; border: none; padding: 8px 16px;
+            border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; width: 100%; transition: 0.2s;
+        }
+        .btn-modal:hover { background-color: var(--primary-hover); }
+        .btn-modal.outline { background-color: transparent; border: 1px solid var(--border); color: var(--text-dark); }
+        .btn-modal.outline:hover { background-color: var(--bg-color); }
+
+        /* Toast */
+        .toast {
+            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: #202223; color: white; 
+            padding: 10px 16px; border-radius: 8px; font-size: 13px; display: none; z-index: 1000; align-items: center; gap: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15); font-weight: 500;
+        }
+
+        @keyframes fadeIn { to { opacity: 1; } }
+        @keyframes scaleUp { to { transform: scale(1); } }
+
+        /* RESPONSIVE MÓVIL */
         @media screen and (max-width: 480px) {
-            html, body {
-                margin: 0;
-                padding: 0;
-                width: 100vw;
-                height: 100svh; /* Altura real en móviles modernos */
-                overflow: hidden; /* Evita scroll externo */
-                background-color: var(--bg-card);
-            }
-            
-            .card {
-                width: 100%;
-                max-width: none;
-                height: 100svh; /* Ocupa el 100% de la pantalla */
-                border-radius: 0; /* Quita los bordes curvos */
-                border: none;
-                box-shadow: none;
-                display: flex;
-                flex-direction: column;
-            }
-
-            .card-header {
-                flex-shrink: 0; /* El encabezado se mantiene fijo arriba */
-            }
-
-            .card-form {
-                flex: 1; /* Este contenedor empuja el footer hacia abajo */
-                overflow-y: auto; /* Permite scroll interno */
-                -webkit-overflow-scrolling: touch; /* Suavidad en scroll de iOS */
-            }
-
-            .card-footer {
-                flex-shrink: 0; /* El footer se mantiene fijo al fondo */
-            }
+            body { padding: 0; background-color: var(--bg-color); }
+            .card { max-width: none; height: 100svh; max-height: none; border-radius: 0; border: none; box-shadow: none; }
         }
     </style>
 </head>
 <body>
 
 <main class="card">
+    
+    <!-- CABECERA FIJA Y MINIMALISTA -->
     <header class="card-header">
-      <a href="#" title="Volver atrás" class="icon-link" onclick="window.history.back(); return false;">
-        <img src="Iconos/VOLVER.png" alt="Volver atrás" class="icon" style="filter: brightness(0) invert(1);">
-      </a>
-      <h1 class="menu-title">CONFIRMAR COMPRA</h1>
+        <div class="spacer"></div>
+        <h1>CONFIRMAR COMPRA</h1>
+        <!-- Botón de Retorno a la Derecha -->
+        <button class="icon-btn" title="Cerrar y Volver" onclick="window.history.back();">
+            <span class="material-icons-outlined">close</span>
+        </button>
     </header>
 
     <section class="card-form">
         
+        <!-- RESUMEN DEL PLAN (ESTILO PREMIUM) -->
         <div id="detallePlanContainer" class="detalle-plan">
+            <!-- Rellenado por JS -->
             Cargando información del plan...
         </div>
 
+        <!-- BUSCADOR UNIFICADO -->
         <div class="form-group">
-            <label for="busquedaCodigo">CÓDIGO DE CLIENTE (ID):</label>
+            <label for="busquedaCodigo">ID CLIENTE</label>
             <div class="search-wrapper">
-                <input type="text" id="busquedaCodigo" placeholder="Ej. P001" oninput="this.value = this.value.toUpperCase()">
+                <input type="text" id="busquedaCodigo" class="form-input" placeholder="Ej. P001" autocomplete="off" oninput="this.value = this.value.toUpperCase()">
                 <button type="button" class="btn-search" onclick="buscarCliente()" title="Buscar Cliente">
-                    <img src="Iconos/LUPA1.png" alt="Buscar">
+                    <span class="material-icons-outlined">search</span>
                 </button>
             </div>
         </div>
 
+        <!-- RESULTADO DE BÚSQUEDA -->
         <div id="resultadoBusqueda" class="info-cliente">
-            <p><strong>Nombre:</strong> <span id="resNombre">---</span></p>
-            <p><strong>DNI:</strong> <span id="resDni">---</span></p>
-            <p><strong>N° Celular:</strong> <span id="resCelular">---</span></p>
+            <div class="info-row"><span>Nombre:</span> <strong id="resNombre">---</strong></div>
+            <div class="info-row"><span>DNI:</span> <strong id="resDni">---</strong></div>
+            <div class="info-row"><span>Celular:</span> <strong id="resCelular">---</strong></div>
             
             <div id="msgYaTienePlan" class="alerta-activa">
-                ⚠️ ESTE CLIENTE YA CUENTA CON UNA MEMBRESÍA ACTIVA.
+                <span class="material-icons-outlined" style="font-size: 16px;">warning</span>
+                Ya cuenta con membresía activa.
             </div>
 
-            <button id="btnConfirmar" class="btn-confirmar" onclick="finalizarRegistro()">COMPRAR Y ACTIVAR</button>
+            <button id="btnConfirmar" class="btn-confirmar" onclick="finalizarRegistro()">
+                <span class="material-icons-outlined">workspace_premium</span>
+                COMPRAR Y ACTIVAR
+            </button>
         </div>
     </section>
 
+    <!-- PIE DE PÁGINA ESTÁTICO -->
     <footer class="card-footer">
-      <a href="#" title="Volver al Menú Principal" onclick="volverAlMenu(event)">
-        <img src="Imagenes/ECFM.png" alt="Logo de MEF Engineering" class="logo" />
-      </a>
+        <img src="Imagenes/ECFM.png" alt="Logo de MEF Engineering" class="logo" onerror="this.style.display='none'" />
     </footer>
+
 </main>
+
+<!-- ==========================================
+     MODALES DE SISTEMA Y ALERTAS PRO
+     ========================================== -->
+<div id="modal-alerta" class="modal-overlay">
+    <div class="modal-content">
+        <div class="modal-header" id="alerta-header">
+            <span class="material-icons-outlined" id="alerta-icon">error</span>
+            <span id="alerta-titulo">Atención</span>
+        </div>
+        <div class="modal-body" id="alerta-mensaje">Mensaje de error aquí.</div>
+        <div class="modal-footer" id="alerta-footer">
+            <button class="btn-modal primary" onclick="cerrarAlerta()">Entendido</button>
+        </div>
+    </div>
+</div>
+
+<!-- TOAST NOTIFICATION -->
+<div id="toast" class="toast">
+    <span class="material-icons-outlined" style="color: #4ade80;">check_circle</span>
+    <span id="toast-msg">Operación exitosa</span>
+</div>
 
 <script>
     'use strict';
 
     // ==========================================
-    // 1. INICIALIZACIÓN Y DETALLE DEL PLAN
+    // 1. SISTEMA VISUAL DE ALERTAS PRO
+    // ==========================================
+    function mostrarAlerta(titulo, mensaje, tipo = 'warning', botonesAdicionales = null) {
+        const modal = document.getElementById('modal-alerta');
+        const header = document.getElementById('alerta-header');
+        const icon = document.getElementById('alerta-icon');
+        const footer = document.getElementById('alerta-footer');
+        
+        document.getElementById('alerta-titulo').innerText = titulo;
+        document.getElementById('alerta-mensaje').innerText = mensaje;
+
+        header.className = 'modal-header'; 
+        if(tipo === 'error') {
+            header.classList.add('error'); icon.innerText = 'gpp_bad';
+        } else if (tipo === 'warning') {
+            header.classList.add('warning'); icon.innerText = 'warning';
+        }
+
+        // Inyectar botones si existen
+        if (botonesAdicionales) {
+            footer.innerHTML = botonesAdicionales;
+        } else {
+            footer.innerHTML = `<button class="btn-modal primary" onclick="cerrarAlerta()">Entendido</button>`;
+        }
+
+        modal.style.display = 'flex';
+    }
+
+    function cerrarAlerta() {
+        document.getElementById('modal-alerta').style.display = 'none';
+        document.getElementById('busquedaCodigo').focus();
+    }
+
+    function mostrarToast(mensaje, redireccion = null) {
+        const toast = document.getElementById('toast');
+        document.getElementById('toast-msg').innerText = mensaje;
+        toast.style.display = 'flex';
+        
+        setTimeout(() => { 
+            toast.style.display = 'none'; 
+            if(redireccion) window.location.href = redireccion;
+        }, 1800);
+    }
+
+    // ==========================================
+    // 2. GESTIÓN DE SESIÓN Y NAVEGACIÓN
+    // ==========================================
+    function cerrarSesion() {
+        sessionStorage.clear();
+        localStorage.setItem("sesionActiva", "no");
+        window.location.replace("index.html");
+    }
+
+    function validarSesion() {
+        if (sessionStorage.getItem("sesionActiva") !== "true") {
+            cerrarSesion();
+        }
+    }
+
+    window.addEventListener("DOMContentLoaded", validarSesion);
+    window.addEventListener("pageshow", validarSesion);
+
+    // Límite estricto de inactividad (1 minuto)
+    let timerInactividad;
+    const reiniciarTemporizador = () => {
+        clearTimeout(timerInactividad);
+        timerInactividad = setTimeout(() => {
+            alert("⏰ TIEMPO DE INACTIVIDAD EXCEDIDO. SESIÓN CERRADA.");
+            cerrarSesion();
+        }, 1 * 60 * 1000); 
+    };
+
+    ["mousemove", "keydown", "click", "scroll", "touchstart"].forEach(evt => {
+        document.addEventListener(evt, reiniciarTemporizador, { passive: true });
+    });
+    reiniciarTemporizador();
+
+    // Bloqueo Anti-Inspección
+    document.addEventListener('contextmenu', function(e) { e.preventDefault(); });
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C')) || (e.ctrlKey && e.key === 'U')) {
+            e.preventDefault();
+        }
+    });
+
+    // ==========================================
+    // 3. INICIALIZACIÓN Y DETALLE DEL PLAN
     // ==========================================
     const urlParams = new URLSearchParams(window.location.search);
     const planURL = (urlParams.get('plan') || '').toLowerCase();
     
-    // Base de datos de información visual
     const infoPlanes = {
         'basico': {
             titulo: '🌱 ECO BÁSICO',
             descripcion: 'El punto de partida ideal para acceder a nuestros servicios.',
             beneficios: [
-                'Recibe 20 Créditos para servicios',
+                '20 Créditos para servicios',
                 'Acceso general a la plataforma',
-                'Generación básica de Ecopoints'
+                'Generación de Ecopoints'
             ],
             precio: 'S/ 15.00'
         },
         'aventura': {
             titulo: '🌿 ECO AVENTURA',
-            descripcion: 'Perfecto para clientes frecuentes que buscan mayores recompensas.',
+            descripcion: 'Perfecto para clientes que buscan mayores recompensas.',
             beneficios: [
-                'Recibe 30 Créditos para servicios',
+                '30 Créditos para servicios',
                 'Multiplicador: +20% en Ecopoints',
-                'Descuentos exclusivos en tienda'
+                'Descuentos exclusivos'
             ],
             precio: 'S/ 25.00'
         },
         'elite': {
             titulo: '🌳 ECO ELITE',
-            descripcion: 'La experiencia VIP máxima para clientes comprometidos con SSOMA.',
+            descripcion: 'La experiencia VIP para clientes comprometidos con SSOMA.',
             beneficios: [
-                'Recibe 70 Créditos para servicios',
+                '70 Créditos para servicios',
                 'Multiplicador: +50% en Ecopoints',
-                'Soporte prioritario y atención VIP'
+                'Atención VIP prioritaria'
             ],
             precio: 'S/ 50.00'
         }
@@ -431,64 +593,31 @@
     const planSeleccionado = infoPlanes[planURL];
 
     if (planSeleccionado) {
+        let ulHTML = `<ul>`;
+        planSeleccionado.beneficios.forEach(b => {
+            ulHTML += `<li><span class="material-icons-outlined">check_circle</span>${b}</li>`;
+        });
+        ulHTML += `</ul>`;
+
         contenedorPlan.innerHTML = `
             <h2>${planSeleccionado.titulo}</h2>
             <p>${planSeleccionado.descripcion}</p>
-            <ul>
-                ${planSeleccionado.beneficios.map(beneficio => `<li>${beneficio}</li>`).join('')}
-            </ul>
-            <div class="precio-plan">Valor a pagar: ${planSeleccionado.precio}</div>
+            ${ulHTML}
+            <div class="precio-plan">
+                <span class="material-icons-outlined">payments</span>
+                Valor a pagar: ${planSeleccionado.precio}
+            </div>
         `;
     } else {
-        contenedorPlan.innerHTML = `<h2 style="color: #d32f2f;">⚠️ PLAN NO VÁLIDO</h2><p>Por favor, regresa a la pantalla anterior y selecciona un plan válido.</p>`;
+        contenedorPlan.innerHTML = `
+            <h2 style="color: var(--critical);">⚠️ PLAN NO VÁLIDO</h2>
+            <p>Por favor, regresa a la pantalla anterior y selecciona un plan válido.</p>`;
     }
 
     const inputBusqueda = document.getElementById('busquedaCodigo');
 
-
     // ==========================================
-    // 2. GESTIÓN DE SESIÓN Y SEGURIDAD
-    // ==========================================
-    function cerrarSesion(e, mensaje) {
-        if (e && typeof e.preventDefault === 'function') e.preventDefault();
-        if (mensaje) alert(mensaje);
-        
-        sessionStorage.clear();
-        localStorage.setItem("sesionActiva", "no");
-        window.location.replace("index.html");
-    }
-
-    function validarSesion() {
-        const activa = sessionStorage.getItem("sesionActiva");
-        if (activa !== "true") {
-            cerrarSesion(null, "⚠️ ACCESO DENEGADO. SESIÓN CERRADA.");
-        }
-    }
-
-    function volverAlMenu(e) {
-        if (e) e.preventDefault();
-        window.location.href = sessionStorage.getItem("menuUsuario") || "Botones.html";
-    }
-
-    window.addEventListener("DOMContentLoaded", validarSesion);
-    window.addEventListener("pageshow", validarSesion);
-
-    let timerInactividad;
-    const reiniciarTemporizador = () => {
-        clearTimeout(timerInactividad);
-        timerInactividad = setTimeout(() => {
-            cerrarSesion(null, "⏰ TIEMPO DE INACTIVIDAD EXCEDIDO. SESIÓN CERRADA.");
-        }, 1 * 60 * 1000); 
-    };
-
-    ["mousemove", "keydown", "click", "scroll", "touchstart"].forEach(evento => {
-        document.addEventListener(evento, reiniciarTemporizador, { passive: true });
-    });
-    reiniciarTemporizador();
-
-
-    // ==========================================
-    // 3. LÓGICA DE BÚSQUEDA Y COMPRA
+    // 4. LÓGICA DE BÚSQUEDA Y COMPRA
     // ==========================================
     function buscarCliente() {
         const codigo = inputBusqueda.value.trim().toUpperCase();
@@ -501,22 +630,25 @@
             document.getElementById('resultadoBusqueda').style.display = 'block';
             document.getElementById('resNombre').innerText = `${clientePersonal.nombres} ${clientePersonal.apellidos}`;
             document.getElementById('resDni').innerText = clientePersonal.dni;
-            
-            // ⚠️ CORRECCIÓN: Mostramos el celular en vez del cargo
             document.getElementById('resCelular').innerText = clientePersonal.celular || 'No registrado';
 
             // Validar si ya tiene un plan activo
             if (clientePersonal.membresiaActual && clientePersonal.membresiaActual.trim() !== "") {
-                document.getElementById('msgYaTienePlan').style.display = 'block';
+                document.getElementById('msgYaTienePlan').style.display = 'flex';
                 document.getElementById('btnConfirmar').style.display = 'none';
             } else {
                 document.getElementById('msgYaTienePlan').style.display = 'none';
-                document.getElementById('btnConfirmar').style.display = 'block';
+                document.getElementById('btnConfirmar').style.display = 'flex';
             }
         } else {
             document.getElementById('resultadoBusqueda').style.display = 'none';
-            const irARegistrar = confirm("⚠️ CLIENTE NO ENCONTRADO.\n¿Ir al módulo de Registro de Personal ahora?");
-            if (irARegistrar) window.location.href = 'RegistroPersonal.html'; 
+            
+            // Modal especial para redirigir al registro si no existe
+            const botonesError = `
+                <button class="btn-modal outline" onclick="cerrarAlerta()">Cancelar</button>
+                <button class="btn-modal primary" onclick="window.location.href='RegistroPersonal.html'">Registrar Cliente</button>
+            `;
+            mostrarAlerta("Cliente No Encontrado", `El código [${codigo}] no existe en la base de datos. ¿Deseas ir al módulo de registro ahora?`, "warning", botonesError);
         }
     }
 
@@ -529,17 +661,17 @@
 
     function finalizarRegistro() {
         if (!planSeleccionado) {
-            alert("⛔ ERROR: No hay un plan válido seleccionado.");
+            mostrarAlerta("Error de Plan", "No hay un plan válido seleccionado.", "error");
             return;
         }
 
         const codigoCliente = inputBusqueda.value.trim().toUpperCase();
-
+        
+        // Fecha ajustada al huso horario local
         const fechaActualLocal = new Date();
         fechaActualLocal.setMinutes(fechaActualLocal.getMinutes() - fechaActualLocal.getTimezoneOffset());
         const fechaMovimiento = fechaActualLocal.toISOString().split('T')[0];
 
-        // ⚠️ CORRECCIÓN: El plan Básico ahora da 20 créditos como dice el texto
         const configPlanes = {
             'basico':   { creditos: 20, puntos: 0 },
             'aventura': { creditos: 30, puntos: 0 },
@@ -547,18 +679,24 @@
         };
 
         const beneficios = configPlanes[planURL] || { creditos: 0, puntos: 0 };
-        
         let personal = JSON.parse(localStorage.getItem('personal')) || [];
         let idxPersonal = personal.findIndex(p => p.codigo === codigoCliente);
 
         if (idxPersonal !== -1) {
-            
             // Doble validación de seguridad
             if (personal[idxPersonal].membresiaActual && personal[idxPersonal].membresiaActual.trim() !== "") {
-                alert("⛔ ERROR: El cliente ya posee una membresía activa.");
+                mostrarAlerta("Operación Denegada", "Este cliente ya posee una membresía activa en el sistema.", "error");
                 return;
             }
             
+            // CAPTURA INVISIBLE DE SEDE DEL OPERADOR DEL SISTEMA
+            const sedeOperador = sessionStorage.getItem("usuarioSede") || "NO REGISTRADA";
+
+            // Si el cliente no tenía sede (porque es antiguo), se le asigna la del operador que le vende
+            if (!personal[idxPersonal].area && !personal[idxPersonal].sede) {
+                personal[idxPersonal].area = sedeOperador;
+            }
+
             // Asignación de beneficios
             personal[idxPersonal].membresiaActual = planURL.toUpperCase();
             personal[idxPersonal].creditos = beneficios.creditos;
@@ -568,12 +706,11 @@
             // Guardar cambios
             localStorage.setItem('personal', JSON.stringify(personal));
             
-            alert(`✅ COMPRA EXITOSA\n\nPlan: ${planURL.toUpperCase()} activado correctamente.\nSe abonaron ${beneficios.creditos} CRÉDITOS a la cuenta de ${personal[idxPersonal].nombres}.`);
-            
-            // Opcional: Redirigir al inicio o dejar que el usuario navegue solo
-            window.history.back(); // Regresa a la pantalla de planes
+            // Notificación de éxito
+            mostrarToast("Compra Procesada Exitosamente", "Membresias.html");
+
         } else {
-            alert("⚠️ ERROR: No se pudo procesar. El cliente desapareció de la base de datos.");
+            mostrarAlerta("Error del Sistema", "No se pudo procesar. El cliente no fue encontrado.", "error");
         }
     }
 </script>
