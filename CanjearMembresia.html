@@ -5,312 +5,531 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>CANJEAR MEMBRESÍA | MEF Engineering & Soluciones</title>
 
-    <style>
-        /* =====================================================
-           VARIABLES Y RESET
-        ===================================================== */
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+    <!-- FUENTES E ICONOS DE GOOGLE -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
 
+    <style>
+        /* ==========================================
+           SISTEMA DE DISEÑO MEF ENGINEERING (COMPACTO)
+           ========================================== */
         :root {
             --primary-color: #1d3b20;
-            --primary-hover: #143117;
-            --bg-color: #f4f6f5;
-            --white: #ffffff;
-            --text-dark: #333333;
-            --text-light: #666666;
-            --danger-color: #d32f2f; /* Rojo para costo */
-            --danger-bg: #ffebee;    /* Fondo rosa para costo */
-            --shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
-            --transition: all 0.25s ease;
+            --primary-hover: #0a1f0d;
+            --bg-color: #f4f6f8;
+            --surface: #ffffff;
+            --text-dark: #202223;
+            --text-subdued: #6d7175;
+            --border: #c9cccf;
+            --interactive: #2c6ecb;
+            --critical: #d82c0d;
+            --warning: #b98900;
+            --success: #108043;
+            
+            --danger-bg: #ffebee;
+            --shadow-card: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.03);
+            --radius: 10px;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
 
+        /* LAYOUT FIJO: El body no hace scroll global */
         body {
             background-color: var(--bg-color);
-            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            color: var(--text-dark);
+            height: 100vh;
+            height: 100svh;
+            overflow: hidden; 
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
-            min-height: 100svh;
-            color: var(--text-dark);
-            padding: 20px;
+            padding: 15px;
         }
 
         /* =====================================================
-           CONTENEDOR GLOBAL
+           CONTENEDOR GLOBAL (TARJETA FIJA Y REDUCIDA)
         ===================================================== */
-        .menu-container {
+        .container {
             width: 100%;
-            max-width: 420px;
-            background-color: var(--white);
-            border: 1.5px solid var(--primary-color);
-            border-radius: 12px;
-            box-shadow: var(--shadow);
+            max-width: 380px; /* Reducido para formato Kiosko */
+            background-color: var(--surface);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-card);
+            border: 1px solid var(--border);
             overflow: hidden;
             display: flex;
             flex-direction: column;
-        }
-
-        .menu-header {
-            background-color: var(--primary-color);
-            color: var(--white);
-            padding: 16px 15px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-        }
-
-        .menu-header .icon-link { position: absolute; left: 15px; }
-        .menu-header .icon { width: 24px; height: 24px; cursor: pointer; transition: var(--transition); }
-        .menu-header .icon:hover { transform: scale(1.15); filter: brightness(1.2); }
-        
-        .menu-title {
-            font-size: 1.1rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin: 0;
+            height: 100%;
+            max-height: 800px;
         }
 
         /* =====================================================
-           TARJETAS COMPACTAS (SERVICIOS)
+           ENCABEZADO FIJO (SOLO RETORNO A LA DERECHA)
+        ===================================================== */
+        .card-header {
+            background-color: var(--primary-color);
+            color: #ffffff;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            flex-shrink: 0;
+            z-index: 10;
+        }
+
+        .card-header .spacer {
+            width: 32px; /* Espaciador invisible para centrar el título */
+        }
+
+        .card-header h1 {
+            font-size: 0.95rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            margin: 0;
+            text-align: center;
+            flex-grow: 1;
+            text-transform: uppercase;
+        }
+
+        .icon-btn {
+            background: rgba(255,255,255,0.05);
+            color: white;
+            border: none;
+            padding: 4px;
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            text-decoration: none;
+        }
+        
+        .icon-btn:hover { background: rgba(255,255,255,0.2); transform: scale(1.05); }
+        .icon-btn .material-icons-outlined { font-size: 20px; }
+
+        /* =====================================================
+           CONTENEDOR DE SERVICIOS (SCROLL INTERNO)
         ===================================================== */
         .planes-section {
             display: flex;
             flex-direction: column;
-            gap: 12px; /* Reducido */
-            padding: 20px 15px;
+            gap: 12px;
+            padding: 20px 16px;
+            overflow-y: auto;
+            flex-grow: 1;
+            background-color: var(--bg-color);
         }
+        .planes-section::-webkit-scrollbar { width: 0px; background: transparent; }
 
+        /* =====================================================
+           DISEÑO ATRACTIVO DE TARJETAS DE CANJE
+        ===================================================== */
         .card-membresia {
-            background: var(--white);
-            padding: 10px; /* Reducido */
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.06);
-            border: 1px solid #e0e0e0;
-            transition: var(--transition);
+            background: var(--surface);
+            padding: 12px;
+            border-radius: var(--radius);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.03);
+            border: 1px solid var(--border);
+            transition: all 0.2s ease;
             position: relative;
             overflow: hidden;
             display: flex;
             align-items: center;
-            gap: 12px; /* Reducido */
+            gap: 12px;
             cursor: pointer;
-            min-height: 85px; /* Altura mínima compacta */
-        }
-
-        .card-membresia:hover {
-            box-shadow: 0 4px 12px rgba(29, 59, 32, 0.15);
-            border-color: var(--primary-color);
-            transform: translateY(-2px);
+            min-height: 90px;
         }
 
         .card-membresia:active { transform: scale(0.98); }
 
-        /* IMÁGENES COMPACTAS */
+        .card-membresia:hover {
+            box-shadow: 0 6px 12px rgba(216, 44, 13, 0.08); /* Sombra roja sutil */
+            border-color: var(--critical);
+            transform: translateY(-2px);
+        }
+
+        /* BORDE ACTIVO LATERAL (EFECTO PREMIUM) */
+        .card-membresia::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--border);
+            transition: all 0.2s ease;
+        }
+        .card-membresia:hover::before { background: var(--critical); }
+        .card-membresia.vip:hover::before { background: #fbc02d; }
+
+        /* IMÁGENES (ICONOS NATIVOS) */
         .img-container {
-            width: 60px; /* Reducido */
-            height: 60px; /* Reducido */
+            width: 60px;
+            height: 60px;
             border-radius: 8px;
-            background-color: #f4f6f5; 
+            background-color: #f8fafc; 
             display: flex;
             justify-content: center;
             align-items: center;
             flex-shrink: 0;
             overflow: hidden;
+            border: 1px solid #e2e8f0;
+            transition: all 0.3s ease;
+            margin-left: 4px;
         }
 
-        .servicio-img { width: 100%; height: 100%; object-fit: cover; }
+        .material-icon-big {
+            font-size: 32px;
+            color: var(--primary-color);
+            transition: transform 0.3s ease;
+        }
+        .card-membresia:hover .material-icon-big { transform: scale(1.15) rotate(5deg); }
+        .card-membresia.vip .material-icon-big { color: #d49a00; }
+        .card-membresia.recomendado .material-icon-big { color: var(--interactive); }
 
-        /* TEXTOS COMPACTOS */
+        /* TEXTOS */
         .info-container {
             display: flex;
             flex-direction: column;
             flex-grow: 1;
             justify-content: center;
+            text-align: left;
         }
 
         .card-membresia h2 {
-            font-size: 13px; /* Reducido */
+            font-size: 13px;
             margin: 0 0 2px 0;
             color: var(--primary-color);
             font-weight: 800;
         }
 
         .card-membresia p {
-            font-size: 11px; /* Reducido */
+            font-size: 11px;
             margin: 0 0 6px 0;
-            color: var(--text-light);
+            color: var(--text-subdued);
             line-height: 1.2;
         }
 
-        /* Estilo del costo en créditos (Rojo indicando gasto) */
         .costo-restar {
-            font-size: 11px; /* Reducido */
+            font-size: 11px;
             font-weight: 800;
-            color: var(--danger-color);
+            color: var(--critical);
             background: var(--danger-bg);
             padding: 3px 8px;
             border-radius: 6px;
-            display: inline-block;
+            display: inline-flex;
+            align-items: center;
+            gap: 2px;
             align-self: flex-start;
+            border: 1px solid #ffcdd2;
         }
 
         /* ETIQUETAS (BADGES) */
-        .recomendado { border-color: var(--primary-color); }
-        .vip { border-color: #fbc02d; }
-
         .badge {
             position: absolute;
             top: 0;
             right: 0;
             font-size: 9px;
-            padding: 3px 8px;
+            padding: 3px 10px;
             border-bottom-left-radius: 8px;
             background: var(--primary-color);
             color: white;
-            font-weight: 700;
+            font-weight: 800;
+            letter-spacing: 0.5px;
             z-index: 2;
-        }
-        .vip-badge { background: #fbc02d; color: #333; }
-
-        /* FOOTER */
-        .card-footer {
-            background-color: #fafafa;
-            padding: 12px;
-            border-top: 1px solid #eeeeee;
-            text-align: center;
-            margin-top: auto;
+            box-shadow: -2px 2px 5px rgba(0,0,0,0.05);
         }
 
-        .card-footer .logo { width: 70px; height: auto; transition: var(--transition); }
-        .card-footer a:hover .logo { transform: scale(1.05); }
+        .recomendado { border-color: #bbdefb; background: linear-gradient(to right, #ffffff, #f4f8fe); }
+        .recomendado .badge { background: var(--interactive); }
+
+        .vip { border-color: #fff9c4; background: linear-gradient(to right, #ffffff, #fffdf2); }
+        .vip .badge { background: #fbc02d; color: #333; }
+
+        /* Icono de Flecha Derecha */
+        .icon-ir {
+            color: var(--border);
+            font-size: 24px;
+            transition: all 0.2s;
+        }
+        .card-membresia:hover .icon-ir { transform: translateX(3px); color: var(--primary-color); }
+        .card-membresia.vip:hover .icon-ir { color: #d49a00; }
+        .card-membresia.recomendado:hover .icon-ir { color: var(--interactive); }
 
         /* =====================================================
-           RESPONSIVE MÓVIL PROFESIONAL (PANTALLA COMPLETA)
+           PIE DE PÁGINA ESTÁTICO
         ===================================================== */
+        .card-footer {
+            background-color: var(--surface);
+            text-align: center;
+            padding: 12px;
+            border-top: 1px solid var(--border);
+            flex-shrink: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .card-footer .logo { 
+            height: 25px; 
+            width: auto; 
+            display: block; 
+            opacity: 0.8;
+            pointer-events: none; 
+        }
+
+        /* =====================================================
+           SISTEMA DE MODALES Y FLUJO DE COMPRA
+        ===================================================== */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(32, 34, 35, 0.85);
+            display: none; justify-content: center; align-items: center; z-index: 1000; opacity: 0; animation: fadeIn 0.2s forwards;
+            padding: 15px;
+        }
+        .modal-content {
+            background: var(--surface); width: 100%; max-width: 320px; border-radius: var(--radius); box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            overflow: hidden; transform: scale(0.95); animation: scaleUp 0.2s forwards; text-align: center;
+        }
+        .modal-header { padding: 20px 16px 10px; display: flex; flex-direction: column; align-items: center; gap: 6px; font-size: 15px; font-weight: 800; text-transform: uppercase;}
+        .modal-body { padding: 0 16px 16px; color: var(--text-dark); font-size: 13px; line-height: 1.4; }
+        .modal-footer { padding: 12px 16px; background: #fafbfb; border-top: 1px solid var(--border); display: flex; justify-content: center; gap: 10px;}
+        
+        .modal-header.error { color: var(--critical); }
+        .modal-header.warning { color: var(--warning); }
+        .modal-header.info { color: var(--interactive); }
+        .modal-header .material-icons-outlined { font-size: 40px; margin-bottom: 2px;}
+
+        /* Input del Modal de Escaneo */
+        .form-input-scan {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: 800;
+            text-align: center;
+            color: var(--primary-color);
+            outline: none;
+            transition: all 0.3s;
+            margin-top: 10px;
+            background-color: #f8fafc;
+            text-transform: uppercase;
+        }
+        .form-input-scan:focus { border-color: var(--interactive); box-shadow: 0 0 0 3px rgba(44, 110, 203, 0.15); background-color: var(--surface); }
+
+        /* Resumen de Confirmación */
+        .resumen-caja {
+            background: #f8fafc;
+            border: 1px dashed var(--border);
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 10px;
+            text-align: left;
+        }
+        .resumen-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 6px 0;
+            border-bottom: 1px solid #e2e8f0;
+            font-size: 12px;
+        }
+        .resumen-row:last-child { border-bottom: none; padding-bottom: 0;}
+        .resumen-row strong { color: var(--primary-color); }
+        .resumen-row.destacado strong { color: var(--critical); font-size: 14px; }
+
+        .btn-modal {
+            padding: 8px 16px; border-radius: 6px; font-size: 13px; font-weight: 700; cursor: pointer; width: 100%; transition: 0.2s; border: none; display: flex; justify-content: center; align-items: center; gap: 6px;
+        }
+        .btn-modal.primary { background-color: var(--primary-color); color: white; }
+        .btn-modal.primary:hover { background-color: var(--primary-hover); }
+        .btn-modal.danger { background-color: var(--critical); color: white; }
+        .btn-modal.danger:hover { background-color: #b9250a; }
+        .btn-modal.outline { background-color: transparent; border: 1px solid var(--border); color: var(--text-dark); }
+        .btn-modal.outline:hover { background-color: var(--bg-color); }
+
+        /* Toast */
+        .toast {
+            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: #202223; color: white; 
+            padding: 10px 16px; border-radius: 8px; font-size: 13px; display: none; z-index: 1200; align-items: center; gap: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15); font-weight: 500;
+        }
+
+        @keyframes fadeIn { to { opacity: 1; } }
+        @keyframes scaleUp { to { transform: scale(1); } }
+
+        /* RESPONSIVE MÓVIL */
         @media screen and (max-width: 480px) {
-            html, body {
-                margin: 0;
-                padding: 0;
-                width: 100vw;
-                height: 100svh; /* Altura real en móviles modernos */
-                overflow: hidden; /* Evita scroll externo */
-                background-color: var(--white);
-            }
-            
-            .menu-container {
-                width: 100%;
-                max-width: none;
-                height: 100svh; /* Ocupa el 100% de la pantalla */
-                border-radius: 0; /* Quita los bordes curvos */
-                border: none;
-                box-shadow: none;
-                display: flex;
-                flex-direction: column;
-            }
-
-            .menu-header {
-                flex-shrink: 0; /* El encabezado se mantiene fijo arriba */
-            }
-
-            .planes-section {
-                flex: 1; /* Este contenedor empuja el footer hacia abajo */
-                padding: 20px 15px;
-                gap: 14px;
-                overflow-y: auto; /* Permite scroll solo en esta área si hay muchas cards */
-                -webkit-overflow-scrolling: touch; /* Suavidad en scroll de iOS */
-            }
-
-            .card-membresia {
-                min-height: 100px; /* Ajuste sutil para encajar mejor en móviles pequeños */
-            }
-
-            .card-footer {
-                flex-shrink: 0; /* El footer se mantiene fijo al fondo */
-                border-top: 1px solid #eaeaea;
-            }
+            body { padding: 0; background-color: var(--surface); }
+            .container { max-width: none; height: 100svh; max-height: none; border-radius: 0; border: none; box-shadow: none; }
         }
     </style>
 </head>
 <body>
 
-    <main class="menu-container">
+    <main class="container">
         
-        <header class="menu-header">
-            <a href="#" class="icon-link" onclick="cerrarSesion(event)">
-                <img src="Iconos/SALIR.png" alt="Cerrar sesión" class="icon">
-            </a>
-            <h1 class="menu-title">CANJEAR MEMBRESÍA</h1>
+        <!-- CABECERA FIJA Y MINIMALISTA -->
+        <header class="card-header">
+            <div class="spacer"></div>
+            
+            <h1>CANJEAR MEMBRESÍA</h1>
+            
+            <button class="icon-btn" title="Cerrar y volver" onclick="window.history.back();">
+                <span class="material-icons-outlined">arrow_back</span>
+            </button>
         </header>
 
+        <!-- ZONA DE SERVICIOS (SCROLLABLE) -->
         <section class="planes-section">
 
-            <div class="card-membresia vip" data-nombre="ECO VIDEO DRON" data-costo="0" onclick="iniciarCobro(this)">
+            <div class="card-membresia vip" data-nombre="ECO VIDEO DRON" data-costo="0" onclick="abrirModalCobro(this)">
                 <div class="badge vip-badge">⭐ EXCLUSIVO</div>
                 <div class="img-container">
-                    <img src="Iconos/moto.png" alt="Icono Moto" class="servicio-img" onerror="this.style.display='none'">
+                    <span class="material-icons-outlined material-icon-big">videocam</span>
                 </div>
                 <div class="info-container">
-                    <h2>🌳 ECO VIDEO DRON</h2>
-                    <p>1 grabación de video aéreo profesional</p>
-                    <div class="costo-restar">- <span class="txt-costo"></span> Créditos</div>
+                    <h2 style="color: #d49a00;">🌳 ECO VIDEO DRON</h2>
+                    <p>Grabación aérea profesional.</p>
+                    <div class="costo-restar"><span class="material-icons-outlined" style="font-size: 12px;">remove</span><span class="txt-costo"></span> CR</div>
                 </div>
+                <span class="material-icons-outlined icon-ir">chevron_right</span>
             </div>
 
-            <div class="card-membresia recomendado" data-nombre="ECO FOTO DRON" data-costo="1" onclick="iniciarCobro(this)">
+            <div class="card-membresia recomendado" data-nombre="ECO FOTO DRON" data-costo="1" onclick="abrirModalCobro(this)">
                 <div class="badge">🔥 POPULAR</div>
                 <div class="img-container">
-                    <img src="Iconos/camara.png" alt="Icono Foto" class="servicio-img" onerror="this.style.display='none'">
+                    <span class="material-icons-outlined material-icon-big">photo_camera</span>
                 </div>
                 <div class="info-container">
-                    <h2>🌿 ECO FOTO DRON</h2>
-                    <p>1 fotografía aérea en alta resolución</p>
-                    <div class="costo-restar">- <span class="txt-costo"></span> Crédito</div>
+                    <h2 style="color: var(--interactive);">🌿 ECO FOTO DRON</h2>
+                    <p>Fotografía en alta resolución.</p>
+                    <div class="costo-restar"><span class="material-icons-outlined" style="font-size: 12px;">remove</span><span class="txt-costo"></span> CR</div>
                 </div>
+                <span class="material-icons-outlined icon-ir">chevron_right</span>
             </div>
 
-            <div class="card-membresia vip" data-nombre="ECO PASEO MOTO" data-costo="3" onclick="iniciarCobro(this)">
+            <div class="card-membresia vip" data-nombre="ECO PASEO MOTO" data-costo="3" onclick="abrirModalCobro(this)">
                 <div class="badge vip-badge">👑 PREMIUM</div>
                 <div class="img-container">
-                    <img src="Iconos/moto.png" alt="Icono Moto" class="servicio-img" onerror="this.style.display='none'">
+                    <span class="material-icons-outlined material-icon-big">two_wheeler</span>
                 </div>
                 <div class="info-container">
-                    <h2>🌳 ECO PASEO MOTO</h2>
-                    <p>1 paseo guiado en ruta ecológica</p>
-                    <div class="costo-restar">- <span class="txt-costo"></span> Créditos</div>
+                    <h2 style="color: #d49a00;">🌳 ECO PASEO MOTO</h2>
+                    <p>Paseo guiado en ruta ecológica.</p>
+                    <div class="costo-restar"><span class="material-icons-outlined" style="font-size: 12px;">remove</span><span class="txt-costo"></span> CR</div>
                 </div>
+                <span class="material-icons-outlined icon-ir">chevron_right</span>
             </div>
 
-            <div class="card-membresia recomendado" data-nombre="ECO FOTO DRON PLUS" data-costo="5" onclick="iniciarCobro(this)">
+            <div class="card-membresia recomendado" data-nombre="ECO FOTO DRON PLUS" data-costo="5" onclick="abrirModalCobro(this)">
                 <div class="badge">📸 PAQUETE</div>
                 <div class="img-container">
-                    <img src="Iconos/camara.png" alt="Icono Foto" class="servicio-img" onerror="this.style.display='none'">
+                    <span class="material-icons-outlined material-icon-big">collections</span>
                 </div>
                 <div class="info-container">
-                    <h2>🌿 ECO FOTO DRON PLUS</h2>
-                    <p>Sesión fotográfica aérea completa</p>
-                    <div class="costo-restar">- <span class="txt-costo"></span> Créditos</div>
+                    <h2 style="color: var(--interactive);">🌿 ECO FOTO DRON PLUS</h2>
+                    <p>Sesión fotográfica completa.</p>
+                    <div class="costo-restar"><span class="material-icons-outlined" style="font-size: 12px;">remove</span><span class="txt-costo"></span> CR</div>
                 </div>
+                <span class="material-icons-outlined icon-ir">chevron_right</span>
             </div>
 
         </section>
 
+        <!-- PIE DE PÁGINA ESTÁTICO -->
         <footer class="card-footer">
-            <a href="#" title="Volver al Menú Anterior" onclick="window.history.back(); return false;">
-                <img src="Imagenes/ECFM.png" alt="Logo de MEF Engineering" class="logo" />
-            </a>
+            <img src="Imagenes/ECFM.png" alt="Logo de MEF Engineering" class="logo" onerror="this.style.display='none'">
         </footer>
 
     </main>
 
+    <!-- ==========================================
+         MODALES DE SISTEMA Y FLUJO
+         ========================================== -->
+    
+    <!-- Modal Alerta (Errores/Warnings) -->
+    <div id="modal-alerta" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header error" id="alerta-header">
+                <span class="material-icons-outlined" id="alerta-icon">gpp_bad</span>
+                <span id="alerta-titulo">Atención</span>
+            </div>
+            <div class="modal-body" id="alerta-mensaje">Mensaje de error aquí.</div>
+            <div class="modal-footer">
+                <button class="btn-modal primary" onclick="cerrarModalAlerta()">Entendido</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Paso 1: Ingresar ID -->
+    <div id="modal-scan" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header info">
+                <span class="material-icons-outlined">nfc</span>
+                <span id="lbl-servicio-scan">CANJEAR SERVICIO</span>
+            </div>
+            <div class="modal-body">
+                <p>Costo del servicio: <strong id="lbl-costo-scan" style="color: var(--critical);">0</strong> Créditos</p>
+                <form id="form-scan" onsubmit="verificarCliente(event)">
+                    <input type="text" id="input-codigo" class="form-input-scan" placeholder="CÓDIGO ID" required autocomplete="off">
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-modal outline" onclick="cerrarModalScan()">Cancelar</button>
+                <button class="btn-modal primary" onclick="document.getElementById('form-scan').requestSubmit()">Verificar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Paso 2: Confirmar Transacción -->
+    <div id="modal-confirmar" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header error">
+                <span class="material-icons-outlined">shopping_cart_checkout</span>
+                <span>CONFIRMAR CANJE</span>
+            </div>
+            <div class="modal-body">
+                <div class="resumen-caja">
+                    <div class="resumen-row"><span>Cliente:</span> <strong id="conf-nombre">---</strong></div>
+                    <div class="resumen-row"><span>Plan:</span> <strong id="conf-plan">---</strong></div>
+                    <div class="resumen-row"><span>Créditos Actuales:</span> <strong id="conf-actuales">0</strong></div>
+                    <div class="resumen-row destacado"><span>Costo:</span> <strong>-<span id="conf-costo">0</span> CR</strong></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-modal outline" onclick="cerrarModalConfirmar()">Cancelar</button>
+                <button class="btn-modal danger" onclick="procesarCanje()">
+                    <span class="material-icons-outlined" style="font-size: 18px;">check_circle</span>
+                    Procesar Canje
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOAST NOTIFICATION -->
+    <div id="toast" class="toast">
+        <span class="material-icons-outlined" style="color: #4ade80;">check_circle</span>
+        <span id="toast-msg">Operación exitosa</span>
+    </div>
+
 <script>
     'use strict';
 
+    // Variables globales para la transacción
+    let servicioActual = '';
+    let costoActual = 0;
+    let idxClienteTemporal = -1;
+
     // ==========================================
-    // 1. INICIALIZACIÓN DE PRECIOS VISUALES
+    // 1. INICIALIZAR PRECIOS VISUALES
     // ==========================================
     function inicializarPrecios() {
         document.querySelectorAll('.card-membresia').forEach(tarjeta => {
@@ -323,11 +542,44 @@
     }
 
     // ==========================================
-    // 2. GESTIÓN DE SESIÓN Y NAVEGACIÓN
+    // 2. SISTEMA VISUAL DE MODALES
     // ==========================================
-    function cerrarSesion(arg) {
-        if (arg && typeof arg.preventDefault === 'function') arg.preventDefault();
-        alert("🔒 Sesión finalizada de forma segura.");
+    function mostrarAlerta(titulo, mensaje, tipo = 'error') {
+        const modal = document.getElementById('modal-alerta');
+        const header = document.getElementById('alerta-header');
+        const icon = document.getElementById('alerta-icon');
+        
+        document.getElementById('alerta-titulo').innerText = titulo;
+        document.getElementById('alerta-mensaje').innerText = mensaje;
+
+        header.className = 'modal-header'; 
+        if(tipo === 'error') {
+            header.classList.add('error'); icon.innerText = 'gpp_bad';
+        } else if (tipo === 'warning') {
+            header.classList.add('warning'); icon.innerText = 'warning';
+        }
+
+        modal.style.display = 'flex';
+    }
+
+    function cerrarModalAlerta() {
+        document.getElementById('modal-alerta').style.display = 'none';
+        if(document.getElementById('modal-scan').style.display === 'flex') {
+            document.getElementById('input-codigo').focus();
+        }
+    }
+
+    function mostrarToast(mensaje) {
+        const toast = document.getElementById('toast');
+        document.getElementById('toast-msg').innerText = mensaje;
+        toast.style.display = 'flex';
+        setTimeout(() => { toast.style.display = 'none'; }, 2000);
+    }
+
+    // ==========================================
+    // 3. GESTIÓN DE SESIÓN Y SEGURIDAD
+    // ==========================================
+    function cerrarSesion() {
         sessionStorage.clear();
         localStorage.setItem("sesionActiva", "no");
         window.location.replace("index.html");
@@ -345,66 +597,121 @@
     });
     window.addEventListener("pageshow", validarSesion);
 
+    // Control estricto de inactividad (1 minuto)
     let timerInactividad;
     const reiniciarTemporizador = () => {
         clearTimeout(timerInactividad);
         timerInactividad = setTimeout(() => {
             alert("⏰ TIEMPO DE INACTIVIDAD EXCEDIDO. SESIÓN CERRADA.");
             cerrarSesion();
-        }, 1 * 60 * 1000); // 1 MINUTO
+        }, 1 * 60 * 1000); 
     };
 
-    ["mousemove", "keydown", "click", "scroll", "touchstart"].forEach(evento => {
-        document.addEventListener(evento, reiniciarTemporizador, { passive: true });
+    ["mousemove", "keydown", "click", "scroll", "touchstart"].forEach(evt => {
+        document.addEventListener(evt, reiniciarTemporizador, { passive: true });
     });
     reiniciarTemporizador();
 
+    // Bloqueo Anti-Inspección
+    document.addEventListener('contextmenu', function(e) { e.preventDefault(); });
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C')) || (e.ctrlKey && e.key === 'U')) {
+            e.preventDefault();
+        }
+    });
 
     // ==========================================
-    // 3. LÓGICA DINÁMICA DE CONSUMO DE CRÉDITOS
+    // 4. LÓGICA DE FLUJO: CANJE DE SERVICIOS
     // ==========================================
-    function iniciarCobro(elementoHTML) {
-        const nombreServicio = elementoHTML.getAttribute('data-nombre');
-        const costo = parseInt(elementoHTML.getAttribute('data-costo'), 10);
+    
+    // PASO 1: Abrir Modal de Escaneo
+    function abrirModalCobro(elementoHTML) {
+        servicioActual = elementoHTML.getAttribute('data-nombre');
+        costoActual = parseInt(elementoHTML.getAttribute('data-costo'), 10);
+        idxClienteTemporal = -1;
 
-        const codigoInput = prompt(`🛒 SERVICIO: ${nombreServicio}\nCosto: ${costo} Crédito(s)\n\nEscanear o ingresar el CÓDIGO del cliente:`);
+        document.getElementById('lbl-servicio-scan').innerText = servicioActual;
+        document.getElementById('lbl-costo-scan').innerText = costoActual;
         
-        if (!codigoInput) return; // Si cancela o deja vacío
+        const inputCodigo = document.getElementById('input-codigo');
+        inputCodigo.value = '';
+        
+        document.getElementById('modal-scan').style.display = 'flex';
+        setTimeout(() => inputCodigo.focus(), 100);
+    }
 
-        const codigoCliente = codigoInput.trim().toUpperCase();
+    function cerrarModalScan() {
+        document.getElementById('modal-scan').style.display = 'none';
+    }
+
+    // PASO 2: Verificar Cliente y Saldo
+    function verificarCliente(e) {
+        e.preventDefault();
+        
+        const codigoCliente = document.getElementById('input-codigo').value.trim().toUpperCase();
+        if (!codigoCliente) return;
+
         let personal = JSON.parse(localStorage.getItem('personal')) || [];
-        let idxPersonal = personal.findIndex(p => p.codigo === codigoCliente);
+        idxClienteTemporal = personal.findIndex(p => p.codigo === codigoCliente);
 
-        if (idxPersonal !== -1) {
-            let cliente = personal[idxPersonal];
+        if (idxClienteTemporal !== -1) {
+            let cliente = personal[idxClienteTemporal];
 
-            // 1. Verificamos si tiene un plan activo
+            // A) Verificar Membresía Activa
             if (!cliente.membresiaActual || cliente.membresiaActual.trim() === "") {
-                alert(`⛔ ACCESO DENEGADO\n\nEl cliente ${cliente.nombres} no tiene ninguna membresía activa.`);
+                mostrarAlerta("Acceso Denegado", `El cliente no tiene ninguna membresía activa en el sistema.`, "error");
                 return;
             }
 
-            // 2. Verificamos saldo (Asumiendo que si el costo es 0, siempre pasa)
-            if (cliente.creditos >= costo) {
-                
-                // Confirmación de seguridad
-                const confirmar = confirm(`¿Desea descontar ${costo} CR de la cuenta de ${cliente.nombres}?`);
-                
-                if (confirmar) {
-                    cliente.creditos -= costo; 
-                    personal[idxPersonal] = cliente; 
-                    localStorage.setItem('personal', JSON.stringify(personal));
-
-                    alert(`✅ SERVICIO APROBADO\n\nCliente: ${cliente.nombres} ${cliente.apellidos}\nServicio: ${nombreServicio}\nCosto: ${costo} CR\n\n💳 Créditos restantes: ${cliente.creditos}`);
-                }
-            } else {
-                alert(`⛔ SALDO INSUFICIENTE\n\nEl cliente ${cliente.nombres} tiene solo ${cliente.creditos} crédito(s).\nEste servicio requiere ${costo} crédito(s).`);
+            // B) Verificar Saldo de Créditos
+            if (cliente.creditos < costoActual) {
+                mostrarAlerta("Saldo Insuficiente", `El cliente solo tiene ${cliente.creditos} crédito(s).\nEste servicio requiere ${costoActual} crédito(s).`, "warning");
+                return;
             }
 
+            // C) Todo OK -> Ocultar Scan y Mostrar Confirmación
+            cerrarModalScan();
+            
+            document.getElementById('conf-nombre').innerText = `${cliente.nombres} ${cliente.apellidos}`;
+            document.getElementById('conf-plan').innerText = cliente.membresiaActual;
+            document.getElementById('conf-actuales').innerText = cliente.creditos;
+            document.getElementById('conf-costo').innerText = costoActual;
+
+            document.getElementById('modal-confirmar').style.display = 'flex';
+
         } else {
-            alert("⚠️ CLIENTE NO ENCONTRADO.\nVerifique que el código esté bien escrito e intente nuevamente.");
+            mostrarAlerta("Cliente No Encontrado", "Verifique que el ID esté bien escrito e intente nuevamente.", "error");
         }
     }
+
+    function cerrarModalConfirmar() {
+        document.getElementById('modal-confirmar').style.display = 'none';
+        // Si cancela, devolvemos al scan por si escaneó el ID equivocado
+        document.getElementById('modal-scan').style.display = 'flex';
+        setTimeout(() => document.getElementById('input-codigo').focus(), 100);
+    }
+
+    // PASO 3: Ejecutar la Transacción
+    function procesarCanje() {
+        if (idxClienteTemporal === -1) return;
+
+        let personal = JSON.parse(localStorage.getItem('personal')) || [];
+        let cliente = personal[idxClienteTemporal];
+
+        // Restar créditos
+        cliente.creditos -= costoActual; 
+        personal[idxClienteTemporal] = cliente; 
+        
+        // Guardar en Base de Datos Local
+        localStorage.setItem('personal', JSON.stringify(personal));
+
+        // Cerrar Modal y Mostrar Éxito
+        document.getElementById('modal-confirmar').style.display = 'none';
+        mostrarToast("Servicio Aprobado Correctamente");
+        
+        idxClienteTemporal = -1; // Resetear
+    }
+
 </script>
 
 </body>
