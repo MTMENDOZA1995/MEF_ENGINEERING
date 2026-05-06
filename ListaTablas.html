@@ -4,312 +4,312 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>LISTA DE TABLAS | MEF Engineering & Soluciones</title>
-    
-    <style>
-        /* =====================================================
-           IMPORTAR FUENTE Y VARIABLES
-        ===================================================== */
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
+    <!-- FUENTES E ICONOS DE GOOGLE -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+
+    <style>
+        /* ==========================================
+           SISTEMA DE DISEÑO MEF ENGINEERING (COMPACTO)
+           ========================================== */
         :root {
             --primary-color: #1d3b20;
-            --primary-hover: #143117;
-            --bg-color: #f4f6f5;
-            --white: #ffffff;
-            --text-dark: #333333;
-            --text-light: #666666;
-            --shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
-            --transition: all 0.25s ease;
+            --primary-hover: #0a1f0d;
+            --bg-color: #f4f6f8;
+            --surface: #ffffff;
+            --text-dark: #202223;
+            --text-subdued: #6d7175;
+            --border: #c9cccf;
+            --interactive: #2c6ecb;
+            --critical: #d82c0d;
+            --warning: #b98900;
+            --success: #108043;
+            
+            --shadow-card: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.03);
+            --radius: 10px;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
 
+        /* LAYOUT FIJO: El body no hace scroll global */
         body {
             background-color: var(--bg-color);
-            font-family: 'Inter', system-ui, -apple-system, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            min-height: 100svh;
             color: var(--text-dark);
-            padding: 20px;
+            height: 100vh;
+            height: 100svh;
+            overflow: hidden; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 15px;
         }
 
         /* =====================================================
-           CONTENEDOR GLOBAL
+           CONTENEDOR GLOBAL (TARJETA FIJA Y REDUCIDA)
         ===================================================== */
-        .menu-container {
+        .container {
             width: 100%;
-            max-width: 420px;
-            background-color: var(--white);
-            border: 1.5px solid var(--primary-color);
-            border-radius: 12px;
-            box-shadow: var(--shadow);
+            max-width: 400px; /* Ancho para acomodar Grid 2x2 */
+            background-color: var(--surface);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-card);
+            border: 1px solid var(--border);
             overflow: hidden;
             display: flex;
             flex-direction: column;
+            height: 100%;
+            max-height: 800px;
         }
 
-        .menu-header {
+        /* =====================================================
+           ENCABEZADO FIJO (SOLO RETORNO A LA DERECHA)
+        ===================================================== */
+        .card-header {
             background-color: var(--primary-color);
-            color: var(--white);
-            padding: 16px 15px;
+            color: #ffffff;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            flex-shrink: 0;
+            z-index: 10;
+        }
+
+        .card-header .spacer {
+            width: 28px; /* Espaciador invisible para centrar el título */
+        }
+
+        .card-header h1 {
+            font-size: 0.95rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            margin: 0;
+            text-align: center;
+            flex-grow: 1;
+            text-transform: uppercase;
+        }
+
+        .icon-btn {
+            background: rgba(255,255,255,0.05);
+            color: white;
+            border: none;
+            padding: 4px;
+            border-radius: 6px;
+            cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            position: relative;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: all 0.2s ease;
+            text-decoration: none;
         }
-
-        .menu-header .icon-link { position: absolute; left: 15px; }
-        .menu-header .icon { width: 24px; height: 24px; cursor: pointer; filter: brightness(0) invert(1); transition: var(--transition); }
-        .menu-header .icon:hover { transform: scale(1.15); }
         
-        .menu-title {
-            font-size: 1.1rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin: 0;
-        }
+        .icon-btn:hover { background: rgba(255,255,255,0.2); transform: scale(1.05); }
+        .icon-btn .material-icons-outlined { font-size: 20px; }
 
         /* =====================================================
-           CONTENEDOR DE BOTONES (TARJETAS COMPACTAS)
+           ZONA DE TARJETAS GRID 2X2 (SCROLL INTERNO)
         ===================================================== */
-        .menu-cards {
-            display: flex;
-            flex-direction: column;
-            gap: 12px; /* Espaciado reducido para acomodar 6 tarjetas */
-            padding: 20px 15px;
-            flex-grow: 1;
-        }
-
-        .card-menu {
-            display: flex;
-            align-items: center;
+        .planes-section {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr); /* 2 Columnas */
             gap: 12px;
-            background: var(--white);
-            border-radius: 10px;
-            padding: 10px;
-            cursor: pointer;
-            transition: var(--transition);
-            border: 1px solid #e0e0e0;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.04);
+            padding: 16px;
+            overflow-y: auto;
+            flex-grow: 1;
+            background-color: var(--bg-color);
+        }
+        .planes-section::-webkit-scrollbar { width: 0px; background: transparent; }
+
+        /* =====================================================
+           DISEÑO ATRACTIVO DE TARJETAS (CUADRADAS)
+        ===================================================== */
+        .card-membresia {
+            background: var(--surface);
+            padding: 16px 10px 12px;
+            border-radius: var(--radius);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+            border: 1px solid var(--border);
+            transition: all 0.2s ease;
             position: relative;
             overflow: hidden;
-            min-height: 75px; /* Altura compacta */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            cursor: pointer;
         }
 
-        .card-menu:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(29, 59, 32, 0.12);
-            border-color: var(--primary-color);
-        }
+        .card-membresia:active { transform: scale(0.96); }
 
-        .card-menu:active { transform: scale(0.98); }
-
-        /* BORDE LATERAL DE COLOR AL PASAR EL MOUSE */
-        .card-menu::before {
+        /* Borde superior dinámico */
+        .card-membresia::before {
             content: "";
             position: absolute;
-            left: 0;
             top: 0;
-            width: 4px;
-            height: 100%;
-            background: linear-gradient(180deg, var(--primary-color), #43a047);
-            opacity: 0;
-            transition: 0.3s;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--border);
+            transition: all 0.2s ease;
         }
-        .card-menu:hover::before { opacity: 1; }
 
-        /* IMAGEN / ICONO COMPACTO */
+        /* Hover general */
+        .card-membresia:hover {
+            box-shadow: 0 6px 12px rgba(29, 59, 32, 0.1);
+            border-color: var(--primary-color);
+            transform: translateY(-2px);
+        }
+        .card-membresia:hover::before { background: var(--primary-color); }
+
+        /* CONTENEDOR DE ICONOS NATIVOS */
         .img-container {
             width: 50px;
             height: 50px;
-            border-radius: 10px;
-            background: linear-gradient(135deg, #f4f6f5, #e8f5e9);
+            border-radius: 8px;
+            background-color: #f8fafc; 
             display: flex;
             justify-content: center;
             align-items: center;
-            flex-shrink: 0;
-            transition: var(--transition);
+            overflow: hidden;
+            border: 1px solid #e2e8f0;
+            margin-bottom: 8px;
         }
 
-        .card-menu img {
-            width: 55%;
-            height: auto;
-            object-fit: contain;
-            transition: transform 0.3s ease;
+        .material-icon-big {
+            font-size: 30px;
+            transition: transform 0.3s ease, color 0.3s ease;
+            color: var(--text-subdued);
         }
+        .card-membresia:hover .material-icon-big { transform: scale(1.15); color: var(--primary-color);}
 
-        .card-menu:hover .img-container { background: linear-gradient(135deg, #e8f5e9, #c8e6c9); }
-        .card-menu:hover img { transform: scale(1.15) rotate(3deg); }
-
-        /* TEXTO DEL BOTÓN COMPACTO */
-        .text-container {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-
-        .card-menu h3 {
-            font-size: 13px;
-            margin: 0 0 2px 0;
+        /* TEXTOS */
+        .card-membresia h2 {
+            font-size: 11px;
+            margin: 0 0 4px 0;
             color: var(--primary-color);
             font-weight: 800;
         }
 
-        .card-menu p {
-            font-size: 11px;
+        .card-membresia p {
+            font-size: 9px;
             margin: 0;
-            color: var(--text-light);
+            color: var(--text-subdued);
             line-height: 1.2;
-            white-space: nowrap; 
-            overflow: hidden;
-            text-overflow: ellipsis;
+            height: 30px; /* Altura fija para mantener alineación en 2 lineas */
         }
 
         /* =====================================================
-           PIE DE PÁGINA
+           PIE DE PÁGINA ESTÁTICO
         ===================================================== */
         .card-footer {
-            background-color: #fafafa;
+            background-color: var(--surface);
             text-align: center;
-            padding: 12px;
-            border-top: 1px solid #eeeeee;
-            margin-top: auto;
+            padding: 10px;
+            border-top: 1px solid var(--border);
+            flex-shrink: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
-        .card-footer .logo {
-            width: 70px;
-            opacity: 0.9;
-            transition: transform 0.2s ease;
+        .card-footer .logo { 
+            height: 25px; 
+            width: auto; 
+            display: block; 
+            opacity: 0.8;
+            pointer-events: none; /* Inactivo */
         }
-        .card-footer a:hover .logo { transform: scale(1.05); }
 
         /* =====================================================
-           RESPONSIVE MÓVIL PROFESIONAL (PANTALLA COMPLETA)
+           RESPONSIVE MÓVIL (PANTALLA COMPLETA)
         ===================================================== */
         @media screen and (max-width: 480px) {
-            html, body {
-                margin: 0;
-                padding: 0;
-                width: 100vw;
-                height: 100svh; /* Altura real en móviles modernos */
-                overflow: hidden; /* Evita scroll externo */
-                background-color: var(--white);
-            }
-            
-            .menu-container {
-                width: 100%;
-                max-width: none;
-                height: 100svh; /* Ocupa el 100% de la pantalla */
-                border-radius: 0; /* Quita los bordes curvos */
-                border: none;
-                box-shadow: none;
-                display: flex;
-                flex-direction: column;
-            }
-
-            .menu-header {
-                flex-shrink: 0; /* El encabezado se mantiene fijo arriba */
-            }
-
-            .menu-cards {
-                flex: 1; /* Este contenedor empuja el footer hacia abajo */
-                padding: 20px 15px;
-                gap: 12px;
-                overflow-y: auto; /* Permite scroll solo en esta área */
-                -webkit-overflow-scrolling: touch; /* Suavidad en scroll de iOS */
-            }
-
-            .card-footer {
-                flex-shrink: 0; /* El footer se mantiene fijo al fondo */
-                border-top: 1px solid #eaeaea;
-            }
+            body { padding: 0; background-color: var(--surface); }
+            .container { max-width: none; height: 100svh; max-height: none; border-radius: 0; border: none; box-shadow: none; }
         }
     </style>
 </head>
 <body>
 
-    <main class="menu-container">
+    <main class="container">
         
-        <header class="menu-header">
-            <a href="#" title="Volver al Menú Principal" class="icon-link" onclick="volverAlMenu(event)">
-                <img src="Iconos/VOLVER.png" alt="Volver" class="icon">
-            </a>
-            <h1 class="menu-title">LISTA DE TABLAS</h1>
+        <!-- CABECERA FIJA Y MINIMALISTA -->
+        <header class="card-header">
+            <!-- Espaciador Izquierdo -->
+            <div class="spacer"></div>
+            
+            <h1>BASE DE DATOS</h1>
+            
+            <!-- Botón Retorno Derecho -->
+            <button class="icon-btn" title="Volver atrás" onclick="window.history.back();">
+                <span class="material-icons-outlined">close</span>
+            </button>
         </header>
 
-        <nav class="menu-cards" aria-label="Navegación de Tablas">
+        <!-- ZONA DE TARJETAS GRID 2x2 CON ICONOS NATIVOS -->
+        <nav class="planes-section">
 
-            <div class="card-menu" onclick="window.location.href='TBPersonalRegistrado.html'">
+            <div class="card-membresia" onclick="window.location.href='TBPersonalRegistrado.html'">
                 <div class="img-container">
-                    <img src="Iconos/PERSONAL.png" alt="Personal" onerror="this.style.display='none'">
+                    <span class="material-icons-outlined material-icon-big">group</span>
                 </div>
-                <div class="text-container">
-                    <h3>👥 BASE DE PERSONAL</h3>
-                    <p>Registro maestro de clientes y trabajadores.</p>
-                </div>
+                <h2>BASE DE PERSONAL</h2>
+                <p>Registro maestro de clientes y trabajadores.</p>
             </div>
 
-            <div class="card-menu" onclick="window.location.href='TBRegistroUsuarios.html'">
+            <div class="card-membresia" onclick="window.location.href='TBRegistroUsuarios.html'">
                 <div class="img-container">
-                    <img src="Iconos/USUARIO.png" alt="Usuarios" onerror="this.style.display='none'">
+                    <span class="material-icons-outlined material-icon-big">admin_panel_settings</span>
                 </div>
-                <div class="text-container">
-                    <h3>🔐 USUARIOS DEL SISTEMA</h3>
-                    <p>Gestión de accesos, roles y contraseñas.</p>
-                </div>
+                <h2>USUARIOS SISTEMA</h2>
+                <p>Gestión de accesos y contraseñas.</p>
             </div>
 
-            <div class="card-menu" onclick="window.location.href='TBMembresias.html'">
+            <div class="card-membresia" onclick="window.location.href='TBMembresias.html'">
                 <div class="img-container">
-                    <img src="Iconos/MEMBRESIA.png" alt="Membresías" onerror="this.style.display='none'">
+                    <span class="material-icons-outlined material-icon-big">card_membership</span>
                 </div>
-                <div class="text-container">
-                    <h3>⭐ ESTADO MEMBRESÍAS</h3>
-                    <p>Control de planes, créditos y ecopoints.</p>
-                </div>
+                <h2>MEMBRESÍAS</h2>
+                <p>Control de Planes y ecopoints.</p>
             </div>
 
-            <div class="card-menu" onclick="window.location.href='TBRegistroAsistencias.html'">
+            <div class="card-membresia" onclick="window.location.href='TBRegistroAsistencias.html'">
                 <div class="img-container">
-                    <img src="Iconos/ASISTENCIA.png" alt="Asistencias" onerror="this.style.display='none'">
+                    <span class="material-icons-outlined material-icon-big">co_present</span>
                 </div>
-                <div class="text-container">
-                    <h3>📋 CONTROL ASISTENCIAS</h3>
-                    <p>Historial de marcaciones y turnos.</p>
-                </div>
+                <h2>ASISTENCIAS</h2>
+                <p>Historial de marcaciones y turnos.</p>
             </div>
 
-            <div class="card-menu" onclick="window.location.href='TBEventosRegistrados.html'">
+            <div class="card-membresia" onclick="window.location.href='TBEventosRegistrados.html'">
                 <div class="img-container">
-                    <img src="Iconos/EVENTO.png" alt="Eventos" onerror="this.style.display='none'">
+                    <span class="material-icons-outlined material-icon-big">event_note</span>
                 </div>
-                <div class="text-container">
-                    <h3>📅 EVENTOS REGISTRADOS</h3>
-                    <p>Cronograma de capacitaciones y actividades.</p>
-                </div>
+                <h2>EVENTOS</h2>
+                <p>Cronograma de Eventos y Capacitaciones.</p>
             </div>
 
-            <div class="card-menu" onclick="window.location.href='TBReporteReciclaje.html'">
+            <div class="card-membresia" onclick="window.location.href='TBReporteReciclaje.html'">
                 <div class="img-container">
-                    <img src="Iconos/REPORTE.png" alt="Reciclaje" onerror="this.style.display='none'">
+                    <span class="material-icons-outlined material-icon-big">recycling</span>
                 </div>
-                <div class="text-container">
-                    <h3>♻️ REPORTE RECICLAJE</h3>
-                    <p>Estadísticas y kilos recolectados por material.</p>
-                </div>
+                <h2>RECICLAJE</h2>
+                <p>Estadísticas y kilos recolectados.</p>
             </div>
 
         </nav>
 
+        <!-- PIE DE PÁGINA ESTÁTICO -->
         <footer class="card-footer">
-            <a href="#" title="Volver al Menú Principal" onclick="volverAlMenu(event)">
-                <img src="Imagenes/ECFM.png" alt="Logo MEF Engineering" class="logo" />
-            </a>
+            <img src="Imagenes/ECFM.png" alt="Logo de MEF Engineering" class="logo" onerror="this.style.display='none'">
         </footer>
 
     </main>
@@ -318,10 +318,9 @@
     'use strict';
 
     // ==========================================
-    // 1. GESTIÓN DE SESIÓN Y NAVEGACIÓN
+    // 1. GESTIÓN DE SESIÓN Y SEGURIDAD
     // ==========================================
-    function cerrarSesion(e) {
-        if (e && typeof e.preventDefault === 'function') e.preventDefault();
+    function cerrarSesion() {
         sessionStorage.clear();
         localStorage.setItem("sesionActiva", "no");
         window.location.replace("index.html");
@@ -333,18 +332,10 @@
         }
     }
 
-    function volverAlMenu(e) {
-        if (e && typeof e.preventDefault === 'function') e.preventDefault();
-        // Asume que el menú principal del administrador se llama Botones.html
-        window.location.href = sessionStorage.getItem("menuUsuario") || "Botones.html";
-    }
-
     window.addEventListener("DOMContentLoaded", validarSesion);
     window.addEventListener("pageshow", validarSesion);
 
-    // ==========================================
-    // 2. CONTROL DE INACTIVIDAD ESTRICTO (1 MINUTO)
-    // ==========================================
+    // Control estricto de inactividad a 1 minuto
     let timerInactividad;
     const reiniciarTemporizador = () => {
         clearTimeout(timerInactividad);
@@ -359,6 +350,13 @@
     });
     reiniciarTemporizador();
 
+    // Bloqueo Anti-Inspección
+    document.addEventListener('contextmenu', function(e) { e.preventDefault(); });
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C')) || (e.ctrlKey && e.key === 'U')) {
+            e.preventDefault();
+        }
+    });
 </script>
 
 </body>
