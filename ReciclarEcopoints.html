@@ -5,377 +5,427 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>RECICLA RESIDUOS | MEF Engineering & Soluciones</title>
 
-    <style>
-        /* =====================================================
-           VARIABLES Y RESET
-        ===================================================== */
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+    <!-- FUENTES E ICONOS DE GOOGLE -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
 
+    <style>
+        /* ==========================================
+           SISTEMA DE DISEÑO MEF ENGINEERING
+           ========================================== */
         :root {
             --primary-color: #1d3b20;
-            --bg-color: #f4f6f5;
-            --white: #ffffff;
-            --text-dark: #333333;
-            --text-light: #666666;
-            --shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
-            --transition: all 0.25s ease;
+            --primary-hover: #0a1f0d;
+            --bg-color: #f4f6f8;
+            --surface: #ffffff;
+            --text-dark: #202223;
+            --text-subdued: #6d7175;
+            --border: #c9cccf;
+            --interactive: #2c6ecb;
+            --critical: #d82c0d;
+            --warning: #b98900;
+            --success: #108043;
+            --shadow-card: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.03);
+            --radius: 10px;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * {
+            margin: 0; padding: 0; box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
 
+        /* LAYOUT FIJO */
         body {
-            background-color: var(--bg-color);
-            font-family: 'Inter', system-ui, -apple-system, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            min-height: 100svh;
-            color: var(--text-dark);
-            padding: 20px;
+            background-color: var(--bg-color); color: var(--text-dark);
+            height: 100vh; height: 100svh; width: 100vw; overflow: hidden; 
+            display: flex; justify-content: center; align-items: center; padding: 15px;
         }
 
-        /* =====================================================
-           CONTENEDOR GLOBAL
-        ===================================================== */
-        .menu-container {
-            width: 100%;
-            max-width: 420px;
-            background-color: var(--white);
-            border: 1.5px solid var(--primary-color);
-            border-radius: 12px;
-            box-shadow: var(--shadow);
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
+        /* CONTENEDOR GLOBAL */
+        .container {
+            width: 100%; max-width: 420px; background-color: var(--surface);
+            border-radius: var(--radius); box-shadow: var(--shadow-card);
+            border: 1px solid var(--border); overflow: hidden;
+            display: flex; flex-direction: column; height: 100%; max-height: 800px;
         }
 
-        .menu-header {
-            background-color: var(--primary-color);
-            color: var(--white);
-            padding: 16px 15px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
+        /* ENCABEZADO FIJO */
+        .card-header {
+            background-color: var(--primary-color); color: #ffffff; padding: 12px 16px;
+            display: flex; align-items: center; justify-content: space-between;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); flex-shrink: 0; z-index: 10;
+        }
+        .card-header .spacer { width: 32px; }
+        .card-header h1 {
+            font-size: 0.95rem; font-weight: 700; letter-spacing: 0.5px; margin: 0;
+            text-align: center; flex-grow: 1; text-transform: uppercase;
         }
 
-        .menu-header .icon-link { position: absolute; left: 15px; }
-        .menu-header .icon { width: 24px; height: 24px; cursor: pointer; }
-        
-        .menu-title {
-            font-size: 1.1rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin: 0;
+        .icon-btn {
+            background: rgba(255,255,255,0.05); color: white; border: none; padding: 4px;
+            border-radius: 6px; cursor: pointer; display: flex; align-items: center;
+            justify-content: center; transition: all 0.2s ease;
         }
+        .icon-btn:hover { background: rgba(255,255,255,0.2); transform: scale(1.05); }
 
-        /* =====================================================
-           TARJETAS COMPACTAS (Para acomodar 8 opciones)
-        ===================================================== */
+        /* ZONA DE TARJETAS GRID 2X2 */
         .planes-section {
-            display: flex;
-            flex-direction: column;
-            gap: 10px; /* Reducido */
-            padding: 15px; /* Reducido */
+            display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;
+            padding: 16px; overflow-y: auto; flex-grow: 1; background-color: var(--bg-color);
         }
+        .planes-section::-webkit-scrollbar { width: 0px; background: transparent; }
 
+        /* DISEÑO DE TARJETAS */
         .card-membresia {
-            background: var(--white);
-            padding: 10px; /* Reducido */
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.06);
-            border: 1px solid #e0e0e0;
-            transition: var(--transition);
-            position: relative;
-            overflow: hidden;
-            display: flex;
-            align-items: center;
-            gap: 12px; /* Reducido */
-            cursor: pointer;
-            min-height: 85px; /* Altura mínima compacta */
+            background: var(--surface); padding: 16px 10px 12px; border-radius: var(--radius);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.03); border: 1px solid var(--border);
+            transition: all 0.2s ease; position: relative; overflow: hidden;
+            display: flex; flex-direction: column; align-items: center; text-align: center; cursor: pointer;
         }
-
+        .card-membresia:active { transform: scale(0.96); }
+        .card-membresia::before {
+            content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 4px;
+            background: var(--border); transition: all 0.2s ease;
+        }
         .card-membresia:hover {
-            box-shadow: 0 4px 12px rgba(29, 59, 32, 0.15);
-            border-color: var(--primary-color);
-            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(29, 59, 32, 0.1); border-color: var(--primary-color); transform: translateY(-2px);
         }
+        .card-membresia:hover::before { background: var(--primary-color); }
 
-        .card-membresia:active { transform: scale(0.98); }
+        .card-membresia.vip:hover { border-color: #fbc02d; box-shadow: 0 6px 12px rgba(251, 192, 45, 0.15); }
+        .card-membresia.vip:hover::before { background: #fbc02d; }
+        .card-membresia.recomendado:hover { border-color: var(--success); box-shadow: 0 6px 12px rgba(16, 128, 67, 0.15); }
+        .card-membresia.recomendado:hover::before { background: var(--success); }
 
-        /* IMÁGENES COMPACTAS */
         .img-container {
-            width: 60px; /* Reducido */
-            height: 60px; /* Reducido */
-            border-radius: 8px;
-            background-color: #f4f6f5; 
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-shrink: 0;
-            overflow: hidden;
+            width: 50px; height: 50px; border-radius: 8px; background-color: #f8fafc; 
+            display: flex; justify-content: center; align-items: center; border: 1px solid #e2e8f0; margin-bottom: 8px;
         }
 
-        .servicio-img { width: 100%; height: 100%; object-fit: cover; }
+        .material-icon-big { font-size: 30px; transition: transform 0.3s ease, color 0.3s ease; }
+        .card-membresia:hover .material-icon-big { transform: scale(1.15); }
+        .card-membresia .material-icon-big { color: var(--primary-color); }
+        .card-membresia.recomendado .material-icon-big { color: var(--success); }
+        .card-membresia.vip .material-icon-big { color: #d49a00; }
+        .card-membresia[data-nombre="RAEE"] .material-icon-big { color: var(--interactive); }
 
-        /* TEXTOS COMPACTOS */
-        .info-container {
-            display: flex;
-            flex-direction: column;
-            flex-grow: 1;
-            justify-content: center;
-        }
+        .card-membresia h2 { font-size: 11px; margin: 0 0 2px 0; color: var(--primary-color); font-weight: 800; }
+        .card-membresia.vip h2 { color: #d49a00; }
+        .card-membresia[data-nombre="RAEE"] h2 { color: var(--interactive); }
 
-        .card-membresia h2 {
-            font-size: 13px; /* Reducido */
-            margin: 0 0 2px 0;
-            color: var(--primary-color);
-            font-weight: 800;
-        }
-
-        .card-membresia p {
-            font-size: 11px; /* Reducido */
-            margin: 0 0 6px 0;
-            color: var(--text-light);
-            white-space: nowrap; /* Evita que el texto salte a otra línea */
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
+        .card-membresia p { font-size: 9px; margin: 0 0 8px 0; color: var(--text-subdued); line-height: 1.2; height: 22px; }
 
         .valor-kilo {
-            font-size: 11px; /* Reducido */
-            font-weight: 800;
-            color: #2e7d32;
-            background: #e8f5e9;
-            padding: 3px 8px;
-            border-radius: 6px;
-            display: inline-block;
-            align-self: flex-start;
+            font-size: 10px; font-weight: 800; color: var(--success); background: #e8f5e9;
+            padding: 4px 8px; border-radius: 6px; display: inline-block; border: 1px solid #c8e6c9; width: 100%;
         }
-
-        /* ETIQUETAS (BADGES) */
-        .recomendado { border-color: var(--primary-color); }
-        .vip { border-color: #fbc02d; }
 
         .badge {
-            position: absolute;
-            top: 0;
-            right: 0;
-            font-size: 9px;
-            padding: 3px 8px;
-            border-bottom-left-radius: 8px;
-            background: var(--primary-color);
-            color: white;
-            font-weight: 700;
-            z-index: 2;
+            position: absolute; top: 4px; right: 0; font-size: 8px; padding: 3px 8px;
+            border-bottom-left-radius: 8px; background: var(--success); color: white; font-weight: 800; z-index: 2;
         }
-        .vip-badge { background: #fbc02d; color: #333; }
+        .vip-badge { background: #fbc02d; color: #423000; }
+        .especial-badge { background: var(--interactive); color: #fff; }
 
-        /* FOOTER */
+        /* PIE DE PÁGINA */
         .card-footer {
-            background-color: #fafafa;
-            padding: 12px;
-            border-top: 1px solid #eeeeee;
-            text-align: center;
-            margin-top: auto;
+            background-color: var(--surface); text-align: center; padding: 10px;
+            border-top: 1px solid var(--border); flex-shrink: 0; display: flex; justify-content: center; align-items: center;
         }
+        .card-footer .logo { height: 25px; width: auto; display: block; opacity: 0.8; pointer-events: none; }
 
-        .card-footer .logo { width: 70px; height: auto; opacity: 0.9; }
+        /* MODALES Y CALCULADORA */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(32, 34, 35, 0.85);
+            display: none; justify-content: center; align-items: center; z-index: 1000; opacity: 0; animation: fadeIn 0.2s forwards; padding: 20px;
+        }
+        .modal-content {
+            background: var(--surface); width: 100%; max-width: 320px; border-radius: var(--radius); box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            overflow: hidden; transform: scale(0.95); animation: scaleUp 0.2s forwards; text-align: center;
+        }
+        .modal-header { padding: 20px 16px 10px; display: flex; flex-direction: column; align-items: center; gap: 6px; font-size: 15px; font-weight: 800; text-transform: uppercase;}
+        .modal-body { padding: 5px 20px 20px; color: var(--text-dark); font-size: 13px; line-height: 1.4; }
+        .modal-footer { padding: 12px 16px; background: #fafbfb; border-top: 1px solid var(--border); display: flex; justify-content: center; gap: 10px;}
+        
+        .modal-header.error { color: var(--critical); }
+        .modal-header.warning { color: var(--warning); }
+        .modal-header.secure { color: var(--primary-color); }
+        .modal-header .material-icons-outlined { font-size: 40px; margin-bottom: 2px;}
 
-        /* =====================================================
-           RESPONSIVE MÓVIL PROFESIONAL (PANTALLA COMPLETA)
-        ===================================================== */
+        .form-input-kilos {
+            width: 100%; padding: 12px; border: 2px solid var(--interactive); border-radius: 8px;
+            font-size: 26px; font-weight: 800; text-align: center; color: var(--interactive); outline: none;
+            transition: all 0.3s; margin-top: 10px; background-color: #f0f8ff;
+        }
+        .form-input-kilos:focus { border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(29, 59, 32, 0.15); background-color: var(--surface); color: var(--primary-color); }
+
+        .calculo-vivo {
+            margin-top: 12px; font-size: 12px; font-weight: 600; color: var(--text-subdued);
+            background: #f8fafc; padding: 12px; border-radius: 8px; border: 1px dashed var(--border);
+        }
+        .calculo-vivo span { color: var(--success); font-weight: 800; font-size: 20px; display: block; margin-top: 4px;}
+
+        .btn-modal { padding: 10px 16px; border-radius: 6px; font-size: 13px; font-weight: 700; cursor: pointer; width: 100%; transition: 0.2s; border: none; }
+        .btn-modal.primary { background-color: var(--primary-color); color: white; }
+        .btn-modal.success { background-color: var(--success); color: white; }
+        .btn-modal.success:hover { background-color: #0d6b38; }
+        .btn-modal.outline { background-color: transparent; border: 1px solid var(--border); color: var(--text-dark); }
+        .btn-modal.outline:hover { background-color: var(--bg-color); }
+
+        @keyframes fadeIn { to { opacity: 1; } }
+        @keyframes scaleUp { to { transform: scale(1); } }
+
         @media screen and (max-width: 480px) {
-            html, body {
-                margin: 0;
-                padding: 0;
-                width: 100vw;
-                height: 100svh; /* Altura real en móviles modernos */
-                overflow: hidden; /* Evita scroll externo */
-                background-color: var(--white);
-            }
-            
-            .menu-container {
-                width: 100%;
-                max-width: none;
-                height: 100svh; /* Ocupa el 100% de la pantalla */
-                border-radius: 0; /* Quita los bordes curvos */
-                border: none;
-                box-shadow: none;
-                display: flex;
-                flex-direction: column;
-            }
-
-            .menu-header {
-                flex-shrink: 0; /* El encabezado se mantiene fijo arriba */
-            }
-
-            .planes-section {
-                flex: 1; /* Este contenedor empuja el footer hacia abajo */
-                padding: 15px; /* Mantener un poco de padding */
-                overflow-y: auto; /* Permite scroll interno si hay muchas cards */
-                -webkit-overflow-scrolling: touch; /* Suavidad en scroll de iOS */
-            }
-
-            .card-footer {
-                flex-shrink: 0; /* El footer se mantiene fijo al fondo */
-                border-top: 1px solid #eaeaea;
-            }
+            body { padding: 0; background-color: var(--surface); }
+            .container { max-width: none; height: 100svh; max-height: none; border-radius: 0; border: none; box-shadow: none; }
         }
     </style>
 </head>
 <body>
 
-    <main class="menu-container">
+    <main class="container">
         
-        <header class="menu-header">
-            <a href="#" class="icon-link" onclick="cerrarSesion(event)">
-                <img src="Iconos/SALIR.png" alt="Cerrar sesión" class="icon">
-            </a>
-            <h1 class="menu-title">RECICLA ECOPOINTS</h1>
+        <header class="card-header">
+            <div class="spacer"></div>
+            <h1>RECICLAR RR.SS</h1>
+            <button class="icon-btn" title="Cerrar y volver" onclick="window.history.back();">
+                <span class="material-icons-outlined">close</span>
+            </button>
         </header>
 
-        <section class="planes-section">
+        <section class="planes-section" id="contenedorTarjetas">
 
-            <div class="card-membresia recomendado" data-nombre="PLÁSTICO (PET)" data-puntos-kg="5" onclick="procesarReciclaje(this)">
+            <div class="card-membresia recomendado" data-nombre="PLÁSTICO (PET)" data-puntos-kg="5" onclick="abrirModalReciclaje(this)">
                 <div class="badge">♻️ COMÚN</div>
-                <div class="img-container">
-                    <img src="Iconos/PLASTICO.png" alt="Plástico" class="servicio-img" onerror="this.style.display='none'">
-                </div>
-                <div class="info-container">
-                    <h2>♻️ PLÁSTICO (PET)</h2>
-                    <p>Botellas y envases limpios.</p>
-                    <div class="valor-kilo"><span class="txt-puntos"></span> pts x Kg</div>
-                </div>
+                <div class="img-container"><span class="material-icons-outlined material-icon-big">local_drink</span></div>
+                <h2>PLÁSTICO (PET)</h2>
+                <p>Envases de Botellas.</p>
+                <div class="valor-kilo"><span class="txt-puntos">5</span> pts / Kg</div>
             </div>
 
-            <div class="card-membresia" data-nombre="PAPEL" data-puntos-kg="2" onclick="procesarReciclaje(this)">
-                <div class="img-container">
-                    <img src="Iconos/PAPEL.png" alt="Papel" class="servicio-img" onerror="this.style.display='none'">
-                </div>
-                <div class="info-container">
-                    <h2>📄 PAPEL</h2>
-                    <p>Hojas, periódicos y folletos.</p>
-                    <div class="valor-kilo"><span class="txt-puntos"></span> pts x Kg</div>
-                </div>
+            <div class="card-membresia" data-nombre="PAPEL" data-puntos-kg="2" onclick="abrirModalReciclaje(this)">
+                <div class="img-container"><span class="material-icons-outlined material-icon-big">article</span></div>
+                <h2>PAPEL</h2>
+                <p>Hojas y periódicos.</p>
+                <div class="valor-kilo"><span class="txt-puntos">2</span> pts / Kg</div>
             </div>
 
-            <div class="card-membresia" data-nombre="CARTÓN" data-puntos-kg="2" onclick="procesarReciclaje(this)">
-                <div class="img-container">
-                    <img src="Iconos/CARTON.png" alt="Cartón" class="servicio-img" onerror="this.style.display='none'">
-                </div>
-                <div class="info-container">
-                    <h2>📦 CARTÓN</h2>
-                    <p>Cajas desarmadas y limpias.</p>
-                    <div class="valor-kilo"><span class="txt-puntos"></span> pts x Kg</div>
-                </div>
+            <div class="card-membresia" data-nombre="CARTÓN" data-puntos-kg="2" onclick="abrirModalReciclaje(this)">
+                <div class="img-container"><span class="material-icons-outlined material-icon-big">inventory_2</span></div>
+                <h2>CARTÓN</h2>
+                <p>Cajas desarmadas.</p>
+                <div class="valor-kilo"><span class="txt-puntos">2</span> pts / Kg</div>
             </div>
 
-            <div class="card-membresia" data-nombre="METALES" data-puntos-kg="5" onclick="procesarReciclaje(this)">
-                <div class="img-container">
-                    <img src="Iconos/METALES.png" alt="Metales" class="servicio-img" onerror="this.style.display='none'">
-                </div>
-                <div class="info-container">
-                    <h2>🔩 METALES</h2>
-                    <p>Fierro, chatarra y latas.</p>
-                    <div class="valor-kilo"><span class="txt-puntos"></span> pts x Kg</div>
-                </div>
+            <div class="card-membresia" data-nombre="METALES" data-puntos-kg="5" onclick="abrirModalReciclaje(this)">
+                <div class="img-container"><span class="material-icons-outlined material-icon-big">construction</span></div>
+                <h2>METALES</h2>
+                <p>Fierro y latas.</p>
+                <div class="valor-kilo"><span class="txt-puntos">5</span> pts / Kg</div>
             </div>
 
-            <div class="card-membresia vip" data-nombre="COBRE" data-puntos-kg="50" onclick="procesarReciclaje(this)">
+            <div class="card-membresia vip" data-nombre="COBRE" data-puntos-kg="50" onclick="abrirModalReciclaje(this)">
                 <div class="badge vip-badge">⭐ ALTO VALOR</div>
-                <div class="img-container">
-                    <img src="Iconos/COBRE.png" alt="Cobre" class="servicio-img" onerror="this.style.display='none'">
-                </div>
-                <div class="info-container">
-                    <h2>🔶 COBRE</h2>
-                    <p>Cables pelados, tuberías.</p>
-                    <div class="valor-kilo"><span class="txt-puntos"></span> pts x Kg</div>
-                </div>
+                <div class="img-container"><span class="material-icons-outlined material-icon-big">electrical_services</span></div>
+                <h2>COBRE</h2>
+                <p>Cables pelados.</p>
+                <div class="valor-kilo"><span class="txt-puntos">50</span> pts / Kg</div>
             </div>
 
-            <div class="card-membresia vip" data-nombre="BRONCE" data-puntos-kg="30" onclick="procesarReciclaje(this)">
+            <div class="card-membresia vip" data-nombre="BRONCE" data-puntos-kg="30" onclick="abrirModalReciclaje(this)">
                 <div class="badge vip-badge">⭐ ALTO VALOR</div>
-                <div class="img-container">
-                    <img src="Iconos/BRONCE.png" alt="Bronce" class="servicio-img" onerror="this.style.display='none'">
-                </div>
-                <div class="info-container">
-                    <h2>🔔 BRONCE</h2>
-                    <p>Grifería, llaves, adornos.</p>
-                    <div class="valor-kilo"><span class="txt-puntos"></span> pts x Kg</div>
-                </div>
+                <div class="img-container"><span class="material-icons-outlined material-icon-big">plumbing</span></div>
+                <h2>BRONCE</h2>
+                <p>Grifería y llaves.</p>
+                <div class="valor-kilo"><span class="txt-puntos">30</span> pts / Kg</div>
             </div>
 
-            <div class="card-membresia vip" data-nombre="ALUMINIO" data-puntos-kg="15" onclick="procesarReciclaje(this)">
+            <div class="card-membresia vip" data-nombre="ALUMINIO" data-puntos-kg="15" onclick="abrirModalReciclaje(this)">
                 <div class="badge vip-badge">⭐ VALOR MEDIO</div>
-                <div class="img-container">
-                    <img src="Iconos/ALUMINIO.png" alt="Aluminio" class="servicio-img" onerror="this.style.display='none'">
-                </div>
-                <div class="info-container">
-                    <h2>⚪ ALUMINIO</h2>
-                    <p>Latas de bebidas, perfiles.</p>
-                    <div class="valor-kilo"><span class="txt-puntos"></span> pts x Kg</div>
-                </div>
+                <div class="img-container"><span class="material-icons-outlined material-icon-big">view_in_ar</span></div>
+                <h2>ALUMINIO</h2>
+                <p>Latas y perfiles.</p>
+                <div class="valor-kilo"><span class="txt-puntos">15</span> pts / Kg</div>
             </div>
 
-            <div class="card-membresia recomendado" data-nombre="RAEE" data-puntos-kg="25" onclick="procesarReciclaje(this)">
-                <div class="badge">⚙️ ESPECIAL</div>
-                <div class="img-container">
-                    <img src="Iconos/RAEE.png" alt="RAEE" class="servicio-img" onerror="this.style.display='none'">
-                </div>
-                <div class="info-container">
-                    <h2>🔌 RAEE</h2>
-                    <p>Aparatos eléctricos en desuso.</p>
-                    <div class="valor-kilo"><span class="txt-puntos"></span> pts x Kg</div>
-                </div>
+            <div class="card-membresia" data-nombre="RAEE" data-puntos-kg="25" onclick="abrirModalReciclaje(this)">
+                <div class="badge especial-badge">⚙️ ESPECIAL</div>
+                <div class="img-container"><span class="material-icons-outlined material-icon-big">devices_other</span></div>
+                <h2>RAEE</h2>
+                <p>Aparatos eléctricos.</p>
+                <div class="valor-kilo"><span class="txt-puntos">25</span> pts / Kg</div>
             </div>
 
         </section>
 
         <footer class="card-footer">
-            <a href="#" title="Volver al Menú Anterior" onclick="window.history.back(); return false;">
-                <img src="Imagenes/ECFM.png" alt="Logo de MEF Engineering" class="logo" />
-            </a>
+            <img src="Imagenes/ECFM.png" alt="Logo de MEF Engineering" class="logo" onerror="this.style.display='none'">
         </footer>
-
     </main>
+
+    <!-- Modal Alerta (Errores) -->
+    <div id="modal-alerta" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header error" id="alerta-header">
+                <span class="material-icons-outlined" id="alerta-icon">gpp_bad</span>
+                <span id="alerta-titulo">Atención</span>
+            </div>
+            <div class="modal-body" id="alerta-mensaje">Mensaje de error aquí.</div>
+            <div class="modal-footer">
+                <button class="btn-modal primary" onclick="cerrarModalAlerta()">Entendido</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Formulario de Reciclaje (Calculadora) -->
+    <div id="modal-reciclaje" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header secure">
+                <span class="material-icons-outlined">scale</span>
+                <span>PESAJE DE MATERIAL</span>
+            </div>
+            <div class="modal-body">
+                <p>Material: <strong id="lbl-material" style="color: var(--primary-color);">---</strong></p>
+                <p style="font-size: 12px; margin-top: 2px;">Conversión: <strong id="lbl-valor" style="color: var(--success);">0</strong> pts/Kg</p>
+                
+                <form id="form-reciclaje" onsubmit="validarYProcesar(event)">
+                    <input type="number" step="0.01" min="0.01" id="input-kilos" class="form-input-kilos" placeholder="0.00" required autocomplete="off" inputmode="decimal">
+                </form>
+
+                <div class="calculo-vivo">
+                    Total Ecopoints a Emitir:
+                    <span id="lbl-total-puntos">+0 Ecopoints</span>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-modal outline" onclick="cerrarModalReciclaje()">Cancelar</button>
+                <button class="btn-modal success" onclick="document.getElementById('form-reciclaje').requestSubmit()">Generar Ticket</button>
+            </div>
+        </div>
+    </div>
 
 <script>
     'use strict';
 
-    // 1. INICIALIZAR PUNTOS VISUALES
-    function inicializarPuntos() {
+    let materialSeleccionado = '';
+    let puntosPorKgSeleccionado = 0;
+
+    // ==========================================
+    // 1. INICIALIZAR PUNTOS Y BLOQUEOS DINÁMICOS
+    // ==========================================
+    function inicializarPuntosDinamicos() {
+        let residuosConfig = JSON.parse(localStorage.getItem('config_residuos'));
+        
+        // Si no existe la configuración, la inyectamos por defecto (todo activo)
+        if (!residuosConfig || residuosConfig.length < 8) {
+            residuosConfig = [
+                { nombre: "PLÁSTICO (PET)", puntos: 5, activo: true },
+                { nombre: "PAPEL", puntos: 2, activo: true },
+                { nombre: "CARTÓN", puntos: 2, activo: true },
+                { nombre: "METALES", puntos: 5, activo: true },
+                { nombre: "COBRE", puntos: 50, activo: true },
+                { nombre: "BRONCE", puntos: 30, activo: true },
+                { nombre: "ALUMINIO", puntos: 15, activo: true },
+                { nombre: "RAEE", puntos: 25, activo: true }
+            ];
+            localStorage.setItem('config_residuos', JSON.stringify(residuosConfig));
+        }
+
+        let tarjetasActivas = 0;
+
+        // Actualizamos y Ocultamos tarjetas según la base de datos
         document.querySelectorAll('.card-membresia').forEach(tarjeta => {
-            const puntosKg = tarjeta.getAttribute('data-puntos-kg');
+            const nombreMat = tarjeta.getAttribute('data-nombre');
             const spanPuntos = tarjeta.querySelector('.txt-puntos');
-            if (spanPuntos && puntosKg) {
-                spanPuntos.textContent = puntosKg;
+            
+            const configItem = residuosConfig.find(r => r.nombre === nombreMat);
+            
+            if (configItem) {
+                // Si el residuo fue desactivado en "Configuración", lo ocultamos
+                if (configItem.activo === false) {
+                    tarjeta.style.display = 'none';
+                } else {
+                    tarjeta.style.display = 'flex'; // Aseguramos que se muestre si está activo
+                    tarjeta.setAttribute('data-puntos-kg', configItem.puntos); 
+                    if(spanPuntos) spanPuntos.textContent = configItem.puntos; 
+                    tarjetasActivas++;
+                }
             }
         });
+
+        // Si el administrador desactivó TODOS los materiales, mostramos un mensaje
+        if (tarjetasActivas === 0) {
+            document.getElementById('contenedorTarjetas').innerHTML = `
+                <div style="grid-column: 1 / -1; text-align: center; padding: 40px 20px; color: var(--text-subdued);">
+                    <span class="material-icons-outlined" style="font-size: 40px; color: var(--border); margin-bottom: 10px;">block</span>
+                    <p style="font-weight: 700; font-size: 13px;">No hay materiales habilitados para reciclaje en este momento.</p>
+                </div>
+            `;
+        }
     }
 
-    // 2. SEGURIDAD E INACTIVIDAD (1 MINUTO)
-    function cerrarSesion(arg) {
-        if (arg && typeof arg.preventDefault === 'function') arg.preventDefault();
-        alert("🔒 Sesión finalizada de forma segura.");
+    // ==========================================
+    // 2. SISTEMA VISUAL DE MODALES
+    // ==========================================
+    function mostrarAlerta(titulo, mensaje, tipo = 'error') {
+        const modal = document.getElementById('modal-alerta');
+        const header = document.getElementById('alerta-header');
+        const icon = document.getElementById('alerta-icon');
+        
+        document.getElementById('alerta-titulo').innerText = titulo;
+        document.getElementById('alerta-mensaje').innerText = mensaje;
+
+        header.className = 'modal-header ' + (tipo === 'error' ? 'error' : 'warning'); 
+        icon.innerText = tipo === 'error' ? 'gpp_bad' : 'warning';
+        modal.style.display = 'flex';
+    }
+
+    function cerrarModalAlerta() {
+        document.getElementById('modal-alerta').style.display = 'none';
+        if(document.getElementById('modal-reciclaje').style.display === 'flex'){
+            document.getElementById('input-kilos').focus();
+        }
+    }
+
+    // MODAL CALCULADORA
+    function abrirModalReciclaje(elementoHTML) {
+        materialSeleccionado = elementoHTML.getAttribute('data-nombre');
+        puntosPorKgSeleccionado = parseFloat(elementoHTML.getAttribute('data-puntos-kg'));
+
+        document.getElementById('lbl-material').innerText = materialSeleccionado;
+        document.getElementById('lbl-valor').innerText = puntosPorKgSeleccionado;
+        
+        const inputKilos = document.getElementById('input-kilos');
+        inputKilos.value = '';
+        document.getElementById('lbl-total-puntos').innerText = '+0 Ecopoints';
+
+        document.getElementById('modal-reciclaje').style.display = 'flex';
+        setTimeout(() => inputKilos.focus(), 100);
+    }
+
+    function cerrarModalReciclaje() { document.getElementById('modal-reciclaje').style.display = 'none'; }
+
+    // Calculadora Matemática en Vivo
+    document.getElementById('input-kilos').addEventListener('input', function() {
+        const kilos = parseFloat(this.value) || 0;
+        const total = Math.round(kilos * puntosPorKgSeleccionado);
+        document.getElementById('lbl-total-puntos').innerText = `+${total} Ecopoints`;
+    });
+
+    // ==========================================
+    // 3. GESTIÓN DE SESIÓN Y SEGURIDAD
+    // ==========================================
+    function cerrarSesion() {
         sessionStorage.clear();
         localStorage.setItem("sesionActiva", "no");
         window.location.replace("index.html");
     }
 
-    function validarSesion() {
-        if (sessionStorage.getItem("sesionActiva") !== "true") {
-            cerrarSesion();
-        }
-    }
-
     window.addEventListener("DOMContentLoaded", () => {
-        validarSesion();
-        inicializarPuntos(); 
+        if (sessionStorage.getItem("sesionActiva") !== "true") cerrarSesion();
+        inicializarPuntosDinamicos(); 
     });
-    window.addEventListener("pageshow", validarSesion);
 
     let timerInactividad;
     const reiniciarTemporizador = () => {
@@ -386,39 +436,35 @@
         }, 1 * 60 * 1000); 
     };
 
-    ["mousemove", "keydown", "click", "scroll", "touchstart"].forEach(evento => {
-        document.addEventListener(evento, reiniciarTemporizador, { passive: true });
+    ["mousemove", "keydown", "click", "touchstart"].forEach(evt => document.addEventListener(evt, reiniciarTemporizador, { passive: true }));
+
+    // Bloqueo Anti-Inspección
+    document.addEventListener('contextmenu', e => e.preventDefault());
+    document.addEventListener('keydown', e => {
+        if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && ['I','J','C'].includes(e.key)) || (e.ctrlKey && e.key === 'U')) e.preventDefault();
     });
-    reiniciarTemporizador();
 
-    // 3. LÓGICA DE RECICLAJE Y CÁLCULO
-    function procesarReciclaje(elementoHTML) {
-        const nombreMaterial = elementoHTML.getAttribute('data-nombre');
-        const puntosPorKg = parseInt(elementoHTML.getAttribute('data-puntos-kg'), 10);
+    // ==========================================
+    // 4. VALIDACIÓN Y REDIRECCIÓN AL CAJERO
+    // ==========================================
+    function validarYProcesar(e) {
+        if(e) e.preventDefault();
 
-        // Pedir cantidad (Ej: 1.5)
-        const kilosInput = prompt(`RECICLAJE: ${nombreMaterial}\nValor: ${puntosPorKg} pts x Kg\n\nIngrese la cantidad exacta de material en KILOS (Ejemplo: 1.5 o 3):`);
-        
-        if (!kilosInput) return; // Canceló o dejó en blanco
-
-        // Convertir comas a puntos para decimales y convertir a número
-        const kilos = parseFloat(kilosInput.replace(',', '.')); 
+        const inputKilos = document.getElementById('input-kilos').value;
+        const kilos = parseFloat(inputKilos);
 
         if (isNaN(kilos) || kilos <= 0) {
-            alert("⛔ ERROR: La cantidad de Kilos ingresada no es válida.");
+            mostrarAlerta("Peso Inválido", "La cantidad en kilogramos debe ser mayor a 0.", "warning");
             return;
         }
 
-        // Matemáticas: Multiplicar y redondear al entero más cercano
-        const puntosGanados = Math.round(kilos * puntosPorKg);
+        const puntosGanados = Math.round(kilos * puntosPorKgSeleccionado);
+        const materialAEnviar = materialSeleccionado;
 
-        // Confirmación final antes de validar al cliente
-        const confirmarCalculo = confirm(`📊 RESUMEN DE CÁLCULO:\n\nMaterial: ${nombreMaterial}\nPeso: ${kilos} Kg\nTotal a entregar: +${puntosGanados} Ecopoints\n\n¿Desea proceder a validar al cliente?`);
+        cerrarModalReciclaje();
         
-        if (confirmarCalculo) {
-            // Mandamos todos los datos importantes por la URL hacia la pantalla de validación
-            window.location.href = `ValidarRecargaEcopoints.html?accion=reciclaje&material=${encodeURIComponent(nombreMaterial)}&kilos=${kilos}&puntos=${puntosGanados}`;
-        }
+        // Redirige al cajero enviando la matemática procesada
+        window.location.href = `ValidarRecargaEcopoints.html?accion=reciclaje&material=${encodeURIComponent(materialAEnviar)}&kilos=${kilos}&puntos=${puntosGanados}`;
     }
 </script>
 
