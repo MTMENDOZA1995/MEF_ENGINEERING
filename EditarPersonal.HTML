@@ -1,123 +1,448 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>EDITAR DATOS DEL PERSONAL | MEF Engineering & Soluciones</title>
-    <link rel="stylesheet" href="RegistroPersonal.css">
+    
+    <!-- FUENTES E ICONOS DE GOOGLE -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+
+    <style>
+        /* ==========================================
+           SISTEMA DE DISEÑO MEF ENGINEERING (COMPACTO)
+           ========================================== */
+        :root {
+            --primary-color: #1d3b20;
+            --primary-hover: #0a1f0d;
+            --bg-color: #f4f6f8;
+            --surface: #ffffff;
+            --text-dark: #202223;
+            --text-subdued: #6d7175;
+            --border: #c9cccf;
+            --interactive: #2c6ecb; /* AZUL PARA MODO EDICIÓN */
+            --critical: #d82c0d;
+            --warning: #b98900;
+            --success: #108043;
+            --shadow-card: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.03);
+            --radius: 10px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+            min-height: 100vh;
+            min-height: 100svh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 15px;
+            overflow: hidden;
+        }
+
+        /* =====================================================
+           CONTENEDOR GLOBAL (TARJETA FIJA Y REDUCIDA)
+        ===================================================== */
+        .container {
+            width: 100%;
+            max-width: 400px;
+            background-color: var(--surface);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-card);
+            border: 1px solid var(--border);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            max-height: 800px;
+        }
+
+        /* =====================================================
+           ENCABEZADO FIJO (SOLO X A LA DERECHA)
+        ===================================================== */
+        .card-header {
+            background-color: var(--primary-color);
+            color: #ffffff;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            flex-shrink: 0;
+            z-index: 10;
+        }
+
+        .card-header .spacer {
+            width: 32px; 
+        }
+
+        .card-header h1 {
+            font-size: 0.95rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            margin: 0;
+            text-align: center;
+            flex-grow: 1;
+            text-transform: uppercase;
+        }
+
+        .icon-btn {
+            background: rgba(255,255,255,0.05);
+            color: white;
+            border: none;
+            padding: 4px;
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            text-decoration: none;
+        }
+        
+        .icon-btn:hover { background: rgba(255,255,255,0.2); transform: scale(1.05); }
+        .icon-btn .material-icons-outlined { font-size: 20px; }
+
+        /* =====================================================
+           FORMULARIO Y CAMPOS (SCROLL INTERNO)
+        ===================================================== */
+        .form-section {
+            padding: 16px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            overflow-y: auto;
+            flex-grow: 1;
+        }
+        .form-section::-webkit-scrollbar { width: 0px; background: transparent; }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .form-group label {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-transform: uppercase;
+            letter-spacing: 0.2px;
+            margin-left: 2px;
+        }
+
+        .req-asterisk {
+            color: var(--critical);
+            font-weight: bold;
+            margin-left: 2px;
+        }
+
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+            width: 100%;
+        }
+
+        .prefix-icon {
+            position: absolute;
+            left: 10px;
+            color: var(--text-subdued);
+            font-size: 16px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 10px 12px 10px 32px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 13px;
+            color: var(--text-dark);
+            background-color: var(--surface);
+            transition: all 0.2s ease;
+            outline: none;
+        }
+
+        /* Enfoque Azul para Modo Edición */
+        .form-input:focus {
+            border-color: var(--interactive);
+            box-shadow: 0 0 0 3px rgba(44, 110, 203, 0.15);
+        }
+
+        /* ESTILO PARA CAMPOS AUTOCOMPLETADOS (READONLY) */
+        .form-input[readonly] {
+            background-color: #f8fafc;
+            color: var(--text-subdued);
+            border-color: #e2e8f0;
+            cursor: not-allowed;
+            font-weight: 600;
+        }
+
+        /* =====================================================
+           BOTÓN SUBMIT (AZUL PARA "ACTUALIZAR")
+        ===================================================== */
+        .submit-btn {
+            margin-top: 6px;
+            width: 100%;
+            background-color: var(--interactive);
+            color: #fff;
+            padding: 12px;
+            font-size: 13px;
+            font-weight: 700;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 8px rgba(44, 110, 203, 0.15);
+            flex-shrink: 0;
+            margin-bottom: 10px;
+        }
+
+        .submit-btn .material-icons-outlined { font-size: 18px; }
+
+        .submit-btn:hover {
+            background-color: #1f57a4;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(44, 110, 203, 0.2);
+        }
+
+        .submit-btn:active { transform: translateY(0); }
+
+        /* =====================================================
+           PIE DE PÁGINA ESTÁTICO
+        ===================================================== */
+        .card-footer {
+            background-color: var(--bg-color);
+            text-align: center;
+            padding: 10px;
+            border-top: 1px solid var(--border);
+            margin-top: auto;
+            flex-shrink: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .card-footer .logo { 
+            height: 25px; 
+            width: auto; 
+            display: block; 
+            opacity: 0.8;
+            pointer-events: none;
+        }
+
+        /* =====================================================
+           SISTEMA DE MODALES Y ALERTAS PRO
+        ===================================================== */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(32, 34, 35, 0.8);
+            display: none; justify-content: center; align-items: center; z-index: 1000; opacity: 0; animation: fadeIn 0.2s forwards;
+            padding: 15px;
+        }
+        .modal-content {
+            background: var(--surface); width: 100%; max-width: 320px; border-radius: 10px; box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            overflow: hidden; transform: scale(0.95); animation: scaleUp 0.2s forwards; text-align: center;
+        }
+        .modal-header { padding: 20px 16px 10px; display: flex; flex-direction: column; align-items: center; gap: 6px; font-size: 15px; font-weight: 700;}
+        .modal-body { padding: 0 16px 16px; color: var(--text-subdued); font-size: 13px; line-height: 1.4; white-space: pre-wrap;}
+        .modal-footer { padding: 12px 16px; background: #fafbfb; border-top: 1px solid var(--border); display: flex; justify-content: center;}
+        
+        .modal-header.error { color: var(--critical); }
+        .modal-header.warning { color: var(--warning); }
+        .modal-header .material-icons-outlined { font-size: 40px; margin-bottom: 2px;}
+
+        .btn-modal {
+            background-color: var(--primary-color); color: white; border: none; padding: 8px 16px;
+            border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; width: 100%; transition: 0.2s;
+        }
+        .btn-modal:hover { background-color: var(--primary-hover); }
+
+        /* Toast */
+        .toast {
+            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: #202223; color: white; 
+            padding: 10px 16px; border-radius: 8px; font-size: 13px; display: none; z-index: 1000; align-items: center; gap: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15); font-weight: 500;
+        }
+
+        @keyframes fadeIn { to { opacity: 1; } }
+        @keyframes scaleUp { to { transform: scale(1); } }
+
+        /* RESPONSIVE MÓVIL (PANTALLA COMPLETA) */
+        @media screen and (max-width: 480px) {
+            body { padding: 0; background-color: var(--surface); }
+            .container { max-width: none; height: 100svh; border-radius: 0; border: none; box-shadow: none; }
+        }
+    </style>
 </head>
 <body>
 
-    <main class="card">
+    <main class="container">
         
+        <!-- ENCABEZADO FIJO (SOLO X A LA DERECHA) -->
         <header class="card-header">
-            <div class="header-content">
-                <a href="TBPersonalRegistrado.html" title="Volver a la tabla de personal" class="icon-link">
-                    <img src="Iconos/LUPA1.png" alt="Ver personal registrado" class="icon">
-                </a>
-                <h1>EDITAR PERSONAL</h1>
-            </div>
+            <div class="spacer"></div>
+            
+            <h1>EDITAR PERSONAL</h1>
+            
+            <button class="icon-btn" title="Cerrar y Volver" onclick="window.history.back();">
+                <span class="material-icons-outlined">close</span>
+            </button>
         </header>
-        
-        <section class="card-body">
-            <form class="card-form" id="formRegistroPersonal" autocomplete="off" novalidate>
+
+        <section class="form-section">
+            <form id="formRegistroPersonal" autocomplete="off" novalidate>
                 
                 <div class="form-group">
-                    <label for="codigo">CÓDIGO:</label>
-                    <input 
-                        type="text" 
-                        id="codigo" 
-                        name="codigo" 
-                        placeholder="Ej. P001" 
-                        required 
-                        oninput="this.value = this.value.toUpperCase()" 
-                        autofocus
-                    />
+                    <label for="codigo">Código (ID) <span class="req-asterisk">*</span></label>
+                    <div class="input-wrapper">
+                        <span class="material-icons-outlined prefix-icon">badge</span>
+                        <input type="text" id="codigo" class="form-input" placeholder="Ej. P001" required oninput="this.value = this.value.toUpperCase()" autofocus />
+                    </div>
                 </div>
 
                 <div class="form-group">
-                    <label for="dni">DNI:</label>
-                    <input 
-                        type="text" 
-                        id="dni" 
-                        name="dni" 
-                        placeholder="8 dígitos numéricos" 
-                        maxlength="8" 
-                        inputmode="numeric" 
-                        required 
-                        oninput="this.value = this.value.replace(/[^0-9]/g, '')"
-                    />
+                    <label for="sede">Sede / Área Fija</label>
+                    <div class="input-wrapper">
+                        <span class="material-icons-outlined prefix-icon">domain</span>
+                        <!-- El campo es readonly para evitar que un empleado se transfiera a sí mismo en una edición simple -->
+                        <input type="text" id="sede" class="form-input" placeholder="SEDE NO ASIGNADA" readonly tabindex="-1" />
+                    </div>
                 </div>
 
                 <div class="form-group">
-                    <label for="apellidos">APELLIDOS:</label>
-                    <input 
-                        type="text" 
-                        id="apellidos" 
-                        name="apellidos" 
-                        placeholder="Apellidos del trabajador" 
-                        required 
-                        oninput="this.value = this.value.toUpperCase()" 
-                    />
+                    <label for="dni">DNI <span class="req-asterisk">*</span></label>
+                    <div class="input-wrapper">
+                        <span class="material-icons-outlined prefix-icon">branding_watermark</span>
+                        <input type="text" id="dni" class="form-input" placeholder="8 dígitos" maxlength="8" inputmode="numeric" required oninput="this.value = this.value.replace(/[^0-9]/g, '')" />
+                    </div>
                 </div>
 
                 <div class="form-group">
-                    <label for="nombres">NOMBRES:</label>
-                    <input 
-                        type="text" 
-                        id="nombres" 
-                        name="nombres" 
-                        placeholder="Nombres del trabajador" 
-                        required 
-                        oninput="this.value = this.value.toUpperCase()" 
-                    />
+                    <label for="celular">N° Celular <span class="req-asterisk">*</span></label>
+                    <div class="input-wrapper">
+                        <span class="material-icons-outlined prefix-icon">smartphone</span>
+                        <input type="text" id="celular" class="form-input" placeholder="9 dígitos" maxlength="9" inputmode="numeric" required oninput="this.value = this.value.replace(/[^0-9]/g, '')" />
+                    </div>
                 </div>
 
                 <div class="form-group">
-                    <label for="celular">N° CELULAR:</label>
-                    <input 
-                        type="text" 
-                        id="celular" 
-                        name="celular" 
-                        placeholder="9 dígitos numéricos" 
-                        maxlength="9" 
-                        inputmode="numeric" 
-                        required 
-                        oninput="this.value = this.value.replace(/[^0-9]/g, '')"
-                    />
+                    <label for="apellidos">Apellidos Completos <span class="req-asterisk">*</span></label>
+                    <div class="input-wrapper">
+                        <span class="material-icons-outlined prefix-icon">person</span>
+                        <input type="text" id="apellidos" class="form-input" placeholder="Ej. MENDOZA ACUÑA" required oninput="this.value = this.value.toUpperCase()" />
+                    </div>
                 </div>
 
                 <div class="form-group">
-                    <label for="FechaNacimiento">FECHA DE NACIMIENTO:</label>
-                    <input 
-                        type="date" 
-                        id="FechaNacimiento" 
-                        name="FechaNacimiento" 
-                        required
-                    />
+                    <label for="nombres">Nombres Completos <span class="req-asterisk">*</span></label>
+                    <div class="input-wrapper">
+                        <span class="material-icons-outlined prefix-icon">person_outline</span>
+                        <input type="text" id="nombres" class="form-input" placeholder="Ej. MAX TAYSON" required oninput="this.value = this.value.toUpperCase()" />
+                    </div>
                 </div>
 
-                <button type="submit" class="submit-btn">GUARDAR CAMBIOS</button>
+                <div class="form-group">
+                    <label for="FechaNacimiento">Fecha de Nacimiento <span class="req-asterisk">*</span></label>
+                    <div class="input-wrapper">
+                        <span class="material-icons-outlined prefix-icon">cake</span>
+                        <input type="date" id="FechaNacimiento" class="form-input" required />
+                    </div>
+                </div>
+
+                <button type="submit" class="submit-btn">
+                    <span class="material-icons-outlined">update</span>
+                    ACTUALIZAR REGISTRO
+                </button>
             </form>
         </section>
 
+        <!-- FOOTER ESTÁTICO -->
         <footer class="card-footer">
-            <a href="#" title="Volver al Menú Principal" onclick="volverAlMenu(event)">
-                <img src="Imagenes/ECFM.png" alt="Logo MEF Engineering" class="logo">
-            </a>
+            <img src="Imagenes/ECFM.png" alt="Logo de MEF Engineering" class="logo" onerror="this.style.display='none'" />
         </footer>
 
     </main>
+
+    <!-- ==========================================
+         MODALES DE SISTEMA Y ALERTAS PRO
+         ========================================== -->
+    <div id="modal-alerta" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header" id="alerta-header">
+                <span class="material-icons-outlined" id="alerta-icon">error</span>
+                <span id="alerta-titulo">Atención</span>
+            </div>
+            <div class="modal-body" id="alerta-mensaje">Mensaje de error aquí.</div>
+            <div class="modal-footer">
+                <button class="btn-modal" onclick="cerrarAlerta()">Entendido</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOAST NOTIFICATION -->
+    <div id="toast" class="toast">
+        <span class="material-icons-outlined" style="color: #4ade80;">check_circle</span>
+        <span id="toast-msg">Actualizado con éxito</span>
+    </div>
 
 <script>
     'use strict';
 
     // ==========================================
-    // 1. GESTIÓN DE SESIÓN Y NAVEGACIÓN
+    // 1. SISTEMA VISUAL DE ALERTAS PRO
     // ==========================================
-    function cerrarSesion(e) {
-        if (e && typeof e.preventDefault === 'function') e.preventDefault();
-        alert("🔒 Sesión finalizada de forma segura.");
+    function mostrarAlerta(titulo, mensaje, tipo = 'warning') {
+        const modal = document.getElementById('modal-alerta');
+        const header = document.getElementById('alerta-header');
+        const icon = document.getElementById('alerta-icon');
+        
+        document.getElementById('alerta-titulo').innerText = titulo;
+        document.getElementById('alerta-mensaje').innerText = mensaje;
+
+        header.className = 'modal-header'; 
+        if(tipo === 'error') {
+            header.classList.add('error'); icon.innerText = 'gpp_bad';
+        } else if (tipo === 'warning') {
+            header.classList.add('warning'); icon.innerText = 'warning';
+        }
+
+        modal.style.display = 'flex';
+    }
+
+    function cerrarAlerta() {
+        document.getElementById('modal-alerta').style.display = 'none';
+    }
+
+    function mostrarToast(mensaje, redireccion = null) {
+        const toast = document.getElementById('toast');
+        document.getElementById('toast-msg').innerText = mensaje;
+        toast.style.display = 'flex';
+        
+        setTimeout(() => { 
+            toast.style.display = 'none'; 
+            if(redireccion) window.location.href = redireccion;
+        }, 1500);
+    }
+
+    // ==========================================
+    // 2. GESTIÓN DE SESIÓN Y SEGURIDAD
+    // ==========================================
+    function cerrarSesion() {
         sessionStorage.clear();
         localStorage.setItem("sesionActiva", "no");
         window.location.replace("index.html");
@@ -129,15 +454,10 @@
         }
     }
 
-    function volverAlMenu(e) {
-        if (e && typeof e.preventDefault === 'function') e.preventDefault();
-        window.location.href = sessionStorage.getItem("menuUsuario") || "Botones.html";
-    }
-
     window.addEventListener("DOMContentLoaded", validarSesion);
     window.addEventListener("pageshow", validarSesion);
 
-    // Límite estricto de inactividad: 1 minuto
+    // Control estricto de inactividad (1 minuto)
     let timerInactividad;
     const reiniciarTemporizador = () => {
         clearTimeout(timerInactividad);
@@ -147,29 +467,37 @@
         }, 1 * 60 * 1000); 
     };
 
-    ["mousemove", "keydown", "click", "scroll", "touchstart"].forEach(evento => {
-        document.addEventListener(evento, reiniciarTemporizador, { passive: true });
+    ["mousemove", "keydown", "click", "scroll", "touchstart"].forEach(evt => {
+        document.addEventListener(evt, reiniciarTemporizador, { passive: true });
     });
     reiniciarTemporizador();
 
+    // Bloqueo Anti-Inspección
+    document.addEventListener('contextmenu', function(e) { e.preventDefault(); });
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C')) || (e.ctrlKey && e.key === 'U')) {
+            e.preventDefault();
+        }
+    });
 
     // ==========================================
-    // 2. LÓGICA DE EDICIÓN DEL PERSONAL
+    // 3. LÓGICA DE EDICIÓN DE PERSONAL (SEDE PRESERVADA)
     // ==========================================
     document.addEventListener("DOMContentLoaded", () => {
-        
+        const form = document.getElementById("formRegistroPersonal");
+        const inputFechaNacimiento = document.getElementById("FechaNacimiento");
+
         const personaEnCache = JSON.parse(localStorage.getItem('personalEditar'));
         const index = localStorage.getItem('personalEditarIndex');
-        const inputFechaNacimiento = document.getElementById('FechaNacimiento');
 
-        // Seguridad: Si alguien entra directo a la URL sin elegir a alguien para editar
+        // Seguridad: Evitar acceso directo sin haber seleccionado un trabajador
         if (!personaEnCache || index === null) {
-            alert("⚠️ ERROR: No se encontraron datos del trabajador para editar.");
-            window.location.replace("TBPersonalRegistrado.html");
+            mostrarAlerta("Error de Acceso", "No se encontraron datos del trabajador para editar. Será redirigido.", "error");
+            setTimeout(() => window.location.replace("TBPersonalRegistrado.html"), 2000);
             return;
         }
 
-        // UX: Bloquear fechas en el calendario (Regla de 18 años)
+        // UX: Bloquear en el calendario fechas que harían a la persona menor de 18 años
         const calcularFechaMaxima = () => {
             const hoy = new Date();
             const maxFecha = new Date(hoy.getFullYear() - 18, hoy.getMonth(), hoy.getDate());
@@ -177,7 +505,7 @@
         };
         inputFechaNacimiento.setAttribute("max", calcularFechaMaxima());
 
-        // Función utilitaria para edad
+        // Función para calcular edad exacta en años
         const calcularEdad = (fechaNacimientoStr) => {
             const fechaNac = new Date(fechaNacimientoStr);
             const hoy = new Date();
@@ -192,78 +520,83 @@
 
         // --- RELLENAR LOS CAMPOS DEL FORMULARIO CON DATOS EXISTENTES ---
         document.getElementById('codigo').value = personaEnCache.codigo || '';
+        document.getElementById('sede').value = personaEnCache.area || personaEnCache.sede || 'NO REGISTRADA'; // Mostrar la sede de lectura
         document.getElementById('dni').value = personaEnCache.dni || '';
+        document.getElementById('celular').value = personaEnCache.celular || '';
         document.getElementById('apellidos').value = personaEnCache.apellidos || '';
         document.getElementById('nombres').value = personaEnCache.nombres || '';
-        
-        // Adaptación: Si el registro viejo tenía "cargo", lo ignoramos. Si tenía "celular", lo cargamos.
-        document.getElementById('celular').value = personaEnCache.celular || '';
         inputFechaNacimiento.value = personaEnCache.fechaNacimiento || '';
 
         // --- PROCESAR LOS DATOS ACTUALIZADOS ---
-        document.getElementById('formRegistroPersonal').addEventListener('submit', function (e) {
-            e.preventDefault();
+        form.addEventListener("submit", (event) => {
+            event.preventDefault();
 
-            // Extracción y limpieza
-            const persona = {
+            // Obtenemos SOLO los datos que pueden editarse en este form
+            const nuevosDatos = {
                 codigo: document.getElementById('codigo').value.trim().toUpperCase(),
                 dni: document.getElementById('dni').value.trim(),
+                celular: document.getElementById('celular').value.trim(),
                 apellidos: document.getElementById('apellidos').value.trim().toUpperCase(),
                 nombres: document.getElementById('nombres').value.trim().toUpperCase(),
-                celular: document.getElementById('celular').value.trim(),
                 fechaNacimiento: inputFechaNacimiento.value
             };
 
-            // 1. Validar campos vacíos
-            if (Object.values(persona).some(campo => campo === "")) {
-                alert("⚠️ POR FAVOR, COMPLETA TODOS LOS CAMPOS.");
-                return;
+            // 1. Validación de campos vacíos
+            if (!nuevosDatos.codigo || !nuevosDatos.dni || !nuevosDatos.apellidos || !nuevosDatos.nombres || !nuevosDatos.celular || !nuevosDatos.fechaNacimiento) {
+                return mostrarAlerta("Campos Incompletos", "Por favor, completa todos los campos obligatorios (*) para actualizar el registro.", "warning");
             }
 
             // 2. Validación: Edad mínima de 18 años
-            const edadCalculada = calcularEdad(persona.fechaNacimiento);
+            const edadCalculada = calcularEdad(nuevosDatos.fechaNacimiento);
             if (edadCalculada < 18) {
-                alert(`⚠️ ACCESO DENEGADO:\nEl trabajador tiene ${edadCalculada} años. La edad mínima requerida para mantener el registro es de 18 años (Mayor de edad).`);
+                mostrarAlerta("Acceso Denegado", `El trabajador tiene ${edadCalculada} años.\n\nLa edad mínima requerida para mantener el registro es de 18 años.`, "error");
                 inputFechaNacimiento.focus();
                 return;
             }
 
             // 3. Validar DNI
-            if (persona.dni.length !== 8) {
-                alert("⚠️ ERROR: EL DNI DEBE CONTENER EXACTAMENTE 8 DÍGITOS NUMÉRICOS.");
+            if (nuevosDatos.dni.length !== 8) {
+                mostrarAlerta("DNI Inválido", "El DNI debe contener exactamente 8 dígitos numéricos.", "warning");
                 document.getElementById('dni').focus();
                 return;
             }
 
             // 4. Validar Celular
-            if (persona.celular.length !== 9) {
-                alert("⚠️ ERROR: EL NÚMERO DE CELULAR DEBE CONTENER EXACTAMENTE 9 DÍGITOS NUMÉRICOS.");
+            if (nuevosDatos.celular.length !== 9) {
+                mostrarAlerta("Celular Inválido", "El número de celular debe contener exactamente 9 dígitos numéricos.", "warning");
                 document.getElementById('celular').focus();
                 return;
             }
 
             const personalDB = JSON.parse(localStorage.getItem('personal')) || [];
 
-            // 5. Validar duplicados (Asegurándonos de no chocar con OTRO trabajador, ignorando a este mismo)
+            // 5. Validar duplicados (ignorando al propio trabajador que se está editando)
             const duplicado = personalDB.some((p, i) =>
-                i !== parseInt(index) && (p.codigo === persona.codigo || p.dni === persona.dni)
+                i !== parseInt(index) && (p.codigo === nuevosDatos.codigo || p.dni === nuevosDatos.dni)
             );
 
             if (duplicado) {
-                alert("⚠️ YA EXISTE OTRO TRABAJADOR REGISTRADO CON ESE MISMO CÓDIGO O DNI.");
+                mostrarAlerta("Registro Duplicado", "Ya existe otro trabajador registrado con ese mismo Código o DNI en la base de datos.", "error");
                 return;
             }
 
-            // 6. Sobrescribir en la base de datos
-            personalDB[parseInt(index)] = persona;
+            // 6. FUSIÓN SEGURA (SPREAD OPERATOR): 
+            // Copia todos los datos originales (Sede, Puntos, Kilos, Membresías) y sobrescribe SOLO lo que se editó
+            const registroFinal = {
+                ...personaEnCache,
+                ...nuevosDatos
+            };
+
+            // 7. Sobrescribir en la base de datos
+            personalDB[parseInt(index)] = registroFinal;
             localStorage.setItem('personal', JSON.stringify(personalDB));
             
-            // 7. Limpiar la caché temporal
+            // 8. Limpiar la caché temporal
             localStorage.removeItem('personalEditar');
             localStorage.removeItem('personalEditarIndex');
 
-            alert(`✅ REGISTRO ACTUALIZADO CORRECTAMENTE:\n\n${persona.nombres} ${persona.apellidos}`);
-            window.location.href = "TBPersonalRegistrado.html";
+            // 9. Notificación y Redirección a la tabla
+            mostrarToast("Registro actualizado correctamente", "TBPersonalRegistrado.html");
         });
     });
 </script>
