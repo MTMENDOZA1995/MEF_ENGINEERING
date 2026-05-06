@@ -3,471 +3,494 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>REGISTRO DE ASISTENCIAS | MEF Engineering & Soluciones</title>
+    <title>REGISTRO DE ASISTENCIAS | MEF Engineering</title>
+    
+    <!-- FUENTES E ICONOS DE GOOGLE -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+    
+    <!-- LIBRERÍA SHEETJS PARA EXPORTAR A EXCEL -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
     <style>
-        /* VARIABLES GLOBALES */
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-
+        /* ==========================================
+           SISTEMA DE DISEÑO MEF ENGINEERING
+           ========================================== */
         :root {
-            --color-principal: #1d3b20;
-            --color-fondo: #f5f7fa;
-            --color-tabla: #fff;
-            --color-texto: #333;
-            --color-hover: #e6f4ea;
-            --color-par: #f9f9f9;
+            --primary-color: #1d3b20;
+            --primary-hover: #0a1f0d;
+            --bg-color: #f4f6f8;
+            --surface: #ffffff;
+            --text-dark: #202223;
+            --text-subdued: #6d7175;
+            --border: #c9cccf;
+            --interactive: #2c6ecb;
+            --critical: #d82c0d;
+            --warning: #b98900;
+            --success: #108043;
+            --shadow-card: 0 4px 6px -1px rgba(0,0,0,0.05);
+            --radius: 8px;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
 
-        body {
-            padding: 20px;
-            font-family: 'Inter', -apple-system, sans-serif;
-            background-color: var(--color-fondo);
-            color: var(--color-texto);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
+        body { background-color: var(--bg-color); color: var(--text-dark); height: 100vh; height: 100svh; overflow: hidden; display: flex; flex-direction: column; }
 
-        main {
-            width: 100%;
-            max-width: 1200px;
-        }
+        /* ENCABEZADO FIJO */
+        .header { background-color: var(--primary-color); color: #ffffff; padding: 10px 16px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); flex-shrink: 0; z-index: 100; }
+        .header .spacer { width: 32px; }
+        .header h1 { font-size: 13px; font-weight: 700; letter-spacing: 1px; text-align: center; margin: 0; flex-grow: 1; text-transform: uppercase; }
 
-        h1 {
-            text-align: center;
-            font-size: 1.5rem;
-            color: var(--color-principal);
-            margin-bottom: 2rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
+        .icon-btn { background: rgba(255,255,255,0.08); color: white; border: none; padding: 6px; border-radius: 6px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s; }
+        .icon-btn:hover { background: rgba(255,255,255,0.2); transform: scale(1.05); }
 
-        .icon-bar {
-            display: flex;
-            gap: 20px;
-            align-items: center;
-            margin-bottom: 20px;
-            width: 100%;
-            max-width: 1200px;
-        }
+        /* CONTENEDOR PRINCIPAL Y BARRA DE CONTROLES */
+        .main-container { padding: 20px 15px; width: 100%; max-width: 1200px; margin: 0 auto; flex-grow: 1; display: flex; flex-direction: column; gap: 15px; overflow: hidden; }
 
-        .icon-bar a img {
-            width: 28px;
-            height: 28px;
-            cursor: pointer;
-            transition: transform 0.2s ease, opacity 0.2s ease;
-            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
-        }
+        .control-bar { background: var(--surface); padding: 12px 16px; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; border-radius: var(--radius); box-shadow: var(--shadow-card); border: 1px solid var(--border); gap: 12px; flex-shrink: 0; }
 
-        .icon-bar a img:hover {
-            transform: scale(1.15);
-            opacity: 0.8;
-        }
+        .select-group { display: flex; align-items: center; gap: 8px; flex-grow: 1; max-width: 500px; }
+        .select-group label { font-size: 11px; font-weight: 700; color: var(--primary-color); text-transform: uppercase; }
 
-        .contenedor-select {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            align-items: center;
-            gap: 1rem;
-            margin-bottom: 2rem;
-            background: #ffffff;
-            padding: 15px 20px;
-            border-radius: 12px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-            border: 1px solid #e0e0e0;
-        }
+        .form-select { flex-grow: 1; padding: 8px 12px; border: 1px solid var(--border); border-radius: 6px; font-size: 12px; background-color: var(--bg-color); color: var(--text-dark); cursor: pointer; outline: none; transition: 0.2s; height: 34px; }
+        .form-select:focus { border-color: var(--primary-color); background-color: var(--surface); box-shadow: 0 0 0 3px rgba(29, 59, 32, 0.1); }
 
-        .contenedor-select label {
-            font-size: 0.9rem;
-            font-weight: 700;
-            color: var(--color-principal);
-            text-transform: uppercase;
-        }
+        .action-group { display: flex; gap: 8px; }
 
-        select {
-            padding: 0.6rem 1rem;
-            border: 1.5px solid #ccc;
-            border-radius: 8px;
-            font-size: 0.95rem;
-            font-family: 'Inter', sans-serif;
-            background-color: #fff;
-            color: var(--color-texto);
-            min-width: 280px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
-            cursor: pointer;
-            outline: none;
-            transition: border-color 0.3s;
-        }
+        .action-btn { display: flex; align-items: center; gap: 4px; padding: 0 12px; height: 34px; border-radius: 6px; font-size: 12px; font-weight: 700; cursor: pointer; border: none; transition: 0.2s; white-space: nowrap; }
+        .action-btn .material-icons-outlined { font-size: 16px; }
+        .action-btn.export { background-color: #e8f5e9; color: var(--success); border: 1px solid #a5d6a7; }
+        .action-btn.export:hover { background-color: #c8e6c9; }
+        .action-btn.delete { background-color: #fef2f2; color: var(--critical); border: 1px solid #fca5a5; }
+        .action-btn.delete:hover { background-color: #fecaca; }
 
-        select:focus {
-            border-color: #2e7d32;
-        }
+        /* TABLA SCROLLABLE */
+        .table-card { background-color: var(--surface); border-radius: var(--radius); box-shadow: var(--shadow-card); border: 1px solid var(--border); overflow: hidden; width: 100%; flex-grow: 1; display: flex; flex-direction: column; }
+        .table-responsive { width: 100%; overflow-x: auto; overflow-y: auto; flex-grow: 1; -webkit-overflow-scrolling: touch; }
 
-        /* CONTENEDOR DE TABLA RESPONSIVA */
-        .table-container {
-            width: 100%;
-            overflow-x: auto;
-            border-radius: 12px;
-            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
-            background-color: var(--color-tabla);
-            margin-bottom: 2rem;
-            border: 1px solid #e0e0e0;
-        }
+        table { width: 100%; border-collapse: collapse; min-width: 1000px; }
+        thead { background-color: #f8fafc; position: sticky; top: 0; z-index: 10; }
+        th { padding: 12px 10px; font-size: 11px; font-weight: 700; color: var(--text-subdued); text-transform: uppercase; letter-spacing: 0.5px; text-align: center; border-bottom: 2px solid var(--border); white-space: nowrap; }
+        td { padding: 10px 12px; font-size: 12px; border-bottom: 1px solid #f0f2f4; color: var(--text-dark); vertical-align: middle; text-align: center; white-space: nowrap; }
+        th:nth-child(4), td:nth-child(4) { text-align: left; } 
+        tbody tr:nth-child(even) { background-color: #fbfdfb; }
+        tbody tr:hover { background-color: #f4f6f8; }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            min-width: 900px;
-        }
+        td strong { color: var(--primary-color); }
+        .badge-sede { background: #f4f6f8; color: var(--text-dark); padding: 4px 8px; border-radius: 4px; font-weight: 600; font-size: 11px; display: inline-block; border: 1px solid var(--border); }
+        .tardanza-alert { color: var(--critical); font-weight: 700; background: #fef2f2; padding: 4px 8px; border-radius: 4px; border: 1px solid #fca5a5; }
+        .tiempo-total { color: var(--interactive); font-weight: 800; background: #f0f8ff; padding: 4px 8px; border-radius: 4px; border: 1px solid #bae6fd; }
 
-        thead {
-            background-color: var(--color-principal);
-            color: #fff;
-        }
+        /* ESTADO VACÍO */
+        .empty-state { text-align: center; padding: 50px 20px; color: var(--text-subdued); display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .empty-state .material-icons-outlined { font-size: 36px; color: var(--border); margin-bottom: 8px; }
 
-        th, td {
-            padding: 14px 12px;
-            text-align: center;
-            font-size: 0.85rem;
-            border-bottom: 1px solid #f0f0f0;
-            white-space: nowrap;
-        }
+        /* PIE DE PÁGINA ESTÁTICO */
+        .card-footer { background-color: var(--surface); text-align: center; padding: 10px; border-top: 1px solid var(--border); flex-shrink: 0; display: flex; justify-content: center; align-items: center; }
+        .card-footer .logo { height: 25px; width: auto; opacity: 0.8; pointer-events: none; }
 
-        th {
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            font-weight: 600;
-        }
+        /* MODALES Y TOAST */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(32, 34, 35, 0.85); display: none; justify-content: center; align-items: center; z-index: 1000; opacity: 0; animation: fadeIn 0.2s forwards; padding: 15px; }
+        .modal-content { background: var(--surface); width: 100%; max-width: 320px; border-radius: var(--radius); box-shadow: 0 10px 25px rgba(0,0,0,0.2); overflow: hidden; transform: scale(0.95); animation: scaleUp 0.2s forwards; text-align: center; }
+        .modal-header { padding: 20px 16px 10px; display: flex; flex-direction: column; align-items: center; gap: 6px; font-size: 15px; font-weight: 800; text-transform: uppercase;}
+        .modal-body { padding: 0 16px 16px; color: var(--text-subdued); font-size: 13px; line-height: 1.4; }
+        .modal-footer { padding: 12px 16px; background: #fafbfb; border-top: 1px solid var(--border); display: flex; justify-content: center; gap: 10px;}
+        
+        .modal-header.error { color: var(--critical); }
+        .modal-header.warning { color: var(--warning); }
+        .modal-header .material-icons-outlined { font-size: 40px; margin-bottom: 2px;}
 
-        tbody tr:nth-child(even) { background-color: var(--color-par); }
-        tbody tr:hover { background-color: var(--color-hover); }
+        .btn-modal { padding: 8px 16px; border-radius: 6px; font-size: 13px; font-weight: 700; cursor: pointer; width: 100%; transition: 0.2s; border: none; display: flex; justify-content: center; align-items: center; gap: 4px; }
+        .btn-modal.primary { background-color: var(--primary-color); color: white; }
+        .btn-modal.primary:hover { background-color: var(--primary-hover); }
+        .btn-modal.danger { background-color: var(--critical); color: white; }
+        .btn-modal.danger:hover { background-color: #b9250a; }
+        .btn-modal.outline { background-color: transparent; border: 1px solid var(--border); color: var(--text-dark); }
+        .btn-modal.outline:hover { background-color: var(--bg-color); }
 
-        td[colspan] {
-            font-style: italic;
-            color: #777;
-            padding: 20px;
-        }
+        .toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: #202223; color: white; padding: 10px 16px; border-radius: 8px; font-size: 13px; display: none; z-index: 3000; align-items: center; gap: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); font-weight: 500; }
 
-        .boton-accion {
-            width: 45px;
-            height: 45px;
-            padding: 8px;
-            border: none;
-            border-radius: 8px;
-            background-color: transparent;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.2s ease;
-        }
+        @keyframes fadeIn { to { opacity: 1; } }
+        @keyframes scaleUp { to { transform: scale(1); } }
 
-        .boton-accion:hover { 
-            transform: scale(1.1) translateY(-2px); 
-            background-color: rgba(46, 125, 50, 0.1);
-        }
-
-        .boton-accion img {
-            width: 26px;
-            height: 26px;
-            object-fit: contain;
-            pointer-events: none;
-        }
-
-        /* ADAPTACIÓN MÓVIL */
-        @media (max-width: 600px) {
-            body { padding: 15px 10px; }
-            h1 { font-size: 1.2rem; }
-            .icon-bar { justify-content: center; gap: 25px; }
-            .contenedor-select { flex-direction: column; align-items: stretch; padding: 15px; }
-            select { width: 100%; min-width: 100%; }
-            .acciones-wrapper { display: flex; justify-content: center; gap: 15px; }
-            th, td { padding: 10px 8px; font-size: 0.8rem; }
+        /* RESPONSIVE */
+        @media (max-width: 650px) {
+            .control-bar { flex-direction: column; align-items: stretch; }
+            .select-group { max-width: 100%; flex-direction: column; align-items: stretch; gap: 6px;}
+            .action-group { justify-content: space-between; }
+            .action-btn { flex: 1; justify-content: center; }
+            .main-container { padding: 10px; }
         }
     </style>
 </head>
 <body>
 
-    <nav class="icon-bar" aria-label="Navegación superior">
-        <a href="#" title="Volver al Menú Principal" onclick="volverAlMenu(event)">
-            <img src="Iconos/MENU1.webp" alt="Menú">
-        </a>
-        <a href="TBEventosRegistrados.html" title="Regresar a Lista de Eventos">
-            <img src="Iconos/VOLVER.png" alt="Volver">
-        </a>
-        <a href="#" title="Cerrar Sesión de forma segura" onclick="cerrarSesion(event)">
-            <img src="Iconos/SALIR.png" alt="Cerrar sesión">
-        </a>
-    </nav>
+    <header class="header">
+        <div class="spacer"></div>
+        <h1>PANEL DE ASISTENCIAS</h1>
+        <button class="icon-btn" title="Volver a la Lista de Tablas" onclick="window.history.back();">
+            <span class="material-icons-outlined">close</span>
+        </button>
+    </header>
 
-    <main>
-        <h1>REGISTRO GENERAL DE ASISTENCIAS</h1>
-
-        <div class="contenedor-select">
-            <label for="eventoSelect">EVENTO:</label>
-            <select id="eventoSelect">
-                <option disabled selected value="">Seleccione un evento</option>
-            </select>
-
-            <div class="acciones-wrapper">
-                <button id="btnEliminarEvento" class="boton-accion" title="Eliminar Registro de Asistencia">
-                    <img src="Iconos/ELIDATOS.png" alt="Eliminar" />
+    <main class="main-container">
+        
+        <div class="control-bar">
+            <div class="select-group">
+                <label for="eventoSelect">Evento Seleccionado:</label>
+                <select id="eventoSelect" class="form-select">
+                    <option disabled selected value="">-- Seleccione un evento --</option>
+                </select>
+            </div>
+            
+            <div class="action-group">
+                <button id="btnEliminarEvento" class="action-btn delete" title="Eliminar Registro de Asistencia">
+                    <span class="material-icons-outlined">delete_sweep</span> Borrar Registro
                 </button>
-                <button id="btnDescargarDatos" class="boton-accion" title="Descargar Reporte en Excel">
-                    <img src="Iconos/DESCARGAR1.webp" alt="Descargar" />
+                <button id="btnDescargarDatos" class="action-btn export" title="Descargar Reporte en Excel">
+                    <span class="material-icons-outlined">file_download</span> Exportar
                 </button>
             </div>
         </div>
 
-        <div class="table-container">
-            <table id="tablaAsistencias">
-                <thead>
-                    <tr>
-                        <th>CÓDIGO</th>
-                        <th>DNI</th>
-                        <th>APELLIDOS Y NOMBRES</th>
-                        <th>CARGO</th>
-                        <th>FECHA</th>
-                        <th>HORA ENTRADA</th>
-                        <th>HORA SALIDA</th>
-                        <th>TARDANZA</th>
-                        <th>TIEMPO TOTAL</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr><td colspan="9">SELECCIONE UN EVENTO PARA VER LOS REGISTROS.</td></tr>
-                </tbody>
-            </table>
+        <div class="table-card">
+            <div class="table-responsive">
+                <table id="tablaAsistencias">
+                    <thead>
+                        <tr>
+                            <th>Código</th>
+                            <th>DNI</th>
+                            <th>Sede / Área</th>
+                            <th>Apellidos y Nombres</th>
+                            <th>Fecha Ingreso</th>
+                            <th>Hora Entrada</th>
+                            <th>Fecha Salida</th>
+                            <th>Hora Salida</th>
+                            <th>Tardanza</th>
+                            <th>Tiempo Total</th>
+                        </tr>
+                    </thead>
+                    <tbody id="cuerpoTabla">
+                        <tr>
+                            <td colspan="10">
+                                <div class="empty-state">
+                                    <span class="material-icons-outlined">assignment_ind</span>
+                                    <p style="font-weight: 600; font-size: 13px; color: var(--text-dark);">Seleccione un evento arriba</p>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </main>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <footer class="card-footer">
+        <img src="Imagenes/ECFM.png" alt="Logo de MEF Engineering" class="logo" onerror="this.style.display='none'">
+    </footer>
+
+    <!-- MODALES Y TOAST -->
+    <div id="modal-alerta" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header warning" id="alerta-header">
+                <span class="material-icons-outlined" id="alerta-icon">warning</span>
+                <span id="alerta-titulo">Atención</span>
+            </div>
+            <div class="modal-body" id="alerta-mensaje">Mensaje aquí.</div>
+            <div class="modal-footer">
+                <button class="btn-modal primary" onclick="cerrarModales()">Entendido</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-confirmacion" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header error">
+                <span class="material-icons-outlined">delete_forever</span>
+                <span>Borrar Asistencias</span>
+            </div>
+            <div class="modal-body" id="confirmacion-mensaje"></div>
+            <div class="modal-footer">
+                <button class="btn-modal outline" onclick="cerrarModales()">Cancelar</button>
+                <button class="btn-modal danger" id="btn-confirmar-eliminar">Borrar todo</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast" class="toast">
+        <span class="material-icons-outlined" style="color: #4ade80;">check_circle</span>
+        <span id="toast-msg">Operación exitosa</span>
+    </div>
 
 <script>
     'use strict';
 
-    // ==========================================
-    // 1. GESTIÓN DE SESIÓN Y SEGURIDAD
-    // ==========================================
-    function cerrarSesion(e) {
-        if (e && typeof e.preventDefault === 'function') e.preventDefault();
-        alert("🔒 Sesión finalizada de forma segura.");
-        sessionStorage.clear();
-        localStorage.setItem("sesionActiva", "no");
-        window.location.replace("index.html");
+    // 1. SISTEMA VISUAL DE MODALES Y TOAST
+    function mostrarAlerta(titulo, mensaje, tipo = 'warning') {
+        const modal = document.getElementById('modal-alerta');
+        document.getElementById('alerta-titulo').innerText = titulo;
+        document.getElementById('alerta-mensaje').innerText = mensaje;
+        document.getElementById('alerta-header').className = 'modal-header ' + (tipo==='error'?'error':'warning'); 
+        document.getElementById('alerta-icon').innerText = tipo === 'error' ? 'gpp_bad' : 'warning';
+        modal.style.display = 'flex';
     }
 
-    function validarSesion() {
-        if (sessionStorage.getItem("sesionActiva") !== "true") {
-            cerrarSesion();
-        }
+    function mostrarConfirmacion(nombreEvento, callbackConfirma) {
+        document.getElementById('confirmacion-mensaje').innerHTML = `¿Estás seguro de eliminar el registro completo del evento:<br><br><strong style="color:var(--critical); font-size:14px;">[ ${nombreEvento} ]</strong>?<br><br>Esta acción NO se puede deshacer.`;
+        document.getElementById('btn-confirmar-eliminar').onclick = () => { callbackConfirma(); cerrarModales(); };
+        document.getElementById('modal-confirmacion').style.display = 'flex';
     }
 
-    function volverAlMenu(e) {
-        if (e && typeof e.preventDefault === 'function') e.preventDefault();
-        window.location.href = sessionStorage.getItem("menuUsuario") || "Botones.html";
+    function cerrarModales() {
+        document.getElementById('modal-alerta').style.display = 'none';
+        document.getElementById('modal-confirmacion').style.display = 'none';
     }
 
-    window.addEventListener("DOMContentLoaded", validarSesion);
-    window.addEventListener("pageshow", validarSesion);
+    function mostrarToast(mensaje) {
+        const toast = document.getElementById('toast');
+        document.getElementById('toast-msg').innerText = mensaje;
+        toast.style.display = 'flex';
+        setTimeout(() => toast.style.display = 'none', 2000);
+    }
+
+    // 2. SEGURIDAD Y SESIÓN
+    function cerrarSesion() {
+        sessionStorage.clear(); localStorage.setItem("sesionActiva", "no"); window.location.replace("index.html");
+    }
 
     let timerInactividad;
     const reiniciarTemporizador = () => {
         clearTimeout(timerInactividad);
-        timerInactividad = setTimeout(() => {
-            alert("⏰ INACTIVIDAD DETECTADA. SESIÓN CERRADA.");
-            cerrarSesion();
-        }, 1 * 60 * 1000); // 1 minuto
+        timerInactividad = setTimeout(() => { alert("⏰ INACTIVIDAD DETECTADA. SESIÓN CERRADA."); cerrarSesion(); }, 60000); 
     };
 
-    ["mousemove", "keydown", "click", "scroll", "touchstart"].forEach(evento => {
-        document.addEventListener(evento, reiniciarTemporizador, { passive: true });
+    window.addEventListener("DOMContentLoaded", () => {
+        if (sessionStorage.getItem("sesionActiva") !== "true") cerrarSesion();
+        sincronizarDashboard(); // <--- EL PUENTE MÁGICO PARA EL DASHBOARD
     });
-    reiniciarTemporizador();
+    
+    ["mousemove", "keydown", "click", "touchstart"].forEach(evt => document.addEventListener(evt, reiniciarTemporizador, { passive: true }));
+    document.addEventListener('contextmenu', e => e.preventDefault());
+    document.addEventListener('keydown', e => { if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && ['I','J','C'].includes(e.key)) || (e.ctrlKey && e.key === 'U')) e.preventDefault(); });
+
+    // 3. MOTOR MATEMÁTICO DE TIEMPOS
+    function calcularDiferenciaMinutos(fechaInicioStr, horaInicioStr, fechaFinStr, horaFinStr) {
+        if (!fechaInicioStr || fechaInicioStr === '-' || !horaInicioStr || horaInicioStr === '-') return null;
+        if (!fechaFinStr || fechaFinStr === '-' || !horaFinStr || horaFinStr === '-') return null;
+        const ini = new Date(`${fechaInicioStr}T${horaInicioStr.substring(0,5)}:00`);
+        const fin = new Date(`${fechaFinStr}T${horaFinStr.substring(0,5)}:00`);
+        if (isNaN(ini.getTime()) || isNaN(fin.getTime())) return null;
+        return Math.floor((fin - ini) / 60000);
+    }
+
+    function formatoHorasMinutos(minutosTotales) {
+        if (minutosTotales === null || minutosTotales < 0) return '---'; 
+        if (minutosTotales === 0) return '0 min';
+        const h = Math.floor(minutosTotales / 60), m = minutosTotales % 60;
+        if (h === 0) return `${m} min`;
+        if (m === 0) return `${h}h`;
+        return `${h}h ${m}m`;
+    }
+
+    function obtenerDatosOficialesDelEvento(nombreEvento) {
+        const eventos = JSON.parse(localStorage.getItem('CrearLA')) || [];
+        return eventos.find(e => e.NombreEvento && e.NombreEvento.toUpperCase() === nombreEvento.toUpperCase()) || null;
+    }
 
     // ==========================================
-    // 2. LÓGICA DE TABLA Y EXCEL
+    // NUEVO: EL PUENTE DE SINCRONIZACIÓN
+    // Extrae todas las asistencias individuales y las mezcla en "registroAsistencias"
     // ==========================================
+    function sincronizarDashboard() {
+        const PREFIJO_CLAVE = "asistencia_";
+        const claves = Object.keys(localStorage).filter(clave => clave.startsWith(PREFIJO_CLAVE));
+        let registroMaestro = [];
+
+        claves.forEach(clave => {
+            const nombreEvento = clave.replace(PREFIJO_CLAVE, "");
+            const eventoOficial = obtenerDatosOficialesDelEvento(nombreEvento);
+            const registrosIndividuales = JSON.parse(localStorage.getItem(clave)) || [];
+
+            registrosIndividuales.forEach(r => {
+                let horasTrabajadas = 0;
+                let estadoFinal = "ASISTIÓ";
+
+                // Cálculo rápido de horas para el Dashboard
+                if (r.entrada && r.entrada !== '-') {
+                    if (r.salida && r.salida !== '-') {
+                        const mins = calcularDiferenciaMinutos(r.fechaEntrada || r.fecha, r.entrada, r.fechaSalida || r.fechaEntrada || r.fecha, r.salida);
+                        if (mins !== null && mins > 0) horasTrabajadas = parseFloat((mins / 60).toFixed(2));
+                    } else { horasTrabajadas = 1; } // Mínimo 1 hora si marcó entrada pero olvidó salida
+                } else {
+                    estadoFinal = "FALTÓ";
+                }
+
+                registroMaestro.push({
+                    evento: nombreEvento,
+                    codigo: r.codigo,
+                    fecha: r.fechaEntrada || r.fecha || (eventoOficial ? eventoOficial.FechaEvento : "S/F"),
+                    estado: estadoFinal,
+                    duracionHoras: horasTrabajadas
+                });
+            });
+        });
+
+        // Guardar la caja fuerte maestra para el Dashboard
+        localStorage.setItem("registroAsistencias", JSON.stringify(registroMaestro));
+        console.log("¡Base de datos del Dashboard sincronizada con éxito!");
+    }
+
+    // 4. LÓGICA DE TABLA, SEDE Y EXCEL
     document.addEventListener("DOMContentLoaded", () => {
         const eventoSelect = document.getElementById("eventoSelect");
-        const tbody = document.querySelector("#tablaAsistencias tbody");
-        const btnEliminar = document.getElementById("btnEliminarEvento");
-        const btnDescargar = document.getElementById("btnDescargarDatos");
-
+        const tbody = document.getElementById('cuerpoTabla');
         const PREFIJO_CLAVE = "asistencia_";
+        const dbPersonal = JSON.parse(localStorage.getItem('personal')) || [];
 
-        // Muestra un mensaje en la tabla ocupando las 9 columnas
-        const mostrarMensaje = (mensaje) => {
-            tbody.innerHTML = `<tr><td colspan="9">${mensaje}</td></tr>`;
+        const mostrarEstadoVacio = (mensaje, icono = "assignment_late") => {
+            tbody.innerHTML = `<tr><td colspan="10"><div class="empty-state"><span class="material-icons-outlined">${icono}</span><p style="font-weight: 600; font-size: 13px; color: var(--text-dark);">${mensaje}</p></div></td></tr>`;
         };
 
-        // 1. Cargar lista de eventos en el <select>
         const cargarEventosEnSelect = () => {
             const claves = Object.keys(localStorage).filter(clave => clave.startsWith(PREFIJO_CLAVE));
-
-            if (claves.length === 0) {
-                mostrarMensaje("NO HAY REGISTROS DE ASISTENCIA DISPONIBLES EN LA BASE DE DATOS.");
-                return;
-            }
+            if (claves.length === 0) return mostrarEstadoVacio("No hay registros de asistencia en la base de datos.", "cloud_off");
 
             claves.forEach(clave => {
                 const nombreEvento = clave.replace(PREFIJO_CLAVE, "");
-                const opcion = new Option(nombreEvento.toUpperCase(), clave);
-                eventoSelect.appendChild(opcion);
+                eventoSelect.appendChild(new Option(nombreEvento.toUpperCase(), clave));
             });
 
-            // --- AUTO-CARGA INTELIGENTE ---
-            // Si venimos del botón "Ver Asistencias" de la tabla de eventos, auto-seleccionamos
             const eventoEnCache = JSON.parse(localStorage.getItem('eventoSeleccionado'));
             if (eventoEnCache && eventoEnCache.NombreEvento) {
                 const clavePreseleccionada = PREFIJO_CLAVE + eventoEnCache.NombreEvento;
-                
-                // Verificar si existe la opción en el select
-                const existeOpcion = Array.from(eventoSelect.options).some(opt => opt.value === clavePreseleccionada);
-                
-                if (existeOpcion) {
+                if (Array.from(eventoSelect.options).some(opt => opt.value === clavePreseleccionada)) {
                     eventoSelect.value = clavePreseleccionada;
-                    cargarAsistencias(); // Cargamos la tabla automáticamente
+                    cargarAsistencias(); 
                 }
-                // Limpiamos el caché para que no se quede pegado si entra manualmente después
                 localStorage.removeItem('eventoSeleccionado');
             }
         };
 
-        // 2. Dibujar la tabla con los datos del evento seleccionado
         const cargarAsistencias = () => {
             const claveEvento = eventoSelect.value;
-            
-            if (!claveEvento || claveEvento === "") {
-                mostrarMensaje("SELECCIONE UN EVENTO PARA VER LOS REGISTROS.");
-                return;
-            }
+            if (!claveEvento) return mostrarEstadoVacio("Seleccione un evento arriba para ver los registros.", "assignment_ind");
 
             const registros = JSON.parse(localStorage.getItem(claveEvento)) || [];
+            if (registros.length === 0) return mostrarEstadoVacio("El evento seleccionado aún no tiene asistencias.", "people_outline");
 
-            if (registros.length === 0) {
-                mostrarMensaje("EL EVENTO SELECCIONADO AÚN NO TIENE ASISTENCIAS REGISTRADAS.");
-                return;
-            }
+            const nombreDelEventoPuro = claveEvento.replace(PREFIJO_CLAVE, "");
+            const datosOficialesEvento = obtenerDatosOficialesDelEvento(nombreDelEventoPuro);
+            const fechaOficialInicio = datosOficialesEvento ? datosOficialesEvento.FechaEvento : null;
+            const horaOficialInicio = datosOficialesEvento ? datosOficialesEvento.HoraEntrante : null;
 
-            // Construir filas de forma eficiente
-            const htmlFilas = registros.map(r => `
-                <tr>
-                    <td><strong>${r.codigo || '-'}</strong></td>
-                    <td>${r.dni || '-'}</td>
-                    <td>${(r.apellidos || '')} ${(r.nombres || '')}</td>
-                    <td>${r.cargo || '-'}</td>
-                    <td>${r.fecha || '-'}</td>
-                    <td>${r.entrada || '-'}</td>
-                    <td>${r.salida || '-'}</td>
-                    <td>${r.tardanza || '-'}</td>
-                    <td><strong>${r.horasTrabajadas || '-'}</strong></td>
-                </tr>
-            `).join('');
+            let htmlFilas = '';
 
+            registros.forEach(r => {
+                let textoTardanza = '---', textoTiempoTotal = '---', claseTardanza = '';
+                
+                let sedeTrabajador = "NO REGISTRADA";
+                if(r.codigo) {
+                    const emp = dbPersonal.find(p => p.codigo === r.codigo);
+                    if(emp && emp.area) sedeTrabajador = emp.area;
+                }
+
+                const fechaEntradaTrabajador = r.fechaEntrada || r.fecha || '-';
+                const fechaSalidaTrabajador = r.fechaSalida || fechaEntradaTrabajador; 
+
+                if (fechaOficialInicio && horaOficialInicio && fechaEntradaTrabajador !== '-' && r.entrada && r.entrada !== '-') {
+                    const minsTarde = calcularDiferenciaMinutos(fechaOficialInicio, horaOficialInicio, fechaEntradaTrabajador, r.entrada);
+                    if (minsTarde !== null) {
+                        if (minsTarde > 0) { textoTardanza = formatoHorasMinutos(minsTarde); claseTardanza = 'tardanza-alert'; } 
+                        else { textoTardanza = 'A tiempo'; }
+                    }
+                }
+
+                if (fechaEntradaTrabajador !== '-' && r.entrada !== '-' && fechaSalidaTrabajador !== '-' && r.salida && r.salida !== '-') {
+                    const minsTrabajados = calcularDiferenciaMinutos(fechaEntradaTrabajador, r.entrada, fechaSalidaTrabajador, r.salida);
+                    if (minsTrabajados !== null) textoTiempoTotal = formatoHorasMinutos(minsTrabajados);
+                }
+
+                htmlFilas += `
+                    <tr>
+                        <td><strong>${r.codigo || '-'}</strong></td>
+                        <td>${r.dni || '-'}</td>
+                        <td><span class="badge-sede">${sedeTrabajador}</span></td>
+                        <td style="text-align: left;">${(r.apellidos || '')} ${(r.nombres || '')}</td>
+                        <td>${fechaEntradaTrabajador}</td>
+                        <td>${r.entrada || '-'}</td>
+                        <td>${r.salida && r.salida !== '-' ? fechaSalidaTrabajador : '-'}</td>
+                        <td>${r.salida || '-'}</td>
+                        <td><span class="${claseTardanza}">${textoTardanza}</span></td>
+                        <td><span class="tiempo-total">${textoTiempoTotal}</span></td>
+                    </tr>
+                `;
+            });
             tbody.innerHTML = htmlFilas;
         };
 
-        // 3. Eliminar el registro completo de un evento
-        const eliminarEvento = () => {
+        const eliminarRegistroAsistencia = () => {
             const claveEvento = eventoSelect.value;
+            if (!claveEvento) return mostrarAlerta("Selección Requerida", "Selecciona un evento de la lista.");
 
-            if (!claveEvento || claveEvento === "") {
-                alert("⚠️ POR FAVOR, SELECCIONA UN EVENTO DE LA LISTA PRIMERO.");
-                return;
-            }
-
-            const nombreEvento = claveEvento.replace(PREFIJO_CLAVE, "").toUpperCase();
-
-            if (!confirm(`⚠️ ADVERTENCIA ⚠️\n\n¿Estás absolutamente seguro de querer eliminar TODO el registro de asistencia del evento:\n"${nombreEvento}"?\n\nEsta acción NO se puede deshacer.`)) {
-                return;
-            }
-
-            // Borrar de base de datos
-            localStorage.removeItem(claveEvento);
-            
-            // Borrar del selector HTML
-            const opcionAEliminar = eventoSelect.querySelector(`option[value="${claveEvento}"]`);
-            if (opcionAEliminar) opcionAEliminar.remove();
-            
-            // Resetear la vista
-            eventoSelect.selectedIndex = 0;
-            mostrarMensaje("SELECCIONE UN EVENTO PARA VER LOS REGISTROS.");
-            
-            alert(`✅ EL REGISTRO DE ASISTENCIA DEL EVENTO "${nombreEvento}" HA SIDO ELIMINADO.`);
+            mostrarConfirmacion(claveEvento.replace(PREFIJO_CLAVE, "").toUpperCase(), () => {
+                localStorage.removeItem(claveEvento);
+                eventoSelect.querySelector(`option[value="${claveEvento}"]`)?.remove();
+                eventoSelect.selectedIndex = 0;
+                mostrarEstadoVacio("Seleccione un evento arriba para ver los registros.", "assignment_ind");
+                sincronizarDashboard(); // Vuelve a sincronizar para quitarlo del Dashboard
+                mostrarToast(`Registro eliminado.`);
+            });
         };
 
-        // 4. Exportar a Excel (XLSX)
         const descargarDatos = () => {
             const claveEvento = eventoSelect.value;
-
-            if (!claveEvento || claveEvento === "") {
-                alert("⚠️ POR FAVOR, SELECCIONA UN EVENTO DE LA LISTA ANTES DE DESCARGAR.");
-                return;
-            }
-
+            if (!claveEvento) return mostrarAlerta("Selección Requerida", "Selecciona un evento antes de exportar.");
             const registros = JSON.parse(localStorage.getItem(claveEvento)) || [];
-
-            if (registros.length === 0) {
-                alert("⚠️ NO HAY DATOS DE ASISTENCIA PARA EXPORTAR EN ESTE EVENTO.");
-                return;
-            }
+            if (registros.length === 0) return mostrarAlerta("Sin Datos", "No hay datos para exportar.");
 
             const nombreEvento = claveEvento.replace(PREFIJO_CLAVE, "").toUpperCase();
+            const datosOficialesEvento = obtenerDatosOficialesDelEvento(nombreEvento);
+            const fechaOficialInicio = datosOficialesEvento ? datosOficialesEvento.FechaEvento : null;
+            const horaOficialInicio = datosOficialesEvento ? datosOficialesEvento.HoraEntrante : null;
 
-            // Mapear los datos al formato Excel
-            const datosExcel = registros.map(r => ({
-                "CÓDIGO": r.codigo || "-",
-                "DNI": r.dni || "-",
-                "APELLIDOS Y NOMBRES": `${r.apellidos || ''} ${r.nombres || ''}`.trim(),
-                "CARGO": r.cargo || "-",
-                "FECHA": r.fecha || "-",
-                "HORA ENTRADA": r.entrada || "-",
-                "HORA SALIDA": r.salida || "-",
-                "TARDANZA": r.tardanza || "-",
-                "TIEMPO TOTAL": r.horasTrabajadas || "-"
-            }));
+            const datosExcel = registros.map(r => {
+                let textoTardanza = '---', textoTiempoTotal = '---';
+                let sedeTrabajador = "NO REGISTRADA";
+                if(r.codigo) { const emp = dbPersonal.find(p => p.codigo === r.codigo); if(emp && emp.area) sedeTrabajador = emp.area; }
+                const fechaEntradaTrabajador = r.fechaEntrada || r.fecha || '-';
+                const fechaSalidaTrabajador = r.fechaSalida || fechaEntradaTrabajador; 
+
+                if (fechaOficialInicio && horaOficialInicio && fechaEntradaTrabajador !== '-' && r.entrada && r.entrada !== '-') {
+                    const minsTarde = calcularDiferenciaMinutos(fechaOficialInicio, horaOficialInicio, fechaEntradaTrabajador, r.entrada);
+                    if (minsTarde !== null) textoTardanza = minsTarde > 0 ? formatoHorasMinutos(minsTarde) : 'A tiempo';
+                }
+                if (fechaEntradaTrabajador !== '-' && r.entrada !== '-' && fechaSalidaTrabajador !== '-' && r.salida && r.salida !== '-') {
+                    const minsTrabajados = calcularDiferenciaMinutos(fechaEntradaTrabajador, r.entrada, fechaSalidaTrabajador, r.salida);
+                    if (minsTrabajados !== null) textoTiempoTotal = formatoHorasMinutos(minsTrabajados);
+                }
+
+                return {
+                    "CÓDIGO": r.codigo || "-", "DNI": r.dni || "-", "SEDE / ÁREA": sedeTrabajador,
+                    "APELLIDOS Y NOMBRES": `${r.apellidos || ''} ${r.nombres || ''}`.trim(),
+                    "FECHA INGRESO": fechaEntradaTrabajador, "HORA ENTRADA": r.entrada || "-",
+                    "FECHA SALIDA": r.salida && r.salida !== '-' ? fechaSalidaTrabajador : '-',
+                    "HORA SALIDA": r.salida || "-", "TARDANZA": textoTardanza, "TIEMPO TOTAL TRABAJADO": textoTiempoTotal
+                };
+            });
 
             try {
-                // Crear hoja y empezar en A2
                 const hoja = XLSX.utils.json_to_sheet(datosExcel, { origin: "A2" });
-
-                // Título en la celda A1
-                XLSX.utils.sheet_add_aoa(hoja, [[`REPORTE DE ASISTENCIA OFICIAL - EVENTO: ${nombreEvento}`]], { origin: "A1" });
-
-                // Ajustar ancho de columnas
-                hoja["!cols"] = [
-                    { wch: 12 },  // A: Código
-                    { wch: 12 },  // B: DNI
-                    { wch: 45 },  // C: Nombres
-                    { wch: 30 },  // D: Cargo
-                    { wch: 15 },  // E: Fecha
-                    { wch: 15 },  // F: Entrada
-                    { wch: 15 },  // G: Salida
-                    { wch: 18 },  // H: Tardanza
-                    { wch: 20 },  // I: Tiempo Total
-                ];
-
-                const libro = XLSX.utils.book_new();
-                XLSX.utils.book_append_sheet(libro, hoja, "Asistencias");
-
-                const nombreArchivo = `Reporte_Asistencia_${nombreEvento.replace(/\s+/g, "_")}.xlsx`;
-                XLSX.writeFile(libro, nombreArchivo);
-            
-            } catch (error) {
-                console.error(error);
-                alert("❌ Ocurrió un error al intentar generar el archivo Excel. Asegúrese de tener conexión a internet.");
-            }
+                XLSX.utils.sheet_add_aoa(hoja, [[`REPORTE DE ASISTENCIA - EVENTO: ${nombreEvento}`]], { origin: "A1" });
+                hoja["!cols"] = [{ wch: 12 }, { wch: 12 }, { wch: 18 }, { wch: 45 }, { wch: 15 }, { wch: 15 }, { wch: 15 }, { wch: 15 }, { wch: 18 }, { wch: 25 }];
+                const libro = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(libro, hoja, "Asistencias");
+                XLSX.writeFile(libro, `Asistencia_${nombreEvento.replace(/\s+/g, "_")}.xlsx`);
+                mostrarToast("Reporte descargado correctamente");
+            } catch (error) { mostrarAlerta("Error de Exportación", "Ocurrió un error al generar el archivo Excel.", "error"); }
         };
 
-        // --- EVENT LISTENERS ---
-        eventoSelect.addEventListener("change", cargarAsistencias);
-        btnEliminar.addEventListener("click", eliminarEvento);
-        btnDescargar.addEventListener("click", descargarDatos);
-
-        // Inicializar
+        document.getElementById("eventoSelect").addEventListener("change", cargarAsistencias);
+        document.getElementById("btnEliminarEvento").addEventListener("click", eliminarRegistroAsistencia);
+        document.getElementById("btnDescargarDatos").addEventListener("click", descargarDatos);
         cargarEventosEnSelect();
     });
 </script>
