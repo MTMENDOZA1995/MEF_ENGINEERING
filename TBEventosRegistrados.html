@@ -5,199 +5,554 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>EVENTOS REGISTRADOS | MEF Engineering & Soluciones</title>
     
+    <!-- FUENTES E ICONOS DE GOOGLE -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+
+    <!-- LIBRERÍA SHEETJS PARA EXPORTAR A EXCEL -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-
-        /* VARIABLES GLOBALES */
+        /* ==========================================
+           SISTEMA DE DISEÑO MEF ENGINEERING (COMPACTO)
+           ========================================== */
         :root {
-            --color-principal: #1d3b20;
-            --color-fondo: #f4f6f5;
-            --color-texto: #333;
-            --color-hover: #e8f5e9;
-            --color-par: #ffffff;
-            --color-impar: #fbfdfb;
+            --primary-color: #1d3b20;
+            --primary-hover: #0a1f0d;
+            --bg-color: #f4f6f8;
+            --surface: #ffffff;
+            --text-dark: #202223;
+            --text-subdued: #6d7175;
+            --border: #c9cccf;
+            --interactive: #2c6ecb;
+            --critical: #d82c0d;
+            --warning: #b98900;
+            --success: #108043;
+            --radius: 8px;
+            --shadow-card: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.03);
         }
 
-        * { 
-            box-sizing: border-box; 
-            margin: 0; 
-            padding: 0; 
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            -webkit-tap-highlight-color: transparent;
         }
 
+        /* LAYOUT FIJO: El body no hace scroll. */
         body {
-            padding: 40px;
-            font-family: 'Inter', -apple-system, sans-serif;
-            background-color: var(--color-fondo);
-            color: var(--color-texto);
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+            height: 100vh;
+            height: 100svh;
+            overflow: hidden;
             display: flex;
             flex-direction: column;
-            align-items: center;
         }
 
-        /* NAVEGACIÓN SUPERIOR */
-        .icon-bar {
+        /* =====================================================
+           ENCABEZADO FIJO (SOLO X A LA DERECHA)
+        ===================================================== */
+        .header {
+            background-color: var(--primary-color);
+            color: #ffffff;
+            padding: 10px 16px;
             display: flex;
             align-items: center;
-            justify-content: flex-start;
-            gap: 20px;
-            width: 100%;
-            max-width: 1000px;
-            margin-bottom: 30px;
+            justify-content: space-between;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            flex-shrink: 0;
+            z-index: 100;
         }
 
-        .icon-bar a img {
-            width: 28px;
-            height: 28px;
+        .header .spacer {
+            width: 32px; /* Mantiene el título centrado */
+        }
+
+        .header h1 {
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-align: center;
+            margin: 0;
+            flex-grow: 1;
+            text-transform: uppercase;
+        }
+
+        .icon-btn {
+            background: rgba(255,255,255,0.08);
+            color: white;
+            border: none;
+            padding: 6px;
+            border-radius: 6px;
             cursor: pointer;
-            transition: transform 0.2s ease, opacity 0.2s ease;
-            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
         }
+        .icon-btn:hover { background: rgba(255,255,255,0.2); transform: scale(1.05); }
+        .icon-btn .material-icons-outlined { font-size: 18px; }
 
-        .icon-bar a img:hover {
-            transform: scale(1.15);
-            opacity: 0.8;
-        }
-
-        /* CONTENEDOR RESPONSIVO DE TABLA */
-        .table-container {
+        /* =====================================================
+           CONTENEDOR PRINCIPAL
+        ===================================================== */
+        .main-container {
+            padding: 20px 15px;
             width: 100%;
-            max-width: 1000px;
+            max-width: 1200px;
+            margin: 0 auto;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            overflow: hidden; /* El scroll está en la tabla */
+            position: relative; /* Para que el FAB flote dentro */
+        }
+
+        /* ZONA DE CONTROLES (DOBLE BUSCADOR FIJO) */
+        .control-bar {
+            background: var(--surface);
+            padding: 12px 16px;
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            justify-content: space-between;
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.03);
+            flex-shrink: 0;
+            flex-wrap: wrap;
+        }
+
+        .search-group {
+            display: flex;
+            gap: 10px;
+            flex-grow: 1;
+            max-width: 600px;
+        }
+
+        .search-wrapper {
+            position: relative;
+            flex: 1;
+            min-width: 140px;
+        }
+
+        .search-wrapper .material-icons-outlined {
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-subdued);
+            font-size: 16px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 8px 10px 8px 32px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 12px;
+            color: var(--text-dark);
+            background-color: var(--bg-color);
+            transition: all 0.3s;
+            outline: none;
+            height: 34px;
+        }
+        .search-input:focus { border-color: var(--primary-color); background-color: var(--surface); box-shadow: 0 0 0 3px rgba(29, 59, 32, 0.1);}
+
+        .action-btn {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            padding: 0 12px;
+            height: 34px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            border: 1px solid #a5d6a7;
+            background-color: #e8f5e9;
+            color: var(--success);
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+        .action-btn .material-icons-outlined { font-size: 16px; }
+        .action-btn:hover { background-color: #c8e6c9; }
+
+        /* =====================================================
+           CONTENEDOR DE LA TABLA (ÁREA CON SCROLL)
+        ===================================================== */
+        .table-card {
+            background-color: var(--surface);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-card);
+            border: 1px solid var(--border);
+            overflow: hidden;
+            width: 100%;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .table-responsive {
+            width: 100%;
             overflow-x: auto;
-            border-radius: 12px;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
-            background-color: #fff;
-            border: 1px solid #e0e0e0;
+            overflow-y: auto; /* Solo la tabla hace scroll vertical */
+            flex-grow: 1;
+            -webkit-overflow-scrolling: touch;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
-            min-width: 700px; /* Evita que las columnas colapsen en móviles */
-        }
-
-        caption {
-            background: linear-gradient(135deg, var(--color-principal), #142d17);
-            color: #fff;
-            font-size: 1.2rem;
-            font-weight: 700;
-            padding: 18px;
-            letter-spacing: 1.5px;
-            text-transform: uppercase;
-            text-align: center;
+            min-width: 800px;
         }
 
         thead {
-            background-color: #e8f5e9;
-            border-bottom: 2px solid #2e7d32;
-        }
-
-        th, td {
-            padding: 16px 14px;
-            font-size: 0.9rem;
-            text-align: center;
-            border-bottom: 1px solid #f0f0f0;
-            white-space: nowrap; 
+            background-color: #f8fafc;
+            position: sticky;
+            top: 0;
+            z-index: 10;
         }
 
         th {
-            color: var(--color-principal);
-            text-transform: uppercase;
+            padding: 12px 10px;
+            font-size: 11px;
             font-weight: 700;
+            color: var(--text-subdued);
+            text-transform: uppercase;
             letter-spacing: 0.5px;
+            text-align: center;
+            border-bottom: 2px solid var(--border);
+            white-space: nowrap;
         }
 
-        tbody tr:nth-child(even) {
-            background-color: var(--color-par);
+        td {
+            padding: 10px 12px;
+            font-size: 12px;
+            border-bottom: 1px solid #f0f2f4;
+            color: var(--text-dark);
+            vertical-align: middle;
+            text-align: center;
+            white-space: nowrap;
         }
 
-        tbody tr:nth-child(odd) {
-            background-color: var(--color-impar);
+        th:nth-child(1), td:nth-child(1) { text-align: left; }
+
+        tbody tr:nth-child(even) { background-color: #fbfdfb; }
+        tbody tr:hover { background-color: #f4f6f8; }
+        
+        .row-title {
+            font-weight: 700;
+            color: var(--primary-color);
         }
 
-        tbody tr:hover {
-            background-color: var(--color-hover);
+        .row-clave {
+            letter-spacing: 2px;
+            color: var(--text-subdued);
+            font-family: monospace;
+            font-size: 13px;
         }
 
-        .acciones {
+        .badge-sede {
+            background: #f4f6f8;
+            color: var(--text-dark);
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: 600;
+            font-size: 11px;
+            display: inline-block;
+            border: 1px solid var(--border);
+        }
+
+        /* ACCIONES DE FILA */
+        .td-actions {
             display: flex;
-            justify-content: center;
             align-items: center;
-            gap: 12px;
+            justify-content: center;
+            gap: 6px;
         }
 
-        .icon-btn {
+        .row-btn {
             background: none;
             border: none;
             cursor: pointer;
-            padding: 6px;
+            padding: 4px;
+            border-radius: 4px;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: transform 0.2s ease;
-            border-radius: 8px;
+            transition: all 0.2s ease;
+            color: var(--text-subdued);
+        }
+        .row-btn .material-icons-outlined { font-size: 18px; }
+        .row-btn.edit:hover { background-color: #e0f2fe; color: var(--interactive); }
+        .row-btn.view:hover { background-color: #e8f5e9; color: var(--success); }
+        .row-btn.delete:hover { background-color: #fef2f2; color: var(--critical); }
+
+        /* ESTADO VACÍO */
+        .empty-state {
+            text-align: center;
+            padding: 50px 20px;
+            color: var(--text-subdued);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .empty-state .material-icons-outlined { font-size: 36px; color: var(--border); margin-bottom: 8px;}
+
+        /* =====================================================
+           BOTÓN FLOTANTE (FAB) PARA REGISTRAR NUEVO EVENTO
+        ===================================================== */
+        .fab-btn {
+            position: fixed;
+            bottom: 60px; /* Sobre el footer */
+            right: 25px;
+            width: 56px;
+            height: 56px;
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(29, 59, 32, 0.3);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            z-index: 1000;
+            border: none;
+        }
+        .fab-btn .material-icons-outlined { font-size: 28px; }
+        .fab-btn:hover { background-color: var(--primary-hover); transform: scale(1.05) translateY(-3px); box-shadow: 0 6px 16px rgba(29, 59, 32, 0.4); }
+        .fab-btn:active { transform: scale(0.95); }
+
+        /* =====================================================
+           PIE DE PÁGINA ESTÁTICO
+        ===================================================== */
+        .card-footer {
+            background-color: var(--surface);
+            text-align: center;
+            padding: 10px;
+            border-top: 1px solid var(--border);
+            flex-shrink: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            z-index: 50;
+        }
+        .card-footer .logo { height: 25px; width: auto; opacity: 0.8; pointer-events: none; }
+
+        /* =====================================================
+           MODALES Y TOAST PRO
+        ===================================================== */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(32, 34, 35, 0.85);
+            display: none; justify-content: center; align-items: center; z-index: 2000; opacity: 0; animation: fadeIn 0.2s forwards;
+            padding: 15px;
+        }
+        .modal-content {
+            background: var(--surface); width: 100%; max-width: 320px; border-radius: var(--radius); box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            overflow: hidden; transform: scale(0.95); animation: scaleUp 0.2s forwards; text-align: center;
+        }
+        .modal-header { padding: 20px 16px 10px; display: flex; flex-direction: column; align-items: center; gap: 6px; font-size: 15px; font-weight: 800; text-transform: uppercase;}
+        .modal-body { padding: 0 16px 16px; color: var(--text-subdued); font-size: 13px; line-height: 1.4;}
+        .modal-footer { padding: 12px 16px; background: #fafbfb; border-top: 1px solid var(--border); display: flex; justify-content: center; gap: 10px;}
+        
+        .modal-header.error { color: var(--critical); }
+        .modal-header.warning { color: var(--warning); }
+        .modal-header .material-icons-outlined { font-size: 40px; margin-bottom: 2px;}
+
+        .btn-modal {
+            padding: 8px 16px; border-radius: 6px; font-size: 13px; font-weight: 700; cursor: pointer; width: 100%; transition: 0.2s; border: none; display: flex; justify-content: center; align-items: center; gap: 4px;
+        }
+        .btn-modal.primary { background-color: var(--primary-color); color: white; }
+        .btn-modal.danger { background-color: var(--critical); color: white; }
+        .btn-modal.outline { background-color: transparent; border: 1px solid var(--border); color: var(--text-dark); }
+        .btn-modal.outline:hover { background-color: var(--bg-color); }
+
+        .toast {
+            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: #202223; color: white; 
+            padding: 10px 16px; border-radius: 8px; font-size: 13px; display: none; z-index: 3000; align-items: center; gap: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15); font-weight: 500;
         }
 
-        .icon-btn:hover {
-            transform: scale(1.15) translateY(-2px);
-            background-color: rgba(46, 125, 50, 0.1);
-        }
+        @keyframes fadeIn { to { opacity: 1; } }
+        @keyframes scaleUp { to { transform: scale(1); } }
 
-        .icon-btn img {
-            width: 22px;
-            height: 22px;
-            pointer-events: none;
-        }
-
-        /* ADAPTACIÓN MÓVIL */
-        @media (max-width: 600px) {
-            body { padding: 15px 10px; }
-            .icon-bar { justify-content: center; margin-bottom: 20px; gap: 25px; }
-            caption { font-size: 1rem; padding: 15px; }
-            th, td { padding: 12px 10px; font-size: 0.85rem; }
-            .icon-btn img { width: 20px; height: 20px; }
+        /* RESPONSIVE MÓVIL */
+        @media (max-width: 650px) {
+            .control-bar { flex-direction: column; align-items: stretch; }
+            .search-group { max-width: 100%; flex-direction: column; align-items: stretch; gap: 8px; }
+            .action-btn { justify-content: center; }
+            .main-container { padding: 10px; }
+            .fab-btn { bottom: 50px; right: 15px; width: 50px; height: 50px; }
         }
     </style>
 </head>
 <body>
 
-    <nav class="icon-bar" aria-label="Navegación principal">
-        <a href="#" title="Volver al Menú Principal" onclick="volverAlMenu(event)">
-            <img src="Iconos/MENU1.webp" alt="Menú Principal">
-        </a>
-        <a href="CrearEvento.html" title="Crear Nuevo Evento">
-            <img src="Iconos/VOLVER.png" alt="Crear Evento">
-        </a>
-        <a href="#" title="Cerrar Sesión Segura" onclick="cerrarSesion(event)">
-            <img src="Iconos/SALIR.png" alt="Cerrar sesión">
-        </a>
-    </nav>
+    <!-- ENCABEZADO FIJO (SOLO X A LA DERECHA) -->
+    <header class="header">
+        <div class="spacer"></div>
+        
+        <h1>PANEL DE EVENTOS</h1>
+        
+        <button class="icon-btn" title="Cerrar y Volver" onclick="window.history.back();">
+            <span class="material-icons-outlined">close</span>
+        </button>
+    </header>
 
-    <main class="table-container">
-        <table>
-            <caption>Gestor de Eventos Registrados</caption>
-            <thead>
-                <tr>
-                    <th>NOMBRE DEL EVENTO</th>
-                    <th>FECHA</th>
-                    <th>HORA</th>
-                    <th>CLAVE</th>
-                    <th>ACCIONES</th>
-                </tr>
-            </thead>
-            <tbody id="tablaCrearLA">
-                </tbody>
-        </table>
+    <!-- CONTENEDOR PRINCIPAL -->
+    <main class="main-container">
+        
+        <!-- BARRA DE CONTROLES (DOBLE BUSCADOR FIJO) -->
+        <div class="control-bar">
+            <div class="search-group">
+                <div class="search-wrapper">
+                    <span class="material-icons-outlined">event</span>
+                    <input type="text" id="buscarNombre" class="search-input" placeholder="Buscar por Nombre..." onkeyup="filtrarTabla()">
+                </div>
+                <div class="search-wrapper">
+                    <span class="material-icons-outlined">calendar_today</span>
+                    <input type="text" id="buscarFecha" class="search-input" placeholder="Buscar por Fecha (YYYY-MM-DD)..." onkeyup="filtrarTabla()">
+                </div>
+            </div>
+            <button class="action-btn export" onclick="exportarExcel()" title="Descargar Base de Datos">
+                <span class="material-icons-outlined">file_download</span>
+                Exportar
+            </button>
+        </div>
+
+        <!-- CONTENEDOR DE LA TABLA (SCROLLABLE) -->
+        <div class="table-card">
+            <div class="table-responsive">
+                <table id="tablaGeneral">
+                    <thead>
+                        <tr>
+                            <th>Nombre del Evento</th>
+                            <th>Sede / Área</th>
+                            <th>Fecha</th>
+                            <th>Hora</th>
+                            <th>Clave</th>
+                            <th style="text-align: center;">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tablaCrearLA">
+                        <!-- Contenido dinámico -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- BOTÓN FLOTANTE (FAB) PARA PROGRAMAR EVENTO -->
+        <button class="fab-btn" onclick="window.location.href='CrearEvento.html'" title="Programar Nuevo Evento">
+            <span class="material-icons-outlined">add</span>
+        </button>
     </main>
+
+    <!-- PIE DE PÁGINA ESTÁTICO -->
+    <footer class="card-footer">
+        <img src="Imagenes/ECFM.png" alt="Logo de MEF Engineering" class="logo" onerror="this.style.display='none'">
+    </footer>
+
+    <!-- ==========================================
+         MODALES Y ALERTAS PRO
+         ========================================== -->
+    
+    <!-- Modal Alerta General -->
+    <div id="modal-alerta" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header warning" id="alerta-header">
+                <span class="material-icons-outlined" id="alerta-icon">warning</span>
+                <span id="alerta-titulo">Atención</span>
+            </div>
+            <div class="modal-body" id="alerta-mensaje">Mensaje aquí.</div>
+            <div class="modal-footer">
+                <button class="btn-modal primary" onclick="cerrarModales()">Entendido</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Confirmación Peligrosa -->
+    <div id="modal-confirmacion" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header error">
+                <span class="material-icons-outlined">delete_forever</span>
+                <span>Eliminar Evento</span>
+            </div>
+            <div class="modal-body" id="confirmacion-mensaje">
+                ¿Estás seguro de eliminar permanentemente este evento? Perderás todas las asistencias vinculadas a él.
+            </div>
+            <div class="modal-footer">
+                <button class="btn-modal outline" onclick="cerrarModales()">Cancelar</button>
+                <button class="btn-modal danger" id="btn-confirmar-eliminar">Sí, eliminar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOAST NOTIFICATION -->
+    <div id="toast" class="toast">
+        <span class="material-icons-outlined" style="color: #4ade80;">check_circle</span>
+        <span id="toast-msg">Operación exitosa</span>
+    </div>
 
 <script>
     'use strict';
 
     // ==========================================
-    // 1. GESTIÓN DE SESIÓN Y NAVEGACIÓN
+    // 1. SISTEMA VISUAL DE MODALES
     // ==========================================
-    function cerrarSesion(e) {
-        if (e && typeof e.preventDefault === 'function') e.preventDefault();
-        alert("🔒 Sesión finalizada de forma segura.");
+    function mostrarAlerta(titulo, mensaje, tipo = 'warning') {
+        const modal = document.getElementById('modal-alerta');
+        const header = document.getElementById('alerta-header');
+        const icon = document.getElementById('alerta-icon');
+        
+        document.getElementById('alerta-titulo').innerText = titulo;
+        document.getElementById('alerta-mensaje').innerText = mensaje;
+
+        header.className = 'modal-header'; 
+        if(tipo === 'error') {
+            header.classList.add('error'); icon.innerText = 'gpp_bad';
+        } else if (tipo === 'warning') {
+            header.classList.add('warning'); icon.innerText = 'warning';
+        }
+
+        modal.style.display = 'flex';
+    }
+
+    function mostrarConfirmacion(nombreEvento, index) {
+        const mensajeHTML = `¿Estás seguro de eliminar el evento:<br><br><strong style="color:var(--text-dark); font-size:14px;">[ ${nombreEvento} ]</strong>?<br><br>Esta acción borrará todas sus asistencias registradas.`;
+        document.getElementById('confirmacion-mensaje').innerHTML = mensajeHTML;
+        
+        const btnConfirmar = document.getElementById('btn-confirmar-eliminar');
+        btnConfirmar.onclick = () => {
+            ejecutarEliminacion(index, nombreEvento);
+        };
+
+        document.getElementById('modal-confirmacion').style.display = 'flex';
+    }
+
+    function cerrarModales() {
+        document.getElementById('modal-alerta').style.display = 'none';
+        document.getElementById('modal-confirmacion').style.display = 'none';
+    }
+
+    function mostrarToast(mensaje) {
+        const toast = document.getElementById('toast');
+        document.getElementById('toast-msg').innerText = mensaje;
+        toast.style.display = 'flex';
+        setTimeout(() => { toast.style.display = 'none'; }, 2000);
+    }
+
+    // ==========================================
+    // 2. GESTIÓN DE SESIÓN Y SEGURIDAD
+    // ==========================================
+    function cerrarSesion() {
         sessionStorage.clear();
         localStorage.setItem("sesionActiva", "no");
         window.location.replace("index.html");
@@ -209,16 +564,13 @@
         }
     }
 
-    function volverAlMenu(e) {
-        if (e && typeof e.preventDefault === 'function') e.preventDefault();
-        window.location.href = sessionStorage.getItem("menuUsuario") || "Botones.html";
-    }
-
-    // Inicializar validaciones
-    window.addEventListener("DOMContentLoaded", validarSesion);
+    window.addEventListener("DOMContentLoaded", () => {
+        validarSesion();
+        cargarEventos();
+    });
     window.addEventListener("pageshow", validarSesion);
 
-    // Temporizador de inactividad (1 Minuto)
+    // Inactividad de 1 Minuto
     let timerInactividad;
     const reiniciarTemporizador = () => {
         clearTimeout(timerInactividad);
@@ -228,16 +580,22 @@
         }, 1 * 60 * 1000); 
     };
 
-    ["mousemove", "keydown", "click", "scroll", "touchstart"].forEach(evento => {
-        document.addEventListener(evento, reiniciarTemporizador, { passive: true });
+    ["mousemove", "keydown", "click", "scroll", "touchstart"].forEach(evt => {
+        document.addEventListener(evt, reiniciarTemporizador, { passive: true });
     });
     reiniciarTemporizador();
 
+    // Bloqueo Anti-Inspección
+    document.addEventListener('contextmenu', function(e) { e.preventDefault(); });
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C')) || (e.ctrlKey && e.key === 'U')) {
+            e.preventDefault();
+        }
+    });
 
     // ==========================================
-    // 2. LÓGICA DE DATOS Y TABLA
+    // 3. LÓGICA DE DATOS Y TABLA
     // ==========================================
-    // NOTA: Se mantiene la key 'CrearLA' en el localStorage para no perder los datos antiguos.
     const STORAGE_KEY = 'CrearLA';
 
     function obtenerEventos() {
@@ -254,99 +612,172 @@
         tabla.innerHTML = '';
 
         if (eventos.length === 0) {
-            tabla.innerHTML = `<tr><td colspan="5" style="text-align:center; padding:20px; font-style:italic; color:#666;">No hay eventos registrados actualmente.</td></tr>`;
+            tabla.innerHTML = `
+                <tr class="empty-row">
+                    <td colspan="6">
+                        <div class="empty-state">
+                            <span class="material-icons-outlined">event_busy</span>
+                            <p style="font-weight:600; font-size:13px; color:var(--text-dark);">No hay eventos registrados.</p>
+                            <p style="font-size:11px; margin-top:4px;">Utilice el botón flotante inferior (+) para programar un evento.</p>
+                        </div>
+                    </td>
+                </tr>`;
             return;
         }
 
         eventos.forEach((evento, index) => {
             const fila = document.createElement('tr');
             
-            // Lógica segura para mostrar asteriscos basados en la longitud de la clave real
+            // Lógica segura para decodificar asteriscos
             let longitudClave = 6; 
             try {
-                // Intenta desencriptar para contar los caracteres reales
                 longitudClave = atob(evento.Clave).length;
             } catch (error) {
-                // Fallback si la clave se guardó sin encriptar
                 longitudClave = (evento.Clave || "******").length;
             }
 
+            // Fallback en caso de que un evento antiguo no tenga Sede registrada
+            const sedeArea = evento.area || evento.sede || "GLOBAL / NO REGISTRADA";
+
             fila.innerHTML = `
-                <td><strong>${evento.NombreEvento || '---'}</strong></td>
+                <td class="row-title">${evento.NombreEvento || '---'}</td>
+                <td><span class="badge-sede">${sedeArea}</span></td>
                 <td>${evento.FechaEvento || '---'}</td>
                 <td>${evento.HoraEntrante || '---'}</td>
-                <td style="letter-spacing: 2px; color: #555;">${'*'.repeat(longitudClave)}</td>
-                <td class="acciones">
-                    <button class="icon-btn" title="Editar Evento" onclick="editarEvento(${index})">
-                        <img src="Iconos/EDITAR.png" alt="Editar">
-                    </button>
-                    <button class="icon-btn" title="Eliminar Evento" onclick="eliminarEvento(${index})">
-                        <img src="Iconos/ELIMINAR.png" alt="Eliminar">
-                    </button>
-                    <button class="icon-btn" title="Ver Panel de Asistencias" onclick="verAsistencias(${index})">
-                        <img src="Iconos/VER.png" alt="Ver">
-                    </button>
+                <td class="row-clave">${'*'.repeat(longitudClave)}</td>
+                <td>
+                    <div class="td-actions">
+                        <button class="row-btn edit" title="Editar Evento" onclick="editarEvento(${index})">
+                            <span class="material-icons-outlined">edit</span>
+                        </button>
+                        <button class="row-btn view" title="Ver Panel de Asistencias" onclick="verAsistencias(${index})">
+                            <span class="material-icons-outlined">visibility</span>
+                        </button>
+                        <button class="row-btn delete" title="Eliminar Evento" onclick="mostrarConfirmacion('${evento.NombreEvento}', ${index})">
+                            <span class="material-icons-outlined">delete</span>
+                        </button>
+                    </div>
                 </td>
             `;
             tabla.appendChild(fila);
         });
     }
 
+    // ==========================================
+    // 4. DOBLE FILTRO (Buscador)
+    // ==========================================
+    function filtrarTabla() {
+        const filtroNombre = document.getElementById("buscarNombre").value.toUpperCase();
+        const filtroFecha = document.getElementById("buscarFecha").value.toUpperCase();
+        const tabla = document.getElementById("tablaCrearLA");
+        const filas = tabla.getElementsByTagName("tr");
+
+        for (let i = 0; i < filas.length; i++) {
+            if (filas[i].classList.contains('empty-row')) continue;
+
+            // Índices de columnas: 0:Nombre, 1:Sede, 2:Fecha
+            const tdNombre = filas[i].getElementsByTagName("td")[0];
+            const tdFecha = filas[i].getElementsByTagName("td")[2];
+            
+            if (tdNombre && tdFecha) {
+                const txtNombre = tdNombre.textContent || tdNombre.innerText;
+                const txtFecha = tdFecha.textContent || tdFecha.innerText;
+                
+                const matchNombre = txtNombre.toUpperCase().indexOf(filtroNombre) > -1;
+                const matchFecha = txtFecha.toUpperCase().indexOf(filtroFecha) > -1;
+                
+                // AND
+                if (matchNombre && matchFecha) {
+                    filas[i].style.display = "";
+                } else {
+                    filas[i].style.display = "none";
+                }
+            }
+        }
+    }
 
     // ==========================================
-    // 3. FUNCIONES DE ACCIÓN (CRUD)
+    // 5. FUNCIONES DE ACCIÓN (CRUD)
     // ==========================================
-    function eliminarEvento(index) {
+    function ejecutarEliminacion(index, nombreEvento) {
         const eventos = obtenerEventos();
-        const eventoAEliminar = eventos[index];
         
-        const confirmacion = confirm(`⚠️ ADVERTENCIA CRÍTICA:\n\n¿Estás seguro de que deseas eliminar permanentemente el evento:\n[ ${eventoAEliminar.NombreEvento} ]?\n\nEsta acción no se puede deshacer.`);
-        
-        if (!confirmacion) return;
-
-        // Limpiar el registro de asistencias atado a ese evento
-        localStorage.removeItem(`asistencia_${eventoAEliminar.NombreEvento}`);
+        // Limpiar el registro de asistencias atado a ese evento específico
+        localStorage.removeItem(`asistencia_${nombreEvento}`);
 
         // Eliminar el evento y recargar tabla
         eventos.splice(index, 1);
         guardarEventos(eventos);
+        
+        cerrarModales();
         cargarEventos();
+        document.getElementById('buscarNombre').value = '';
+        document.getElementById('buscarFecha').value = '';
+        mostrarToast("Evento eliminado exitosamente");
     }
 
-    function editarEvento(index) {
+    window.editarEvento = function(index) {
         const eventos = obtenerEventos();
         const evento = eventos[index];
 
         if (!evento) {
-            alert("⚠️ ERROR: No se encontró el evento solicitado.");
+            mostrarAlerta("Error de Sistema", "No se encontró el evento solicitado.", "error");
             return;
         }
 
-        // Guardar el caché temporal para la página de edición
         localStorage.setItem('eventoEditar', JSON.stringify(evento));
         localStorage.setItem('eventoEditarIndex', index.toString());
         window.location.href = 'EditarEvento.html';
     }
 
-    function verAsistencias(index) {
+    window.verAsistencias = function(index) {
         const eventos = obtenerEventos();
         const eventoSeleccionado = eventos[index];
 
         if (!eventoSeleccionado) {
-            alert('⚠️ ERROR: No se encontró el evento.');
+            mostrarAlerta("Error de Sistema", "No se encontró el evento solicitado.", "error");
             return;
         }
 
         // Guardar el evento en memoria para que el Panel de Asistencias sepa cuál abrir
         localStorage.setItem('eventoSeleccionado', JSON.stringify(eventoSeleccionado));
         
-        // Redirigir a la tabla maestra de asistencias (Corregido el .html extra)
+        // Redirigir a la tabla maestra de asistencias
         window.location.href = 'TBRegistroAsistencias.html';
     }
 
-    // --- INICIALIZAR LA TABLA AL CARGAR EL DOM ---
-    document.addEventListener("DOMContentLoaded", cargarEventos);
+    // ==========================================
+    // 6. EXPORTACIÓN A EXCEL
+    // ==========================================
+    window.exportarExcel = function() {
+        const eventos = obtenerEventos();
 
+        if (eventos.length === 0) {
+            mostrarAlerta("Sin Datos", "No hay eventos registrados para exportar.", "warning");
+            return;
+        }
+
+        const datosExcel = eventos.map(e => ({
+            "NOMBRE DEL EVENTO": e.NombreEvento || "-",
+            "SEDE / ÁREA": e.area || e.sede || "GLOBAL / NO REGISTRADA",
+            "FECHA PROGRAMADA": e.FechaEvento || "-",
+            "HORA DE INGRESO": e.HoraEntrante || "-"
+        }));
+
+        try {
+            const hoja = XLSX.utils.json_to_sheet(datosExcel);
+            const libro = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(libro, hoja, "Eventos_Registrados");
+
+            const fecha = new Date().toISOString().split('T')[0];
+            XLSX.writeFile(libro, `Base_Eventos_${fecha}.xlsx`);
+            
+            mostrarToast("Reporte Excel descargado");
+        } catch (error) {
+            console.error(error);
+            mostrarAlerta("Error", "No se pudo generar el archivo Excel.", "error");
+        }
+    }
 </script>
 
 </body>
