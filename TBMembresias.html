@@ -3,378 +3,288 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>CRÉDITOS Y PUNTOS | MEF Engineering & Soluciones</title>
+    <title>CRÉDITOS Y PUNTOS | MEF Engineering</title>
+    
+    <!-- FUENTES E ICONOS DE GOOGLE -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+    
+    <!-- LIBRERÍA SHEETJS PARA EXPORTAR A EXCEL -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
     <style>
-        /* =====================================================
-           IMPORTAR FUENTE Y VARIABLES
-        ===================================================== */
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
-
+        /* ==========================================
+           SISTEMA DE DISEÑO MEF ENGINEERING 
+           ========================================== */
         :root {
-            --mme-primary: #1d3b20;
-            --mme-primary-hover: #142d17;
-            --mme-accent: #2e7d32;
-            --bg-app: #f4f6f5;
-            --bg-card: #ffffff;
-            --text-main: #333333;
-            --border-color: #dcdcdc;
+            --primary-color: #1d3b20;
+            --primary-hover: #0a1f0d;
+            --bg-color: #f4f6f8;
+            --surface: #ffffff;
+            --text-dark: #202223;
+            --text-subdued: #6d7175;
+            --border: #c9cccf;
+            --interactive: #2c6ecb;
+            --critical: #d82c0d;
+            --warning: #b98900;
+            --success: #108043;
+            --radius: 8px;
             --color-puntos: #e65100;
             --color-creditos: #2e7d32;
-            --color-alerta: #d32f2f;
-            --shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+            --shadow-card: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.03);
         }
 
-        body {
-            font-family: 'Inter', -apple-system, sans-serif;
-            background-color: var(--bg-app);
-            margin: 0;
-            padding: 0;
-            color: var(--text-main);
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
 
-        /* =====================================================
-           CONTENEDOR PRINCIPAL
-        ===================================================== */
-        .menu-container {
-            display: flex;
-            flex-direction: column;
-            width: 100%;
-            max-width: 1100px; 
-            margin: 0 auto;
-            min-height: 100vh;
-            min-height: 100svh;
-            background: var(--bg-app);
-        }
+        body { background-color: var(--bg-color); color: var(--text-dark); height: 100vh; height: 100svh; overflow: hidden; display: flex; flex-direction: column; }
 
-        /* ENCABEZADO */
-        .menu-header {
-            background-color: var(--mme-primary);
-            color: #ffffff;
-            padding: 20px;
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        }
+        /* ENCABEZADO FIJO */
+        .header { background-color: var(--primary-color); color: #ffffff; padding: 10px 16px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); flex-shrink: 0; z-index: 100; }
+        .header .spacer { width: 32px; }
+        .header h1 { font-size: 13px; font-weight: 700; letter-spacing: 1px; text-align: center; margin: 0; flex-grow: 1; text-transform: uppercase; }
 
-        .menu-title {
-            font-size: 1.2rem;
-            font-weight: 700;
-            letter-spacing: 1.5px;
-            margin: 0;
-            text-transform: uppercase;
-        }
+        .icon-btn { background: rgba(255,255,255,0.08); color: white; border: none; padding: 6px; border-radius: 6px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s; }
+        .icon-btn:hover { background: rgba(255,255,255,0.2); transform: scale(1.05); }
 
-        .icon-link {
-            position: absolute;
-            left: 20px;
-            display: flex;
-            align-items: center;
-        }
+        /* CONTENEDOR PRINCIPAL Y BARRA DE CONTROLES */
+        .main-container { padding: 20px 15px; width: 100%; max-width: 1200px; margin: 0 auto; flex-grow: 1; display: flex; flex-direction: column; gap: 15px; overflow: hidden; }
 
-        .icon {
-            width: 24px;
-            height: 24px;
-            filter: brightness(0) invert(1);
-            transition: transform 0.2s ease;
-        }
+        .control-bar { background: var(--surface); padding: 12px 16px; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; border-radius: var(--radius); box-shadow: var(--shadow-card); border: 1px solid var(--border); gap: 12px; flex-shrink: 0; }
 
-        .icon:hover {
-            transform: scale(1.15);
-        }
+        .search-group { display: flex; gap: 10px; flex-grow: 1; max-width: 600px; }
+        .search-wrapper { position: relative; flex: 1; min-width: 120px; }
+        .search-wrapper .material-icons-outlined { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--text-subdued); font-size: 16px; }
 
-        section {
-            padding: 25px 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            flex-grow: 1;
-        }
+        .search-input { width: 100%; padding: 8px 10px 8px 32px; border: 1px solid var(--border); border-radius: 6px; font-size: 12px; color: var(--text-dark); background-color: var(--bg-color); transition: 0.3s; outline: none; height: 34px; }
+        .search-input:focus { border-color: var(--primary-color); background-color: var(--surface); box-shadow: 0 0 0 3px rgba(29, 59, 32, 0.1); }
 
-        /* =====================================================
-           BUSCADOR
-        ===================================================== */
-        .search-wrapper {
-            display: flex;
-            gap: 8px;
-            width: 100%;
-            max-width: 500px;
-            margin: 0 auto;
-            position: relative;
-        }
+        .action-btn { display: flex; align-items: center; gap: 4px; padding: 0 16px; height: 34px; border-radius: 6px; font-size: 12px; font-weight: 700; cursor: pointer; border: none; transition: 0.2s; white-space: nowrap; background-color: #e8f5e9; color: var(--success); border: 1px solid #a5d6a7; }
+        .action-btn:hover { background-color: #c8e6c9; }
 
-        .search-wrapper input {
-            width: 100%;
-            padding: 14px 14px 14px 40px; 
-            font-size: 0.95rem;
-            font-family: 'Inter', sans-serif;
-            border: 1.5px solid var(--border-color);
-            border-radius: 8px;
-            outline: none;
-            transition: all 0.3s ease;
-            background: var(--bg-card);
-        }
+        /* TABLA SCROLLABLE */
+        .table-card { background-color: var(--surface); border-radius: var(--radius); box-shadow: var(--shadow-card); border: 1px solid var(--border); overflow: hidden; width: 100%; flex-grow: 1; display: flex; flex-direction: column; }
+        .table-responsive { width: 100%; overflow-x: auto; overflow-y: auto; flex-grow: 1; -webkit-overflow-scrolling: touch; }
 
-        .search-wrapper input:focus {
-            border-color: var(--mme-accent);
-            box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.1);
-        }
+        table { width: 100%; border-collapse: collapse; min-width: 950px; }
+        thead { background-color: #f8fafc; position: sticky; top: 0; z-index: 10; }
+        th { padding: 12px 10px; font-size: 11px; font-weight: 700; color: var(--text-subdued); text-transform: uppercase; letter-spacing: 0.5px; text-align: center; border-bottom: 2px solid var(--border); white-space: nowrap; }
+        td { padding: 10px 12px; font-size: 12px; border-bottom: 1px solid #f0f2f4; color: var(--text-dark); vertical-align: middle; text-align: center; white-space: nowrap; }
+        th:nth-child(3), td:nth-child(3) { text-align: left; } 
+        tbody tr:nth-child(even) { background-color: #fbfdfb; }
+        tbody tr:hover { background-color: #f4f6f8; }
+        td strong { color: var(--primary-color); }
 
-        .search-wrapper::before {
-            content: "🔍";
-            position: absolute;
-            left: 14px;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 1.1rem;
-            opacity: 0.5;
-        }
+        .nota-header { display: block; font-size: 9px; font-weight: 500; opacity: 0.8; margin-top: 2px; text-transform: none; letter-spacing: 0; color: var(--text-subdued); }
 
-        /* =====================================================
-           DISEÑO DE LA TABLA
-        ===================================================== */
-        .table-wrapper {
-            background: var(--bg-card);
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-            border: 1px solid var(--border-color);
-            overflow-x: auto; 
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            min-width: 950px; 
-            font-size: 0.9rem;
-        }
-
-        thead {
-            background-color: #e8f5e9;
-            border-bottom: 2px solid var(--mme-accent);
-        }
-
-        th {
-            color: var(--mme-primary);
-            font-weight: 700;
-            text-align: center;
-            padding: 16px 12px;
-            white-space: nowrap;
-            letter-spacing: 0.5px;
-        }
-
-        td {
-            padding: 14px 12px;
-            border-bottom: 1px solid #f0f0f0;
-            color: #444;
-            text-align: center;
-            vertical-align: middle;
-            white-space: nowrap;
-        }
-
-        th:nth-child(2), td:nth-child(2) {
-            text-align: left; /* Alinear nombres a la izquierda */
-        }
-
-        tbody tr {
-            transition: background-color 0.2s ease;
-        }
-
-        tbody tr:nth-child(even) { background-color: #fafbfa; }
-        tbody tr:hover { background-color: #f1f8f4; }
-
-        /* BADGES Y TEXTOS ESPECIALES */
-        .plan-badge {
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 11px;
-            font-weight: 800;
-            display: inline-block;
-            min-width: 110px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .plan-basico { background: #e8f5e9; color: #2e7d32; border: 1px solid #c8e6c9; }
+        /* BADGES */
+        .plan-badge { padding: 4px 10px; border-radius: 20px; font-size: 10px; font-weight: 800; display: inline-block; min-width: 100px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .plan-basico { background: #e8f5e9; color: var(--success); border: 1px solid #c8e6c9; }
         .plan-aventura { background: #fff3e0; color: #ef6c00; border: 1px solid #ffe0b2; }
         .plan-elite { background: #fffde7; color: #fbc02d; border: 1px solid #fff9c4; }
-        .sin-plan { background: #f5f5f5; color: #999; border: 1px solid #e0e0e0; font-style: italic; }
+        .sin-plan { background: #f1f5f9; color: #94a3b8; border: 1px solid #e2e8f0; font-style: italic; }
 
-        .val-destacado {
-            font-weight: 800;
-            font-size: 16px;
-            font-family: monospace;
-        }
+        .val-destacado { font-weight: 800; font-size: 13px; font-family: monospace; padding: 4px 8px; border-radius: 6px; }
+        .creditos-bg { background: #f0fdf4; color: var(--color-creditos); }
+        .puntos-bg { background: #fff7ed; color: var(--color-puntos); }
 
-        .nota-header {
-            display: block;
-            font-size: 10px;
-            font-weight: 500;
-            opacity: 0.8;
-            margin-top: 4px;
-            text-transform: none;
-            letter-spacing: 0;
-        }
+        .texto-vencido { color: var(--critical); font-weight: 800; background: #fef2f2; padding: 4px 8px; border-radius: 4px; font-size: 11px; display: inline-flex; align-items: center; gap: 4px; }
 
-        .texto-vencido {
-            color: var(--color-alerta);
-            font-weight: 800;
-            background: #ffebee;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 12px;
-        }
+        /* ESTADO VACÍO */
+        .empty-state { text-align: center; padding: 40px 20px; color: var(--text-subdued); display: flex; flex-direction: column; align-items: center; }
+        .empty-state .material-icons-outlined { font-size: 36px; color: var(--border); margin-bottom: 8px; }
 
-        /* =====================================================
-           FOOTER
-        ===================================================== */
-        .card-footer {
-            background-color: var(--bg-card);
-            text-align: center;
-            padding: 15px;
-            border-top: 1px solid var(--border-color);
-            margin-top: auto;
-        }
+        /* FOOTER */
+        .card-footer { background-color: var(--surface); text-align: center; padding: 10px; border-top: 1px solid var(--border); flex-shrink: 0; display: flex; justify-content: center; align-items: center; }
+        .card-footer .logo { height: 25px; width: auto; opacity: 0.8; pointer-events: none; }
 
-        .card-footer .logo {
-            width: 85px;
-            opacity: 0.9;
-            transition: transform 0.2s ease;
-        }
+        /* MODALES Y TOAST */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(32, 34, 35, 0.85); display: none; justify-content: center; align-items: center; z-index: 1000; opacity: 0; animation: fadeIn 0.2s forwards; padding: 15px; }
+        .modal-content { background: var(--surface); width: 100%; max-width: 320px; border-radius: var(--radius); box-shadow: 0 10px 25px rgba(0,0,0,0.2); overflow: hidden; transform: scale(0.95); animation: scaleUp 0.2s forwards; text-align: center; }
+        .modal-header { padding: 20px 16px 10px; display: flex; flex-direction: column; align-items: center; gap: 6px; font-size: 15px; font-weight: 800; text-transform: uppercase;}
+        .modal-body { padding: 0 16px 16px; color: var(--text-subdued); font-size: 13px; line-height: 1.4;}
+        .modal-footer { padding: 12px 16px; background: #fafbfb; border-top: 1px solid var(--border); display: flex; justify-content: center; gap: 10px;}
+        .modal-header.error { color: var(--critical); }
+        .modal-header.warning { color: var(--warning); }
+        .modal-header .material-icons-outlined { font-size: 40px; margin-bottom: 2px;}
 
-        .card-footer a:hover .logo { transform: scale(1.05); }
+        .btn-modal { padding: 8px 16px; border-radius: 6px; font-size: 13px; font-weight: 700; cursor: pointer; width: 100%; transition: 0.2s; border: none; }
+        .btn-modal.primary { background-color: var(--primary-color); color: white; }
+        .btn-modal.primary:hover { background-color: var(--primary-hover); }
 
-        /* =====================================================
-           RESPONSIVE MÓVIL
-        ===================================================== */
-        @media (max-width: 600px) {
-            section { padding: 15px 10px; }
-            .menu-title { font-size: 1rem; }
-            .table-wrapper { border-radius: 8px; }
-            .search-wrapper input { padding: 12px 12px 12px 35px; }
+        .toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: #202223; color: white; padding: 10px 16px; border-radius: 8px; font-size: 13px; display: none; z-index: 1200; align-items: center; gap: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); font-weight: 500; }
+
+        @keyframes fadeIn { to { opacity: 1; } }
+        @keyframes scaleUp { to { transform: scale(1); } }
+
+        @media (max-width: 650px) {
+            .control-bar { flex-direction: column; align-items: stretch; }
+            .search-group { max-width: 100%; flex-direction: column; align-items: stretch; gap: 8px; }
+            .action-btn { justify-content: center; }
+            .main-container { padding: 10px; }
         }
     </style>
 </head>
 <body>
 
-    <main class="menu-container">
+    <header class="header">
+        <div class="spacer"></div>
+        <h1>MEMBRESIAS Y ECOPOINTS</h1>
+        <button class="icon-btn" title="Cerrar y Volver" onclick="window.history.back();">
+            <span class="material-icons-outlined">close</span>
+        </button>
+    </header>
+
+    <main class="main-container">
         
-        <header class="menu-header">
-            <a href="ListaTablas.html" class="icon-link" title="Volver a Membresías">
-                <img src="Iconos/VOLVER.png" alt="Volver" class="icon">
-            </a>
-            <h1 class="menu-title">CRÉDITOS Y PUNTOS</h1>
-        </header>
-
-        <section>
-            <div class="search-wrapper">
-                <input type="text" id="buscador" placeholder="Buscar por Código o Nombre del Cliente..." onkeyup="filtrarTabla()">
+        <div class="control-bar">
+            <div class="search-group">
+                <div class="search-wrapper">
+                    <span class="material-icons-outlined">badge</span>
+                    <input type="text" id="buscarCodigo" class="search-input" placeholder="Buscar por Código..." onkeyup="filtrarTabla()">
+                </div>
+                <div class="search-wrapper">
+                    <span class="material-icons-outlined">person_search</span>
+                    <input type="text" id="buscarNombre" class="search-input" placeholder="Buscar por Nombre..." onkeyup="filtrarTabla()">
+                </div>
             </div>
+            
+            <button class="action-btn" onclick="exportarExcel()" title="Descargar Excel">
+                <span class="material-icons-outlined">file_download</span> Exportar Estado
+            </button>
+        </div>
 
-            <div class="table-wrapper">
-                <table>
+        <div class="table-card">
+            <div class="table-responsive">
+                <table id="tablaGeneral">
                     <thead>
                         <tr>
-                            <th>CÓDIGO</th>
-                            <th>CLIENTE</th>
-                            <th>PLAN ACTUAL</th>
-                            <th>CRÉDITOS <span class="nota-header">(Caducan a los 30 días)</span></th>
-                            <th>PUNTOS <span class="nota-header">(No caducan)</span></th>
-                            <th>FECHA INICIO</th>
-                            <th>CADUCIDAD</th>
+                            <th>Código</th>
+                            <th>Sede / Área</th>
+                            <th>Cliente</th>
+                            <th>Plan Actual</th>
+                            <th>Créditos <span class="nota-header">(Caducan a los 30 días)</span></th>
+                            <th>Ecopoints <span class="nota-header">(No caducan)</span></th>
+                            <th>Fecha Inicio</th>
+                            <th>Caducidad</th>
                         </tr>
                     </thead>
                     <tbody id="tablaMembresias">
-                        </tbody>
+                        <!-- Contenido dinámico -->
+                    </tbody>
                 </table>
             </div>
-        </section>
-
-        <footer class="card-footer">
-            <a href="#" title="Volver al Menú Principal" onclick="volverAlMenu(event)">
-                <img src="Imagenes/ECFM.png" alt="Logo de MEF Engineering" class="logo" />
-            </a>
-        </footer>
-
+        </div>
     </main>
+
+    <footer class="card-footer">
+        <img src="Imagenes/ECFM.png" alt="Logo de MEF Engineering" class="logo" onerror="this.style.display='none'">
+    </footer>
+
+    <!-- MODALES Y TOAST -->
+    <div id="modal-alerta" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header warning" id="alerta-header">
+                <span class="material-icons-outlined" id="alerta-icon">warning</span>
+                <span id="alerta-titulo">Atención</span>
+            </div>
+            <div class="modal-body" id="alerta-mensaje">Mensaje aquí.</div>
+            <div class="modal-footer">
+                <button class="btn-modal primary" onclick="cerrarModalAlerta()">Entendido</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast" class="toast">
+        <span class="material-icons-outlined" style="color: #4ade80;">check_circle</span>
+        <span id="toast-msg">Operación exitosa</span>
+    </div>
 
 <script>
     'use strict';
 
-    // ==========================================
-    // 1. GESTIÓN DE SESIÓN, NAVEGACIÓN E INACTIVIDAD
-    // ==========================================
-    function cerrarSesion(e, mensaje = "🔒 Sesión finalizada de forma segura.") {
-        if (e && typeof e.preventDefault === 'function') e.preventDefault();
-        alert(mensaje);
-        sessionStorage.clear();
-        localStorage.setItem("sesionActiva", "no");
-        window.location.replace("index.html");
+    // 1. SISTEMA VISUAL DE MODALES
+    function mostrarAlerta(titulo, mensaje, tipo = 'warning') {
+        const modal = document.getElementById('modal-alerta');
+        document.getElementById('alerta-titulo').innerText = titulo;
+        document.getElementById('alerta-mensaje').innerText = mensaje;
+        document.getElementById('alerta-header').className = 'modal-header ' + (tipo==='error'?'error':'warning'); 
+        document.getElementById('alerta-icon').innerText = tipo === 'error' ? 'gpp_bad' : 'warning';
+        modal.style.display = 'flex';
     }
 
-    function validarSesion() {
-        if (sessionStorage.getItem("sesionActiva") !== "true") {
-            cerrarSesion(null, "⚠️ ACCESO DENEGADO. SESIÓN CERRADA.");
-        }
+    function cerrarModalAlerta() { document.getElementById('modal-alerta').style.display = 'none'; }
+
+    function mostrarToast(mensaje) {
+        const toast = document.getElementById('toast');
+        document.getElementById('toast-msg').innerText = mensaje;
+        toast.style.display = 'flex';
+        setTimeout(() => toast.style.display = 'none', 2500);
     }
 
-    function volverAlMenu(e) {
-        if (e && typeof e.preventDefault === 'function') e.preventDefault();
-        window.location.href = sessionStorage.getItem("menuUsuario") || "Botones.html";
+    // 2. SEGURIDAD Y SESIÓN
+    function cerrarSesion() {
+        sessionStorage.clear(); localStorage.setItem("sesionActiva", "no"); window.location.replace("index.html");
     }
 
-    window.addEventListener("DOMContentLoaded", () => {
-        validarSesion();
-        cargarMembresias();
-    });
-    window.addEventListener("pageshow", validarSesion);
-
-    // Control estricto de inactividad: 1 minuto
     let timerInactividad;
     const reiniciarTemporizador = () => {
         clearTimeout(timerInactividad);
-        timerInactividad = setTimeout(() => {
-            cerrarSesion(null, "⏰ TIEMPO DE INACTIVIDAD EXCEDIDO. SESIÓN CERRADA.");
-        }, 1 * 60 * 1000); 
+        timerInactividad = setTimeout(() => { alert("⏰ INACTIVIDAD DETECTADA. SESIÓN CERRADA."); cerrarSesion(); }, 60000); 
     };
 
-    ["mousemove", "keydown", "click", "scroll", "touchstart"].forEach(evento => {
-        document.addEventListener(evento, reiniciarTemporizador, { passive: true });
+    window.addEventListener("DOMContentLoaded", () => {
+        if (sessionStorage.getItem("sesionActiva") !== "true") cerrarSesion();
+        cargarMembresias();
     });
-    reiniciarTemporizador();
+    
+    ["mousemove", "keydown", "click", "touchstart"].forEach(evt => document.addEventListener(evt, reiniciarTemporizador, { passive: true }));
+    document.addEventListener('contextmenu', e => e.preventDefault());
+    document.addEventListener('keydown', e => { if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && ['I','J','C'].includes(e.key)) || (e.ctrlKey && e.key === 'U')) e.preventDefault(); });
 
-
-    // ==========================================
-    // 2. FUNCIÓN DE BÚSQUEDA
-    // ==========================================
+    // 3. FUNCIÓN DE BÚSQUEDA DUAL
     function filtrarTabla() {
-        const input = document.getElementById("buscador");
-        const filtro = input.value.toUpperCase();
-        const tabla = document.getElementById("tablaMembresias");
-        const filas = tabla.getElementsByTagName("tr");
+        const filtroCodigo = document.getElementById("buscarCodigo").value.toUpperCase();
+        const filtroNombre = document.getElementById("buscarNombre").value.toUpperCase();
+        const filas = document.getElementById("tablaMembresias").getElementsByTagName("tr");
 
         for (let i = 0; i < filas.length; i++) {
-            if (filas[i].cells.length <= 1) continue; 
+            if (filas[i].classList.contains('empty-row')) continue;
+            const tdCodigo = filas[i].getElementsByTagName("td")[0];
+            const tdNombre = filas[i].getElementsByTagName("td")[2];
 
-            const celdaCodigo = filas[i].cells[0];
-            const celdaNombre = filas[i].cells[1];
-
-            if (celdaCodigo || celdaNombre) {
-                const textoCodigo = celdaCodigo.textContent || celdaCodigo.innerText;
-                const textoNombre = celdaNombre.textContent || celdaNombre.innerText;
-
-                if (textoCodigo.toUpperCase().indexOf(filtro) > -1 || textoNombre.toUpperCase().indexOf(filtro) > -1) {
-                    filas[i].style.display = "";
-                } else {
-                    filas[i].style.display = "none";
-                }
+            if (tdCodigo && tdNombre) {
+                const matchCodigo = tdCodigo.textContent.toUpperCase().indexOf(filtroCodigo) > -1;
+                const matchNombre = tdNombre.textContent.toUpperCase().indexOf(filtroNombre) > -1;
+                filas[i].style.display = (matchCodigo && matchNombre) ? "" : "none";
             }
         }
     }
 
     // ==========================================
-    // 3. CARGAR DATOS Y PROCESAR CADUCIDADES
+    // 4. EL PUENTE MÁGICO PARA EL DASHBOARD
+    // ==========================================
+    function sincronizarDashboardMembresias(clientesConPlan) {
+        let membresiasActivas = [];
+
+        clientesConPlan.forEach(u => {
+            if (u.membresiaActual && u.membresiaActual.trim() !== "") {
+                membresiasActivas.push({
+                    codigoUsuario: u.codigo,
+                    nombres: `${u.nombres} ${u.apellidos}`,
+                    tipoMembresia: u.membresiaActual.toUpperCase(),
+                    // Formatear fecha para que el Dashboard la entienda "YYYY-MM" o "YYYY-MM-DD"
+                    fechaInicio: u.fechaMovimiento ? u.fechaMovimiento.split(',')[0].replace(/\//g, '-') : "S/F"
+                });
+            }
+        });
+
+        // Guardar la tabla maestra que el Dashboard espera leer
+        localStorage.setItem("membresiasActivas", JSON.stringify(membresiasActivas));
+        console.log("¡Membresías sincronizadas para el Dashboard!");
+    }
+
+    // ==========================================
+    // 5. LÓGICA CORE: CARGAR Y EXPIRAR CADUCIDADES
     // ==========================================
     function cargarMembresias() {
         let clientes = JSON.parse(localStorage.getItem('personal')) || [];
@@ -382,76 +292,56 @@
         tbody.innerHTML = '';
 
         if (clientes.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding:30px; font-style:italic; color:#777;">No hay clientes registrados en el sistema.</td></tr>`;
+            tbody.innerHTML = `<tr class="empty-row"><td colspan="8"><div class="empty-state"><span class="material-icons-outlined">group_off</span><p>No hay clientes registrados en el sistema.</p></div></td></tr>`;
             return;
         }
 
         let huboCambios = false;
-
-        // Filtrar clientes que tienen o tuvieron membresías o puntos
-        const clientesConMovimientos = clientes.filter(c => c.membresiaActual || c.creditos || c.puntos);
+        const clientesConMovimientos = clientes.filter(c => c.membresiaActual || c.creditos || c.puntos || c.ecoPuntos);
 
         if (clientesConMovimientos.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding:30px; font-style:italic; color:#777;">Ningún cliente ha registrado planes o puntos aún.</td></tr>`;
+            tbody.innerHTML = `<tr class="empty-row"><td colspan="8"><div class="empty-state"><span class="material-icons-outlined">inbox</span><p>Ningún cliente ha registrado planes o ecopoints aún.</p></div></td></tr>`;
+            sincronizarDashboardMembresias([]); // Sincroniza un array vacío
             return;
         }
 
         clientesConMovimientos.forEach((u) => {
+            const sedeArea = u.area || u.sede || "NO REGISTRADA";
             let tienePlan = u.membresiaActual && u.membresiaActual.trim() !== "";
-            let creditos = u.creditos || 0;
-            let puntos = u.puntos || 0;
+            let creditos = parseInt(u.creditos, 10) || 0;
+            // Se lee puntos o ecoPuntos por compatibilidad con el Cajero
+            let puntos = parseInt(u.puntos || u.ecoPuntos, 10) || 0; 
             
-            let txtFechaInicio = "---";
-            let txtFechaCaducidad = "---";
+            let txtFechaInicio = "---", txtFechaCaducidad = "---";
             let estaCaducado = false;
 
-            // LÓGICA DE FECHAS Y CADUCIDAD
             if (tienePlan && u.fechaMovimiento) {
                 try {
                     let fechaStr = u.fechaMovimiento.split(',')[0].trim();
-                    let partes = fechaStr.split('/');
                     let fInicio;
-
-                    if (partes.length === 3) {
-                        let p1 = parseInt(partes[0], 10);
-                        let p2 = parseInt(partes[1], 10);
-                        let p3 = parseInt(partes[2], 10);
-                        
-                        if (p1 > 12) { fInicio = new Date(p3, p2 - 1, p1); } 
-                        else { fInicio = new Date(p3, p1 - 1, p2); } 
+                    if (fechaStr.includes('/')) {
+                        let partes = fechaStr.split('/');
+                        fInicio = new Date(partes[2], partes[1] - 1, partes[0]);
+                    } else if (fechaStr.includes('-')) {
+                        fInicio = new Date(fechaStr + "T12:00:00"); 
                     } else {
-                        if (u.fechaMovimiento.includes('-') && u.fechaMovimiento.length === 10) {
-                            fInicio = new Date(u.fechaMovimiento + "T12:00:00");
-                        } else {
-                            fInicio = new Date(u.fechaMovimiento);
-                        }
+                        fInicio = new Date(fechaStr);
                     }
 
                     if (!isNaN(fInicio.getTime())) {
                         txtFechaInicio = fInicio.toLocaleDateString();
-
-                        // Caducidad a 30 días
                         let fCaducidad = new Date(fInicio);
                         fCaducidad.setDate(fCaducidad.getDate() + 30);
                         txtFechaCaducidad = fCaducidad.toLocaleDateString();
 
-                        let hoy = new Date();
-                        hoy.setHours(0, 0, 0, 0);
-                        fCaducidad.setHours(0, 0, 0, 0);
+                        let hoy = new Date(); hoy.setHours(0, 0, 0, 0); fCaducidad.setHours(0, 0, 0, 0);
 
-                        // Si la fecha actual supera la caducidad
                         if (hoy > fCaducidad) {
                             estaCaducado = true;
-                            
-                            // REGLA DE NEGOCIO: Retirar plan y créditos. Conservar puntos.
-                            u.membresiaActual = "";
-                            u.creditos = 0; 
-                            
                             tienePlan = false;
                             creditos = 0;
                             huboCambios = true;
                             
-                            // Actualizamos el registro original en "clientes"
                             let indexOriginal = clientes.findIndex(c => c.codigo === u.codigo);
                             if (indexOriginal !== -1) {
                                 clientes[indexOriginal].membresiaActual = "";
@@ -459,44 +349,60 @@
                             }
                         }
                     }
-                } catch (e) {
-                    console.error("Error procesando fecha para usuario:", u.codigo);
-                }
+                } catch (e) { console.error("Error fecha:", u.codigo); }
             }
 
-            // Renderizado visual del badge del plan
             const labelPlan = tienePlan ? u.membresiaActual.toUpperCase() : "SIN PLAN";
             const clasePlan = tienePlan ? `plan-${u.membresiaActual.toLowerCase()}` : "sin-plan";
-            
-            if (!tienePlan) {
-                txtFechaCaducidad = "---";
-                txtFechaInicio = "---";
-            }
+            if (!tienePlan) { txtFechaCaducidad = "---"; txtFechaInicio = "---"; }
 
-            // Creación de la fila
             const fila = document.createElement('tr');
             fila.innerHTML = `
-                <td><strong style="color: var(--mme-primary);">${u.codigo || '---'}</strong></td>
-                <td><strong>${u.nombres || ''}</strong> ${u.apellidos || ''}</td>
+                <td><strong>${u.codigo || '---'}</strong></td>
+                <td><span style="font-weight:600; font-size:11px; padding:4px 8px; border-radius:4px; border:1px solid var(--border); background:#f4f6f8;">${sedeArea}</span></td>
+                <td style="text-align:left;"><strong>${u.nombres || ''}</strong> ${u.apellidos || ''}</td>
                 <td><span class="plan-badge ${clasePlan}">${labelPlan}</span></td>
-                <td style="color: var(--color-creditos);">
-                    <span class="val-destacado">${creditos} CR</span>
-                </td>
-                <td style="color: var(--color-puntos);">
-                    <span class="val-destacado">${puntos} PTS</span>
-                </td>
-                <td style="font-size:13px; color:#555;">${txtFechaInicio}</td>
-                <td style="font-size:13px;">
-                    ${estaCaducado ? '<span class="texto-vencido">⚠️ ACABA DE VENCER</span>' : txtFechaCaducidad}
-                </td>
+                <td><span class="val-destacado creditos-bg">${creditos} CR</span></td>
+                <td><span class="val-destacado puntos-bg">${puntos} PTS</span></td>
+                <td style="color:var(--text-subdued);">${txtFechaInicio}</td>
+                <td>${estaCaducado ? '<span class="texto-vencido"><span class="material-icons-outlined" style="font-size:12px;">warning</span> VENCIDO</span>' : txtFechaCaducidad}</td>
             `;
             tbody.appendChild(fila);
         });
 
-        // ⚠️ GUARDADO: Actualizamos "personal" si hubo caducidades
         if (huboCambios) {
             localStorage.setItem('personal', JSON.stringify(clientes));
+            mostrarToast("Se han actualizado las membresías caducadas");
         }
+
+        // Ejecutar Sincronización para el Dashboard (Vital)
+        sincronizarDashboardMembresias(clientes);
+    }
+
+    // 6. EXPORTACIÓN A EXCEL
+    function exportarExcel() {
+        let clientes = JSON.parse(localStorage.getItem('personal')) || [];
+        const movs = clientes.filter(c => c.membresiaActual || c.creditos || c.puntos || c.ecoPuntos);
+
+        if (movs.length === 0) return mostrarAlerta("Sin Datos", "No hay datos para exportar.");
+
+        const datosExcel = movs.map(u => ({
+            "CÓDIGO": u.codigo || "-",
+            "SEDE / ÁREA": u.area || u.sede || "NO REGISTRADA",
+            "CLIENTE": `${u.nombres || ''} ${u.apellidos || ''}`.trim(),
+            "PLAN ACTUAL": u.membresiaActual ? u.membresiaActual.toUpperCase() : "SIN PLAN",
+            "CRÉDITOS": u.creditos || 0,
+            "ECOPOINTS": u.puntos || u.ecoPuntos || 0,
+            "FECHA ÚLTIMO MOVIMIENTO": u.fechaMovimiento || "-"
+        }));
+
+        try {
+            const hoja = XLSX.utils.json_to_sheet(datosExcel);
+            const libro = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(libro, hoja, "Membresías");
+            XLSX.writeFile(libro, `Estado_Membresias_${new Date().toISOString().split('T')[0]}.xlsx`);
+            mostrarToast("Reporte descargado exitosamente");
+        } catch (error) { mostrarAlerta("Error", "No se pudo generar el archivo Excel.", "error"); }
     }
 </script>
 
