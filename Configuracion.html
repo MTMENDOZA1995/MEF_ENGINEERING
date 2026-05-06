@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>CONFIGURACIÓN | Innovación Sostenible & Atractiva</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+
+    <style>
+        /* ==========================================
+           SISTEMA DE DISEÑO CORPORATIVO
+           ========================================== */
+        :root {
+            --primary-color: #1d3b20;
+            --primary-hover: #0a1f0d;
+            --bg-color: #f4f6f8;
+            --surface: #ffffff;
+            --text-dark: #202223;
+            --text-subdued: #6d7175;
+            --border: #c9cccf;
+            --interactive: #2c6ecb;
+            --critical: #d82c0d;
+            --success: #108043;
+            --warning: #b98900;
+            --radius: 12px;
+            --shadow-card: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.03);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
+
+        body {
+            background-color: var(--bg-color); color: var(--text-dark);
+            height: 100vh; height: 100svh; width: 100vw; display: flex; flex-direction: column; overflow: hidden; 
+            align-items: center; justify-content: center; padding: 15px;
+        }
+
+        /* CONTENEDOR PRINCIPAL ESTANDARIZADO */
+        .container {
+            width: 100%; max-width: 600px; background-color: var(--surface); border-radius: var(--radius);
+            box-shadow: var(--shadow-card); border: 1px solid var(--border); overflow: hidden;
+            display: flex; flex-direction: column; height: 100%; max-height: 850px;
+        }
+
+        /* HEADER */
+        .card-header {
+            background-color: var(--primary-color); color: #ffffff; padding: 12px 20px;
+            display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; z-index: 100;
+        }
+        .card-header .spacer { width: 32px; }
+        .card-header h1 { font-size: 1rem; font-weight: 700; text-transform: uppercase; flex-grow: 1; text-align: center; margin: 0;}
+        .icon-btn { background: rgba(255,255,255,0.1); color: white; border: none; padding: 6px; border-radius: 6px; cursor: pointer; display: flex; align-items: center; transition: 0.2s;}
+        .icon-btn:hover { background: rgba(255,255,255,0.25); transform: scale(1.05);}
+
+        /* NAVEGACIÓN POR PESTAÑAS */
+        .tab-bar {
+            background: #f8fafc; display: flex; border-bottom: 1px solid var(--border);
+            overflow-x: auto; flex-shrink: 0; -webkit-overflow-scrolling: touch;
+        }
+        .tab-bar::-webkit-scrollbar { display: none; }
+        
+        .tab-item {
+            padding: 14px 16px; font-size: 11px; font-weight: 800; color: var(--text-subdued);
+            text-transform: uppercase; cursor: pointer; display: flex; align-items: center; gap: 6px;
+            white-space: nowrap; border-bottom: 3px solid transparent; transition: 0.2s; flex: 1; justify-content: center;
+        }
+        .tab-item:hover { color: var(--primary-color); background: rgba(29, 59, 32, 0.02); }
+        .tab-item.active { color: var(--primary-color); border-bottom-color: var(--primary-color); background: var(--surface); }
+        .tab-item .material-icons-outlined { font-size: 18px; }
+
+        /* CONTENIDO */
+        .config-content { flex-grow: 1; overflow-y: auto; padding: 20px; background: var(--bg-color); }
+        .config-content::-webkit-scrollbar { width: 4px; }
+        .config-content::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+        .tab-panel { display: none; animation: fadeIn 0.3s ease; }
+        .tab-panel.active { display: block; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+        .config-card {
+            background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+            padding: 20px; margin-bottom: 16px; box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        }
+
+        .card-title {
+            font-size: 13px; font-weight: 800; margin-bottom: 12px; color: var(--primary-color);
+            display: flex; align-items: center; gap: 8px; text-transform: uppercase; border-bottom: 1px solid #f0f2f4; padding-bottom: 8px;
+        }
+
+        /* FORMULARIOS INTERNOS */
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; font-size: 11px; font-weight: 700; color: var(--text-subdued); margin-bottom: 5px; text-transform: uppercase; }
+        
+        .input-row { display: flex; gap: 10px; align-items: center; margin-bottom: 12px; }
+        
+        .form-input {
+            width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px;
+            font-size: 13px; outline: none; background: #fbfdfb; transition: 0.2s; font-weight: 500;
+        }
+        .form-input:focus { border-color: var(--interactive); background: var(--surface); box-shadow: 0 0 0 3px rgba(44, 110, 203, 0.1); }
+
+        .btn-save {
+            background: var(--primary-color); color: white; border: none; padding: 12px 20px;
+            border-radius: 8px; font-weight: 800; font-size: 12px; cursor: pointer; width: 100%;
+            text-transform: uppercase; margin-top: 10px; display: flex; justify-content: center; align-items: center; gap: 8px; transition: 0.2s;
+        }
+        .btn-save:hover { background: var(--primary-hover); transform: translateY(-2px); box-shadow: 0 4px 10px rgba(29, 59, 32, 0.2);}
+        
+        .btn-danger { background: var(--critical); color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; font-weight: 800; font-size: 12px; width: 100%; text-transform: uppercase; transition: 0.2s; display: flex; justify-content: center; align-items: center; gap: 8px; }
+        .btn-danger:hover { background: #b9250a; box-shadow: 0 4px 10px rgba(216, 44, 13, 0.2);}
+
+        .list-container { max-height: 300px; overflow-y: auto; border: 1px solid #f0f2f4; border-radius: 8px; background: #fafbfb; }
+        .list-item {
+            display: flex; justify-content: space-between; align-items: center; padding: 10px 15px;
+            border-bottom: 1px solid #f0f2f4; font-size: 12px; font-weight: 600; color: var(--text-dark);
+        }
+        .list-item:last-child { border-bottom: none; }
+        .list-item .btn-delete { color: var(--critical); cursor: pointer; padding: 4px; border-radius: 4px; display: flex; align-items: center; justify-content: center; transition: 0.2s; }
+        .list-item .btn-delete:hover { background: #fef2f2; }
+
+        /* GRID PARA ECOPOINTS Y TOGGLE SWITCH */
+        .eco-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .eco-item { background: #f8fafc; padding: 10px; border-radius: 8px; border: 1px solid #e2e8f0; display: flex; flex-direction: column; gap: 8px; transition: 0.3s; }
+        .eco-item label { font-size: 10px; font-weight: 800; color: var(--interactive); margin: 0; }
+        .eco-item input[type="number"] { font-size: 16px; font-weight: 800; color: var(--success); text-align: center; padding: 6px; }
+        
+        /* Estilos cuando el residuo está bloqueado */
+        .eco-item.inactivo { opacity: 0.55; background: #f1f5f9; }
+        .eco-item.inactivo label { color: var(--text-subdued); text-decoration: line-through; }
+        .eco-item.inactivo input[type="number"] { color: var(--text-subdued); background: #e2e8f0; border-color: #cbd5e1; }
+
+        /* TOGGLE SWITCH ESTILO iOS */
+        .switch { position: relative; display: inline-block; width: 34px; height: 18px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: var(--border); transition: .3s; border-radius: 20px; }
+        .slider:before { position: absolute; content: ""; height: 12px; width: 12px; left: 3px; bottom: 3px; background-color: white; transition: .3s; border-radius: 50%; }
+        input:checked + .slider { background-color: var(--success); }
+        input:checked + .slider:before { transform: translateX(16px); }
+
+        /* MODALES */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(32, 34, 35, 0.85); display: none; justify-content: center; align-items: center; z-index: 2000; opacity: 0; animation: fadeIn 0.2s forwards; padding: 15px; }
+        .modal-content { background: var(--surface); width: 100%; max-width: 320px; border-radius: var(--radius); box-shadow: 0 10px 25px rgba(0,0,0,0.2); overflow: hidden; transform: scale(0.95); animation: scaleUp 0.2s forwards; text-align: center; }
+        .modal-header { padding: 20px 16px 10px; display: flex; flex-direction: column; align-items: center; gap: 6px; font-size: 15px; font-weight: 800; text-transform: uppercase;}
+        .modal-body { padding: 0 16px 16px; color: var(--text-subdued); font-size: 13px; line-height: 1.4; }
+        .modal-footer { padding: 12px 16px; background: #fafbfb; border-top: 1px solid var(--border); display: flex; justify-content: center; gap: 10px;}
+        .modal-header.error { color: var(--critical); }
+        .modal-header.warning { color: var(--warning); }
+        .modal-header .material-icons-outlined { font-size: 40px; margin-bottom: 2px;}
+
+        .btn-modal { padding: 8px 16px; border-radius: 6px; font-size: 13px; font-weight: 700; cursor: pointer; width: 100%; transition: 0.2s; border: none; }
+        .btn-modal.primary { background-color: var(--primary-color); color: white; }
+        .btn-modal.primary:hover { background-color: var(--primary-hover); }
+        .btn-modal.danger { background-color: var(--critical); color: white; }
+        .btn-modal.danger:hover { background-color: #b9250a; }
+        .btn-modal.outline { background-color: transparent; border: 1px solid var(--border); color: var(--text-dark); }
+        .btn-modal.outline:hover { background-color: var(--bg-color); }
+
+        .toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: #202223; color: white; padding: 10px 16px; border-radius: 8px; font-size: 13px; display: none; z-index: 3000; align-items: center; gap: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); font-weight: 500; }
+
+        @media (max-width: 480px) {
+            body { padding: 0; }
+            .container { border-radius: 0; border: none; max-height: 100svh; }
+            .eco-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <main class="container">
+        <header class="card-header">
+            <div class="spacer"></div>
+            <h1>AJUSTES DEL SISTEMA</h1>
+            <button class="icon-btn" onclick="window.history.back();" title="Cerrar"><span class="material-icons-outlined">close</span></button>
+        </header>
+
+        <nav class="tab-bar">
+            <div class="tab-item active" onclick="openTab(event, 'tab-sedes')">
+                <span class="material-icons-outlined">domain</span> RR.HH
+            </div>
+            <div class="tab-item" onclick="openTab(event, 'tab-eco')">
+                <span class="material-icons-outlined">savings</span> EcoPoints
+            </div>
+            <div class="tab-item" onclick="openTab(event, 'tab-seguridad')">
+                <span class="material-icons-outlined">gpp_good</span> Seguridad
+            </div>
+            <div class="tab-item" onclick="openTab(event, 'tab-datos')">
+                <span class="material-icons-outlined">storage</span> Base Datos
+            </div>
+        </nav>
+
+        <section class="config-content">
+
+            <!-- PANEL 1: SEDES (RR.HH) -->
+            <div id="tab-sedes" class="tab-panel active">
+                <div class="config-card">
+                    <div class="card-title"><span class="material-icons-outlined">add_location_alt</span> Ingresar Nueva Sede</div>
+                    <div class="input-row">
+                        <input type="text" id="nuevaSede" class="form-input" placeholder="Nombre de la nueva sede..." oninput="this.value = this.value.toUpperCase()">
+                        <button class="icon-btn" style="background:var(--success)" onclick="agregarItem('sedes', 'nuevaSede', 'listaSedes')" title="Agregar">
+                            <span class="material-icons-outlined">add</span>
+                        </button>
+                    </div>
+                    <div class="list-container" id="listaSedes"></div>
+                </div>
+            </div>
+
+            <!-- PANEL 2: ECOPOINTS (MOTOR RECICLAJE CON BLOQUEO) -->
+            <div id="tab-eco" class="tab-panel">
+                <div class="config-card">
+                    <div class="card-title"><span class="material-icons-outlined">recycling</span> Conversión de Residuos</div>
+                    <p style="font-size: 11px; color: var(--text-subdued); margin-bottom: 15px; line-height: 1.4;">
+                        Ajusta los puntos por kilo o apaga el interruptor para <strong>bloquear</strong> materiales que ya no se reciban.
+                    </p>
+                    <div class="eco-grid" id="listaResiduosConfig">
+                        <!-- Generado Dinámicamente por JS -->
+                    </div>
+                    <button class="btn-save" onclick="guardarEcoConfig()">
+                        <span class="material-icons-outlined">save</span> Guardar Valores
+                    </button>
+                </div>
+            </div>
+
+            <!-- PANEL 3: SEGURIDAD -->
+            <div id="tab-seguridad" class="tab-panel">
+                <div class="config-card">
+                    <div class="card-title"><span class="material-icons-outlined">timer</span> Políticas de Sesión</div>
+                    <div class="form-group">
+                        <label>Desconexión automática (Minutos)</label>
+                        <input type="number" id="tiempoSesion" class="form-input" min="1" max="60" value="1">
+                        <p style="font-size: 10px; color: var(--text-subdued); margin-top: 6px;">Por seguridad, el sistema expulsará a los usuarios inactivos tras este tiempo.</p>
+                    </div>
+                    <button class="btn-save" onclick="guardarSeguridad()">
+                        <span class="material-icons-outlined">update</span> Actualizar Políticas
+                    </button>
+                </div>
+            </div>
+
+            <!-- PANEL 4: DATOS Y MANTENIMIENTO -->
+            <div id="tab-datos" class="tab-panel">
+                <div class="config-card">
+                    <div class="card-title"><span class="material-icons-outlined">cloud_download</span> Respaldos del Sistema</div>
+                    <p style="font-size: 11px; color: var(--text-subdued); margin-bottom: 15px; line-height: 1.4;">
+                        Descarga una copia completa de toda la información en formato .JSON.
+                    </p>
+                    <button class="btn-save" style="background:var(--interactive); color:white;" onclick="exportarBaseDatos()">
+                        <span class="material-icons-outlined">download</span> Extraer Base de Datos
+                    </button>
+                </div>
+
+                <div class="config-card" style="border-color: var(--warning);">
+                    <div class="card-title" style="color:var(--warning); border-bottom-color: #fef08a;"><span class="material-icons-outlined">cloud_upload</span> Restaurar Sistema</div>
+                    <p style="font-size: 11px; color: var(--text-subdued); margin-bottom: 15px; line-height: 1.4;">
+                        Sube un archivo .JSON de respaldo para restaurar toda la información del sistema. <strong>Advertencia:</strong> Esto sobrescribirá los datos actuales.
+                    </p>
+                    <input type="file" id="fileImport" accept=".json" style="display:none" onchange="procesarImportacion(event)">
+                    <button class="btn-save" style="background:var(--warning); color:white;" onclick="document.getElementById('fileImport').click()">
+                        <span class="material-icons-outlined">upload</span> Importar Base de Datos (.JSON)
+                    </button>
+                </div>
+
+                <div class="config-card" style="border-color: #fca5a5; background: #fff5f5;">
+                    <div class="card-title" style="color:var(--critical); border-bottom-color: #fca5a5;">
+                        <span class="material-icons-outlined">dangerous</span> Zona de Peligro
+                    </div>
+                    <p style="font-size: 11px; color: var(--critical); margin-bottom: 15px; font-weight: 600;">
+                        Esta acción formateará el sistema a su estado de fábrica. Toda la información almacenada en este dispositivo será destruida permanentemente.
+                    </p>
+                    <button class="btn-danger" onclick="abrirModalFormateo()">
+                        <span class="material-icons-outlined">delete_forever</span> Formatear Sistema
+                    </button>
+                </div>
+            </div>
+
+        </section>
+    </main>
+
+    <!-- MODALES Y TOAST -->
+    <div id="modal-alerta" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header warning" id="alerta-header">
+                <span class="material-icons-outlined" id="alerta-icon">warning</span>
+                <span id="alerta-titulo">Atención</span>
+            </div>
+            <div class="modal-body" id="alerta-mensaje"></div>
+            <div class="modal-footer">
+                <button class="btn-modal primary" onclick="cerrarModales()">Entendido</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DE FORMATEO -->
+    <div id="modal-prompt" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header error">
+                <span class="material-icons-outlined">warning_amber</span>
+                <span>Autorización Requerida</span>
+            </div>
+            <div class="modal-body">
+                Para proceder con la destrucción de la base de datos, ingrese la <strong>Contraseña del Administrador Maestro</strong>.
+                <input type="password" id="inputMasterKey" class="form-input" style="margin-top: 15px; text-align: center; letter-spacing: 2px;" placeholder="********">
+            </div>
+            <div class="modal-footer">
+                <button class="btn-modal outline" onclick="cerrarModales()">Cancelar</button>
+                <button class="btn-modal danger" onclick="ejecutarFormateo()">Confirmar Destrucción</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast" class="toast">
+        <span class="material-icons-outlined" style="color: #4ade80;">check_circle</span>
+        <span id="toast-msg">Operación exitosa</span>
+    </div>
+
+<script>
+    'use strict';
+
+    function mostrarAlerta(titulo, mensaje, tipo = 'warning') {
+        const modal = document.getElementById('modal-alerta');
+        document.getElementById('alerta-titulo').innerText = titulo;
+        document.getElementById('alerta-mensaje').innerText = mensaje;
+        document.getElementById('alerta-header').className = 'modal-header ' + (tipo==='error'?'error':'warning'); 
+        document.getElementById('alerta-icon').innerText = tipo === 'error' ? 'gpp_bad' : 'warning';
+        modal.style.display = 'flex';
+    }
+
+    function cerrarModales() {
+        document.getElementById('modal-alerta').style.display = 'none';
+        document.getElementById('modal-prompt').style.display = 'none';
+        document.getElementById('inputMasterKey').value = '';
+    }
+
+    function mostrarToast(mensaje) {
+        const toast = document.getElementById('toast');
+        document.getElementById('toast-msg').innerText = mensaje;
+        toast.style.display = 'flex';
+        setTimeout(() => toast.style.display = 'none', 2500);
+    }
+
+    function cerrarSesion() {
+        sessionStorage.clear(); localStorage.setItem("sesionActiva", "no"); window.location.replace("index.html");
+    }
+
+    window.addEventListener("DOMContentLoaded", () => {
+        if (sessionStorage.getItem("sesionActiva") !== "true") return cerrarSesion();
+
+        const rolUsuario = sessionStorage.getItem("rolUsuario") || "";
+        const idUsuario = sessionStorage.getItem("usuarioLogueado") || "";
+        
+        if (rolUsuario !== "ADMINISTRADOR" && rolUsuario !== "GERENTE" && idUsuario !== "MTMENDOZA") {
+            alert("Acceso Denegado. Solo personal autorizado.");
+            window.location.replace("Botones.html");
+        }
+
+        inicializarSistema();
+    });
+
+    let timerInactividad;
+    const reiniciarTemporizador = () => {
+        clearTimeout(timerInactividad);
+        const mins = parseInt(localStorage.getItem('config_timeout')) || 1;
+        timerInactividad = setTimeout(() => { alert("⏰ INACTIVIDAD DETECTADA. SESIÓN CERRADA."); cerrarSesion(); }, mins * 60000); 
+    };
+    ["mousemove", "keydown", "click", "touchstart"].forEach(evt => document.addEventListener(evt, reiniciarTemporizador, { passive: true }));
+    document.addEventListener('contextmenu', e => e.preventDefault());
+    document.addEventListener('keydown', e => { if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && ['I','J','C'].includes(e.key)) || (e.ctrlKey && e.key === 'U')) e.preventDefault(); });
+
+    function openTab(evt, tabId) {
+        document.querySelectorAll(".tab-panel").forEach(el => el.classList.remove("active"));
+        document.querySelectorAll(".tab-item").forEach(el => el.classList.remove("active"));
+        document.getElementById(tabId).classList.add("active");
+        evt.currentTarget.classList.add("active");
+    }
+
+    function inicializarSistema() {
+        const sedesDefault = ["SANTA ELENA", "MOLLEPAMPA ALTA", "BAÑOS DEL INCA", "NUEVO CAJAMARCA", "GLOBAL (TODAS)"];
+        
+        if(!localStorage.getItem('config_sedes')) localStorage.setItem('config_sedes', JSON.stringify(sedesDefault));
+        document.getElementById('tiempoSesion').value = localStorage.getItem('config_timeout') || 1;
+
+        renderLista('config_sedes', 'listaSedes');
+        renderEcoConfig();
+    }
+
+    function renderLista(key, containerId) {
+        const data = JSON.parse(localStorage.getItem(key)) || [];
+        const container = document.getElementById(containerId);
+        container.innerHTML = '';
+        data.forEach((item, index) => {
+            const div = document.createElement('div');
+            div.className = 'list-item';
+            div.innerHTML = `
+                <span>${item}</span>
+                <span class="material-icons-outlined btn-delete" title="Eliminar" onclick="eliminarItem('${key}', ${index}, '${containerId}')">delete</span>
+            `;
+            container.appendChild(div);
+        });
+    }
+
+    window.agregarItem = function(type, inputId, containerId) {
+        const val = document.getElementById(inputId).value.trim().toUpperCase();
+        if(!val) return mostrarAlerta("Campo Vacío", "Ingrese un nombre válido antes de agregar.");
+        
+        const key = 'config_' + type;
+        const data = JSON.parse(localStorage.getItem(key)) || [];
+        if (data.includes(val)) return mostrarAlerta("Duplicado", `El registro "${val}" ya existe en el sistema.`);
+        
+        data.push(val);
+        localStorage.setItem(key, JSON.stringify(data));
+        document.getElementById(inputId).value = '';
+        renderLista(key, containerId);
+        mostrarToast("Registro agregado");
+    }
+
+    window.eliminarItem = function(key, index, containerId) {
+        const data = JSON.parse(localStorage.getItem(key)) || [];
+        data.splice(index, 1);
+        localStorage.setItem(key, JSON.stringify(data));
+        renderLista(key, containerId);
+        mostrarToast("Registro eliminado");
+    }
+
+    // ==========================================
+    // LÓGICA DE ECOPOINTS (MOTOR CAJERO CON BLOQUEO)
+    // ==========================================
+    function renderEcoConfig() {
+        const residuosDefault = [
+            { nombre: "PLÁSTICO (PET)", puntos: 5, activo: true }, 
+            { nombre: "PAPEL", puntos: 2, activo: true },
+            { nombre: "CARTÓN", puntos: 2, activo: true }, 
+            { nombre: "METALES", puntos: 5, activo: true },
+            { nombre: "COBRE", puntos: 50, activo: true }, 
+            { nombre: "BRONCE", puntos: 30, activo: true },
+            { nombre: "ALUMINIO", puntos: 15, activo: true }, 
+            { nombre: "RAEE", puntos: 25, activo: true }
+        ];
+
+        let residuosDB = JSON.parse(localStorage.getItem('config_residuos'));
+        if (!residuosDB || residuosDB.length < 8) {
+            residuosDB = residuosDefault;
+            localStorage.setItem('config_residuos', JSON.stringify(residuosDB));
+        } else {
+            // Migración para bases de datos viejas que no tenían la propiedad 'activo'
+            residuosDB = residuosDB.map(r => ({...r, activo: r.activo !== false}));
+        }
+
+        const container = document.getElementById('listaResiduosConfig');
+        container.innerHTML = '';
+        
+        residuosDB.forEach((r, i) => {
+            const isChecked = r.activo ? 'checked' : '';
+            const isInactiveClass = !r.activo ? 'inactivo' : '';
+            const isInputDisabled = !r.activo ? 'disabled' : '';
+
+            container.innerHTML += `
+                <div class="eco-item ${isInactiveClass}" id="eco-box-${i}">
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <label>${r.nombre}</label>
+                        <label class="switch" title="Bloquear / Desbloquear Residuo">
+                            <input type="checkbox" class="eco-toggle" data-index="${i}" ${isChecked} onchange="toggleResiduo(${i}, this)">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <input type="number" class="form-input eco-val" id="eco-val-${i}" data-index="${i}" min="0" step="1" value="${r.puntos}" ${isInputDisabled}>
+                </div>
+            `;
+        });
+    }
+
+    // Efecto visual instantáneo al tocar el interruptor
+    window.toggleResiduo = function(index, checkbox) {
+        const box = document.getElementById(`eco-box-${index}`);
+        const input = document.getElementById(`eco-val-${index}`);
+        
+        if (checkbox.checked) {
+            box.classList.remove('inactivo');
+            input.disabled = false;
+        } else {
+            box.classList.add('inactivo');
+            input.disabled = true;
+        }
+    }
+
+    window.guardarEcoConfig = function() {
+        const inputs = document.querySelectorAll('.eco-val');
+        const toggles = document.querySelectorAll('.eco-toggle');
+        let residuos = JSON.parse(localStorage.getItem('config_residuos'));
+        
+        inputs.forEach((input, index) => {
+            const idx = input.dataset.index;
+            const val = parseFloat(input.value);
+            
+            residuos[idx].puntos = isNaN(val) || val < 0 ? 0 : val;
+            residuos[idx].activo = toggles[index].checked; // Guarda si el switch está prendido o apagado
+        });
+        
+        localStorage.setItem('config_residuos', JSON.stringify(residuos));
+        mostrarToast("Valores y bloqueos sincronizados.");
+    }
+
+    // ==========================================
+    // SEGURIDAD, BACKUP Y FORMATEO
+    // ==========================================
+    window.guardarSeguridad = function() {
+        const mins = parseInt(document.getElementById('tiempoSesion').value, 10);
+        if (isNaN(mins) || mins < 1 || mins > 60) return mostrarAlerta("Valor Inválido", "El tiempo debe estar entre 1 y 60 minutos.");
+        
+        localStorage.setItem('config_timeout', mins);
+        mostrarToast("Política de sesión actualizada");
+        reiniciarTemporizador(); 
+    }
+
+    window.exportarBaseDatos = function() {
+        const baseCompleta = {
+            fechaExportacion: new Date().toISOString(),
+            personal: JSON.parse(localStorage.getItem('personal')) || [],
+            usuarios: JSON.parse(localStorage.getItem('usuarios')) || [],
+            eventos: JSON.parse(localStorage.getItem('CrearLA')) || [],
+            asistencias: JSON.parse(localStorage.getItem('registroAsistencias')) || [],
+            reciclaje: JSON.parse(localStorage.getItem('registroReciclaje')) || [],
+            membresias: JSON.parse(localStorage.getItem('membresiasActivas')) || [],
+            configuracion: {
+                sedes: JSON.parse(localStorage.getItem('config_sedes')),
+                residuos: JSON.parse(localStorage.getItem('config_residuos')),
+                timeout: localStorage.getItem('config_timeout')
+            }
+        };
+
+        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(baseCompleta, null, 2));
+        const downloadAnchorNode = document.createElement('a');
+        downloadAnchorNode.setAttribute("href", dataStr);
+        downloadAnchorNode.setAttribute("download", `Backup_MEF_${new Date().toISOString().split('T')[0]}.json`);
+        document.body.appendChild(downloadAnchorNode);
+        downloadAnchorNode.click();
+        downloadAnchorNode.remove();
+        mostrarToast("Base de Datos exportada exitosamente.");
+    }
+
+    window.procesarImportacion = function(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            try {
+                const data = JSON.parse(e.target.result);
+                
+                if (!data.personal && !data.configuracion) {
+                    throw new Error("Formato inválido");
+                }
+
+                if (confirm("⚠️ ADVERTENCIA CRÍTICA:\n\nEsta acción eliminará los datos actuales y restaurará el sistema con la información del archivo .JSON seleccionado.\n\n¿Deseas continuar con la restauración?")) {
+                    
+                    if (data.personal) localStorage.setItem('personal', JSON.stringify(data.personal));
+                    if (data.usuarios) localStorage.setItem('usuarios', JSON.stringify(data.usuarios));
+                    if (data.eventos) localStorage.setItem('CrearLA', JSON.stringify(data.eventos));
+                    if (data.asistencias) localStorage.setItem('registroAsistencias', JSON.stringify(data.asistencias));
+                    if (data.reciclaje) localStorage.setItem('registroReciclaje', JSON.stringify(data.reciclaje));
+                    if (data.membresias) localStorage.setItem('membresiasActivas', JSON.stringify(data.membresias));
+                    
+                    if (data.configuracion) {
+                        if (data.configuracion.sedes) localStorage.setItem('config_sedes', JSON.stringify(data.configuracion.sedes));
+                        if (data.configuracion.residuos) localStorage.setItem('config_residuos', JSON.stringify(data.configuracion.residuos));
+                        if (data.configuracion.timeout) localStorage.setItem('config_timeout', data.configuracion.timeout);
+                    }
+
+                    alert("SISTEMA RESTAURADO CON ÉXITO.\n\nLa aplicación se reiniciará para aplicar los cambios.");
+                    cerrarSesion(); 
+                }
+            } catch (err) {
+                console.error(err);
+                mostrarAlerta("Error de Importación", "El archivo seleccionado no es un respaldo válido del sistema.", "error");
+            }
+            event.target.value = ''; 
+        };
+        reader.readAsText(file);
+    };
+
+    window.abrirModalFormateo = function() {
+        document.getElementById('modal-prompt').style.display = 'flex';
+        document.getElementById('inputMasterKey').focus();
+    }
+
+    window.ejecutarFormateo = function() {
+        const inputKey = document.getElementById('inputMasterKey').value;
+        const MASTER_PASS = "C8KM1Y0F1I3K1S6H.";
+
+        if (inputKey === MASTER_PASS) {
+            localStorage.clear();
+            sessionStorage.clear();
+            alert("Sistema formateado exitosamente. Se cerrará la sesión.");
+            window.location.replace("index.html");
+        } else {
+            cerrarModales();
+            mostrarAlerta("Autorización Fallida", "La contraseña maestra ingresada es incorrecta. Acción bloqueada.", "error");
+        }
+    }
+</script>
+
+</body>
+</html>
