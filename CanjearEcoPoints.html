@@ -4,299 +4,426 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>CANJEAR ECOPOINTS | MEF Engineering & Soluciones</title>
-    
-    <style>
-        /* =====================================================
-           VARIABLES Y RESET
-        ===================================================== */
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
+    <!-- FUENTES E ICONOS DE GOOGLE -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+
+    <style>
+        /* ==========================================
+           SISTEMA DE DISEÑO MEF ENGINEERING (COMPACTO)
+           ========================================== */
         :root {
             --primary-color: #1d3b20;
-            --primary-hover: #143117;
-            --bg-color: #f4f6f5;
-            --white: #ffffff;
-            --text-dark: #333333;
-            --text-light: #666666;
-            --danger-color: #d32f2f; /* Rojo para costo */
-            --danger-bg: #ffebee;    /* Fondo rosa para costo */
-            --shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
-            --transition: all 0.25s ease;
+            --primary-hover: #0a1f0d;
+            --bg-color: #f4f6f8;
+            --surface: #ffffff;
+            --text-dark: #202223;
+            --text-subdued: #6d7175;
+            --border: #c9cccf;
+            --interactive: #2c6ecb;
+            --critical: #d82c0d;
+            --warning: #b98900;
+            --success: #108043;
+            
+            --danger-bg: #ffebee;
+            --shadow-card: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.03);
+            --radius: 10px;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
 
+        /* LAYOUT FIJO */
         body {
             background-color: var(--bg-color);
-            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            color: var(--text-dark);
+            height: 100vh;
+            height: 100svh;
+            overflow: hidden; 
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
-            min-height: 100svh;
-            color: var(--text-dark);
-            padding: 20px;
+            padding: 15px;
         }
 
         /* =====================================================
-           CONTENEDOR GLOBAL
+           CONTENEDOR GLOBAL (TARJETA FIJA Y REDUCIDA)
         ===================================================== */
-        .menu-container {
+        .container {
             width: 100%;
-            max-width: 420px;
-            background-color: var(--white);
-            border: 1.5px solid var(--primary-color);
-            border-radius: 12px;
-            box-shadow: var(--shadow);
+            max-width: 380px; /* Reducido para formato Kiosko */
+            background-color: var(--surface);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-card);
+            border: 1px solid var(--border);
             overflow: hidden;
             display: flex;
             flex-direction: column;
-        }
-
-        .menu-header {
-            background-color: var(--primary-color);
-            color: var(--white);
-            padding: 16px 15px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-        }
-
-        .menu-header .icon-link { position: absolute; left: 15px; }
-        .menu-header .icon { width: 24px; height: 24px; cursor: pointer; transition: var(--transition); }
-        .menu-header .icon:hover { transform: scale(1.15); filter: brightness(1.2); }
-        
-        .menu-title {
-            font-size: 1.1rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin: 0;
+            height: 100%;
+            max-height: 750px;
         }
 
         /* =====================================================
-           TARJETAS COMPACTAS (SERVICIOS)
+           ENCABEZADO FIJO (SOLO X A LA DERECHA)
+        ===================================================== */
+        .card-header {
+            background-color: var(--primary-color);
+            color: #ffffff;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            flex-shrink: 0;
+            z-index: 10;
+        }
+
+        .card-header .spacer {
+            width: 32px; /* Espaciador invisible para centrar el título */
+        }
+
+        .card-header h1 {
+            font-size: 0.95rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            margin: 0;
+            text-align: center;
+            flex-grow: 1;
+            text-transform: uppercase;
+        }
+
+        .icon-btn {
+            background: rgba(255,255,255,0.05);
+            color: white;
+            border: none;
+            padding: 4px;
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            text-decoration: none;
+        }
+        
+        .icon-btn:hover { background: rgba(255,255,255,0.2); transform: scale(1.05); }
+        .icon-btn .material-icons-outlined { font-size: 20px; }
+
+        /* =====================================================
+           CONTENEDOR DE SERVICIOS (LISTA VERTICAL SCROLLABLE)
         ===================================================== */
         .planes-section {
             display: flex;
             flex-direction: column;
-            gap: 12px; /* Reducido */
-            padding: 20px 15px;
+            gap: 14px;
+            padding: 20px 16px;
+            overflow-y: auto;
+            flex-grow: 1;
+            background-color: var(--bg-color);
         }
+        .planes-section::-webkit-scrollbar { width: 0px; background: transparent; }
 
+        /* =====================================================
+           DISEÑO ATRACTIVO DE TARJETAS HORIZONTALES
+        ===================================================== */
         .card-membresia {
-            background: var(--white);
-            padding: 10px; /* Reducido */
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.06);
-            border: 1px solid #e0e0e0;
-            transition: var(--transition);
+            background: var(--surface);
+            padding: 14px 12px;
+            border-radius: var(--radius);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+            border: 1px solid var(--border);
+            transition: all 0.2s ease;
             position: relative;
             overflow: hidden;
             display: flex;
             align-items: center;
-            gap: 12px; /* Reducido */
+            gap: 14px;
             cursor: pointer;
-            min-height: 85px; /* Altura mínima compacta */
-        }
-
-        .card-membresia:hover {
-            box-shadow: 0 4px 12px rgba(29, 59, 32, 0.15);
-            border-color: var(--primary-color);
-            transform: translateY(-2px);
+            min-height: 90px;
         }
 
         .card-membresia:active { transform: scale(0.98); }
 
-        /* IMÁGENES COMPACTAS */
+        /* Borde lateral dinámico */
+        .card-membresia::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 5px;
+            height: 100%;
+            background: var(--border);
+            transition: all 0.2s ease;
+        }
+
+        /* Hover general */
+        .card-membresia:hover {
+            box-shadow: 0 6px 12px rgba(29, 59, 32, 0.1);
+            border-color: var(--primary-color);
+            transform: translateY(-2px);
+        }
+        .card-membresia:hover::before { background: var(--primary-color); }
+
+        /* Hover VIP */
+        .card-membresia.vip:hover {
+            border-color: #fbc02d;
+            box-shadow: 0 6px 12px rgba(251, 192, 45, 0.15);
+        }
+        .card-membresia.vip:hover::before { background: #fbc02d; }
+
+        /* Hover Recomendado */
+        .card-membresia.recomendado:hover {
+            border-color: var(--interactive);
+            box-shadow: 0 6px 12px rgba(44, 110, 203, 0.15);
+        }
+        .card-membresia.recomendado:hover::before { background: var(--interactive); }
+
+        /* CONTENEDOR DE ICONOS NATIVOS */
         .img-container {
-            width: 60px; /* Reducido */
-            height: 60px; /* Reducido */
+            width: 60px;
+            height: 60px;
             border-radius: 8px;
-            background-color: #f4f6f5; 
+            background-color: #f8fafc; 
             display: flex;
             justify-content: center;
             align-items: center;
             flex-shrink: 0;
             overflow: hidden;
+            border: 1px solid #e2e8f0;
+            margin-left: 6px;
         }
 
-        .servicio-img { width: 100%; height: 100%; object-fit: cover; }
+        .material-icon-big {
+            font-size: 32px;
+            color: var(--text-subdued);
+            transition: transform 0.3s ease, color 0.3s ease;
+        }
+        .card-membresia:hover .material-icon-big { transform: scale(1.15) rotate(5deg); color: var(--primary-color);}
+        .card-membresia.vip:hover .material-icon-big { color: #d49a00; }
+        .card-membresia.recomendado:hover .material-icon-big { color: var(--interactive); }
 
-        /* TEXTOS COMPACTOS */
+        /* TEXTOS */
         .info-container {
             display: flex;
             flex-direction: column;
             flex-grow: 1;
             justify-content: center;
+            text-align: left;
         }
 
         .card-membresia h2 {
-            font-size: 13px; /* Reducido */
-            margin: 0 0 2px 0;
+            font-size: 13px;
+            margin: 0 0 4px 0;
             color: var(--primary-color);
             font-weight: 800;
         }
+        .card-membresia.vip h2 { color: #d49a00; }
+        .card-membresia.recomendado h2 { color: var(--interactive); }
 
         .card-membresia p {
-            font-size: 11px; /* Reducido */
-            margin: 0 0 6px 0;
-            color: var(--text-light);
-            line-height: 1.2;
+            font-size: 11px;
+            margin: 0 0 8px 0;
+            color: var(--text-subdued);
+            line-height: 1.3;
         }
 
-        /* Estilo del costo en créditos (Rojo indicando gasto) */
+        /* ESTILO NEGATIVO PARA DESCUENTO DE PUNTOS */
         .costo-restar {
-            font-size: 11px; /* Reducido */
+            font-size: 11px;
             font-weight: 800;
-            color: var(--danger-color);
+            color: var(--critical);
             background: var(--danger-bg);
             padding: 3px 8px;
             border-radius: 6px;
-            display: inline-block;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 2px;
+            border: 1px solid #ffcdd2;
             align-self: flex-start;
         }
 
         /* ETIQUETAS (BADGES) */
-        .recomendado { border-color: var(--primary-color); }
-        .vip { border-color: #fbc02d; }
-
         .badge {
             position: absolute;
             top: 0;
             right: 0;
             font-size: 9px;
-            padding: 3px 8px;
+            padding: 4px 12px;
             border-bottom-left-radius: 8px;
-            background: var(--primary-color);
+            background: var(--interactive);
             color: white;
-            font-weight: 700;
+            font-weight: 800;
+            letter-spacing: 0.5px;
             z-index: 2;
+            box-shadow: -2px 2px 5px rgba(0,0,0,0.05);
         }
-        .vip-badge { background: #fbc02d; color: #333; }
+        .vip-badge { background: #fbc02d; color: #423000; }
 
-        /* FOOTER */
-        .card-footer {
-            background-color: #fafafa;
-            padding: 12px;
-            border-top: 1px solid #eeeeee;
-            text-align: center;
-            margin-top: auto;
+        /* Icono de Flecha Derecha */
+        .icon-ir {
+            color: var(--border);
+            font-size: 24px;
+            transition: all 0.2s;
         }
-
-        .card-footer .logo { width: 70px; height: auto; transition: var(--transition); }
-        .card-footer a:hover .logo { transform: scale(1.05); }
+        .card-membresia:hover .icon-ir { transform: translateX(3px); color: var(--primary-color); }
+        .card-membresia.vip:hover .icon-ir { color: #d49a00; }
+        .card-membresia.recomendado:hover .icon-ir { color: var(--interactive); }
 
         /* =====================================================
-           RESPONSIVE MÓVIL PROFESIONAL (PANTALLA COMPLETA)
+           PIE DE PÁGINA ESTÁTICO
         ===================================================== */
+        .card-footer {
+            background-color: var(--surface);
+            text-align: center;
+            padding: 12px;
+            border-top: 1px solid var(--border);
+            flex-shrink: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .card-footer .logo { 
+            height: 25px; 
+            width: auto; 
+            display: block; 
+            opacity: 0.8;
+            pointer-events: none; 
+        }
+
+        /* =====================================================
+           SISTEMA DE MODALES Y ALERTAS PRO
+        ===================================================== */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(32, 34, 35, 0.8);
+            display: none; justify-content: center; align-items: center; z-index: 1000; opacity: 0; animation: fadeIn 0.2s forwards;
+            padding: 15px;
+        }
+        .modal-content {
+            background: var(--surface); width: 100%; max-width: 320px; border-radius: var(--radius); box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            overflow: hidden; transform: scale(0.95); animation: scaleUp 0.2s forwards; text-align: center;
+        }
+        .modal-header { padding: 20px 16px 10px; display: flex; flex-direction: column; align-items: center; gap: 6px; font-size: 15px; font-weight: 700;}
+        .modal-body { padding: 0 16px 16px; color: var(--text-subdued); font-size: 13px; line-height: 1.4; white-space: pre-wrap;}
+        .modal-footer { padding: 12px 16px; background: #fafbfb; border-top: 1px solid var(--border); display: flex; justify-content: center;}
+        
+        .modal-header.error { color: var(--critical); }
+        .modal-header.warning { color: var(--warning); }
+        .modal-header .material-icons-outlined { font-size: 40px; margin-bottom: 2px;}
+
+        .btn-modal {
+            background-color: var(--primary-color); color: white; border: none; padding: 8px 16px;
+            border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; width: 100%; transition: 0.2s;
+        }
+        .btn-modal:hover { background-color: var(--primary-hover); }
+
+        @keyframes fadeIn { to { opacity: 1; } }
+        @keyframes scaleUp { to { transform: scale(1); } }
+
+        /* RESPONSIVE MÓVIL */
         @media screen and (max-width: 480px) {
-            html, body {
-                margin: 0;
-                padding: 0;
-                width: 100vw;
-                height: 100svh; /* Altura real en móviles modernos */
-                overflow: hidden; /* Evita scroll externo */
-                background-color: var(--white);
-            }
-            
-            .menu-container {
-                width: 100%;
-                max-width: none;
-                height: 100svh; /* Ocupa el 100% de la pantalla */
-                border-radius: 0; /* Quita los bordes curvos */
-                border: none;
-                box-shadow: none;
-                display: flex;
-                flex-direction: column;
-            }
-
-            .menu-header {
-                flex-shrink: 0; /* El encabezado se mantiene fijo arriba */
-            }
-
-            .planes-section {
-                flex: 1; /* Este contenedor empuja el footer hacia abajo */
-                padding: 20px 15px;
-                gap: 14px;
-                overflow-y: auto; /* Permite scroll solo en esta área si hay muchas cards */
-                -webkit-overflow-scrolling: touch; /* Suavidad en scroll de iOS */
-            }
-
-            .card-membresia {
-                min-height: 100px; /* Ajuste sutil para encajar mejor en móviles pequeños */
-            }
-
-            .card-footer {
-                flex-shrink: 0; /* El footer se mantiene fijo al fondo */
-                border-top: 1px solid #eaeaea;
-            }
+            body { padding: 0; background-color: var(--surface); }
+            .container { max-width: none; height: 100svh; max-height: none; border-radius: 0; border: none; box-shadow: none; }
         }
     </style>
 </head>
 <body>
 
-    <main class="menu-container">
+    <main class="container">
         
-        <header class="menu-header">
-            <a href="#" class="icon-link" onclick="cerrarSesion(event)">
-                <img src="Iconos/SALIR.png" alt="Cerrar sesión" class="icon">
-            </a>
-            <h1 class="menu-title">CANJEAR ECOPOINTS</h1>
+        <!-- CABECERA FIJA (SOLO X A LA DERECHA) -->
+        <header class="card-header">
+            <div class="spacer"></div>
+            
+            <h1>CANJEAR ECOPOINTS</h1>
+            
+            <button class="icon-btn" title="Cerrar y volver" onclick="window.history.back();">
+                <span class="material-icons-outlined">arrow_back</span>
+            </button>
         </header>
 
+        <!-- ZONA DE TARJETAS (LISTA VERTICAL SCROLLABLE) -->
         <section class="planes-section">
 
-            <div class="card-membresia" data-nombre="TRAVESÍA EXCLUSIVA" data-puntos="100" onclick="iniciarCanje(this)">
+            <div class="card-membresia vip" data-nombre="TRAVESÍA EXCLUSIVA" data-puntos="100" onclick="iniciarCanje(this)">
+                <div class="badge vip-badge">⭐ EXCLUSIVO</div>
                 <div class="img-container">
-                    <img src="Iconos/TRAVESIA EXCLUSIVA.png" alt="Icono Paseo Moto" class="servicio-img" onerror="this.style.display='none'">
+                    <span class="material-icons-outlined material-icon-big">two_wheeler</span>
                 </div>
-
                 <div class="info-container">
-                    <h2>🛵 TRAVESÍA EXCLUSIVA</h2>
+                    <h2>TRAVESÍA EXCLUSIVA</h2>
                     <p>Viaje privado en motocicleta.</p>
-                    <div class="costo-restar">- <span class="txt-puntos"></span> pts</div>
+                    <div class="costo-restar">
+                        <span class="material-icons-outlined" style="font-size: 12px;">remove</span>
+                        <span class="txt-puntos"></span> pts
+                    </div>
                 </div>
+                <span class="material-icons-outlined icon-ir">chevron_right</span>
             </div>
 
             <div class="card-membresia recomendado" data-nombre="AÉREO NATURAL" data-puntos="150" onclick="iniciarCanje(this)">
-                <div class="badge">⭐ POPULAR</div>
-                
+                <div class="badge">🔥 POPULAR</div>
                 <div class="img-container">
-                    <img src="Iconos/AEREO NATURAL.png" alt="Icono Foto Dron" class="servicio-img" onerror="this.style.display='none'">
+                    <span class="material-icons-outlined material-icon-big">park</span>
                 </div>
-
                 <div class="info-container">
-                    <h2>🌿 AÉREO NATURAL</h2>
-                    <p>Grabación aérea en paisajes naturales.</p>
-                    <div class="costo-restar">- <span class="txt-puntos"></span> pts</div>
+                    <h2>AÉREO NATURAL</h2>
+                    <p>Grabación en paisajes.</p>
+                    <div class="costo-restar">
+                        <span class="material-icons-outlined" style="font-size: 12px;">remove</span>
+                        <span class="txt-puntos"></span> pts
+                    </div>
                 </div>
+                <span class="material-icons-outlined icon-ir">chevron_right</span>
             </div>
 
             <div class="card-membresia vip" data-nombre="AÉREO MOTO" data-puntos="250" onclick="iniciarCanje(this)">
                 <div class="badge vip-badge">👑 PREMIUM</div>
-                
                 <div class="img-container">
-                    <img src="Iconos/AEREO MOTO.png" alt="Icono Video Moto" class="servicio-img" onerror="this.style.display='none'">
+                    <span class="material-icons-outlined material-icon-big">sports_motorsports</span>
                 </div>
-
                 <div class="info-container">
-                    <h2>🚁 AÉREO MOTO</h2>
-                    <p>Grabación aérea con seguimiento.</p>
-                    <div class="costo-restar">- <span class="txt-puntos"></span> pts</div>
+                    <h2>AÉREO MOTO</h2>
+                    <p>Grabación con seguimiento.</p>
+                    <div class="costo-restar">
+                        <span class="material-icons-outlined" style="font-size: 12px;">remove</span>
+                        <span class="txt-puntos"></span> pts
+                    </div>
                 </div>
+                <span class="material-icons-outlined icon-ir">chevron_right</span>
             </div>
 
         </section>
 
+        <!-- PIE DE PÁGINA ESTÁTICO -->
         <footer class="card-footer">
-            <a href="#" title="Volver al Menú Anterior" onclick="window.history.back(); return false;">
-                <img src="Imagenes/ECFM.png" alt="Logo de MEF Engineering" class="logo" />
-            </a>
+            <img src="Imagenes/ECFM.png" alt="Logo de MEF Engineering" class="logo" onerror="this.style.display='none'">
         </footer>
 
     </main>
+
+    <!-- ==========================================
+         MODALES DE SISTEMA Y ALERTAS PRO
+         ========================================== -->
+    <div id="modal-alerta" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header error" id="alerta-header">
+                <span class="material-icons-outlined" id="alerta-icon">gpp_bad</span>
+                <span id="alerta-titulo">Atención</span>
+            </div>
+            <div class="modal-body" id="alerta-mensaje">Mensaje de error aquí.</div>
+            <div class="modal-footer">
+                <button class="btn-modal primary" onclick="cerrarModalAlerta()">Entendido</button>
+            </div>
+        </div>
+    </div>
 
 <script>
     'use strict';
@@ -315,11 +442,34 @@
     }
 
     // ==========================================
-    // 2. GESTIÓN DE SESIÓN Y NAVEGACIÓN
+    // 2. SISTEMA VISUAL DE MODALES
     // ==========================================
-    function cerrarSesion(e) {
-        if (e && typeof e.preventDefault === 'function') e.preventDefault();
-        alert("🔒 Sesión finalizada de forma segura.");
+    function mostrarAlerta(titulo, mensaje, tipo = 'error') {
+        const modal = document.getElementById('modal-alerta');
+        const header = document.getElementById('alerta-header');
+        const icon = document.getElementById('alerta-icon');
+        
+        document.getElementById('alerta-titulo').innerText = titulo;
+        document.getElementById('alerta-mensaje').innerText = mensaje;
+
+        header.className = 'modal-header'; 
+        if(tipo === 'error') {
+            header.classList.add('error'); icon.innerText = 'gpp_bad';
+        } else if (tipo === 'warning') {
+            header.classList.add('warning'); icon.innerText = 'warning';
+        }
+
+        modal.style.display = 'flex';
+    }
+
+    function cerrarModalAlerta() {
+        document.getElementById('modal-alerta').style.display = 'none';
+    }
+
+    // ==========================================
+    // 3. GESTIÓN DE SESIÓN Y SEGURIDAD
+    // ==========================================
+    function cerrarSesion() {
         sessionStorage.clear();
         localStorage.setItem("sesionActiva", "no");
         window.location.replace("index.html");
@@ -352,22 +502,28 @@
     });
     reiniciarTemporizador();
 
+    // Bloqueo Anti-Inspección
+    document.addEventListener('contextmenu', function(e) { e.preventDefault(); });
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C')) || (e.ctrlKey && e.key === 'U')) {
+            e.preventDefault();
+        }
+    });
+
     // ==========================================
-    // 3. LÓGICA DE CANJE (REDIRECCIÓN)
+    // 4. LÓGICA DE CANJE (REDIRECCIÓN)
     // ==========================================
     function iniciarCanje(elementoHTML) {
-        // Extraemos el servicio y su costo en puntos
         const nombreServicio = elementoHTML.getAttribute('data-nombre');
         const costoPuntos = parseInt(elementoHTML.getAttribute('data-puntos'), 10);
 
         if (nombreServicio && costoPuntos) {
-            // Redirigimos a la página de validación universal usando accion=canje
+            // Redirigimos a la página de validación universal (el cajero) usando accion=canje
             window.location.href = `ValidarRecargaEcopoints.html?accion=canje&servicio=${encodeURIComponent(nombreServicio)}&costo=${costoPuntos}`;
         } else {
-            alert("⚠️ Error: No se pudieron leer los datos de este servicio.");
+            mostrarAlerta("Error de Datos", "No se pudieron leer los datos de este servicio.", "warning");
         }
     }
-
 </script>
 
 </body>
