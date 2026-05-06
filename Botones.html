@@ -3,297 +3,295 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>MENÚ PRINCIPAL | MEF Engineering & Soluciones</title>
-
+    <title>PANEL PRINCIPAL | MEF Engineering & Soluciones</title>
+    
+    <!-- FUENTES E ICONOS DE GOOGLE -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+    
     <style>
-        /* =====================================================
-           IMPORTAR FUENTE Y VARIABLES
-        ===================================================== */
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
-
+        /* ==========================================
+           SISTEMA DE DISEÑO POLARIS (MEF ENGINEERING)
+           ========================================== */
         :root {
-            --primary-color: #1d3b20;
-            --primary-hover: #050a06;
-            --bg-color: #f9fcfc;
-            --white: #f8f6f6;
-            --text-dark: #333333;
-            --shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
-            --transition: all 0.25s ease;
+            --p-surface: #ffffff;
+            --p-background: #f4f6f8;
+            --p-text: #202223;
+            --p-text-subdued: #6d7175;
+            --p-border: #c9cccf;
+            
+            /* Colores de Marca MEF */
+            --p-action-primary: #1d3b20;
+            --p-action-primary-hover: #0a1f0d;
+            --p-interactive: #2c6ecb;
+            --p-critical: #d82c0d;
+            --p-success: #108043;
+            
+            --p-shadow-card: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.03);
+            --p-shadow-hover: 0 10px 20px rgba(29, 59, 32, 0.15);
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        * { 
+            box-sizing: border-box; 
+            margin: 0; 
+            padding: 0; 
+            font-family: 'Inter', sans-serif; 
+            -webkit-tap-highlight-color: transparent;
+            user-select: none; 
         }
-
-        body {
-            background-color: var(--bg-color);
-            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        
+        body { 
+            background-color: var(--p-background); 
+            color: var(--p-text); 
+            height: 100vh;
+            height: 100svh;
+            overflow: hidden; 
             display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            min-height: 100svh;
-            color: var(--text-dark);
-            padding: 20px;
+            flex-direction: column;
         }
 
-        /* =====================================================
-           CONTENEDOR GLOBAL (TARJETA)
-        ===================================================== */
+        /* ==========================================
+           CABECERA (HEADER) FIJA 
+           ========================================== */
+        .polaris-header {
+            background-color: var(--p-action-primary); 
+            padding: 12px 16px;
+            display: flex;
+            align-items: center; 
+            justify-content: space-between;
+            z-index: 100;
+            flex-shrink: 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        }
+
+        .spacer { width: 32px; }
+
+        .brand-container {
+            display: flex; align-items: center; justify-content: center; gap: 8px; color: white; flex-grow: 1;
+        }
+
+        .brand-container h1 { 
+            font-size: 15px; font-weight: 700; letter-spacing: 0.5px; text-align: center; margin: 0; text-transform: uppercase;
+        }
+
+        .icon-btn {
+            cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center;
+            padding: 6px; border-radius: 6px; color: white; background: rgba(255,255,255,0.08); border: none;
+        }
+        .icon-btn:hover { background: rgba(255,255,255,0.2); transform: scale(1.05); }
+
+        /* ==========================================
+           BARRA DE ESTADO DE USUARIO (DINÁMICA)
+           ========================================== */
+        .user-status-bar {
+            background: var(--p-surface); padding: 10px 15px; display: flex; justify-content: center; align-items: center;
+            border-bottom: 1px solid var(--p-border); box-shadow: 0 2px 4px rgba(0,0,0,0.02); font-size: 11px;
+            color: var(--p-text-subdued); gap: 6px; flex-shrink: 0; flex-wrap: wrap;
+        }
+        .user-status-bar strong { color: var(--p-action-primary); font-weight: 800;}
+        .user-status-bar .material-icons-outlined { font-size: 14px; margin-right: 2px; vertical-align: middle;}
+
+        /* ==========================================
+           CONTENEDOR DE BOTONES (GRID SCROLLABLE)
+           ========================================== */
         .menu-container {
-            width: 100%;
-            max-width: 400px;
-            background-color: var(--white);
-            border: 1.5px solid var(--primary-color);
-            border-radius: 12px;
-            box-shadow: var(--shadow);
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
+            flex-grow: 1; padding: 24px 20px; max-width: 900px; margin: 0 auto; width: 100%; overflow-y: auto; z-index: 10;
+        }
+        .menu-container::-webkit-scrollbar { width: 0px; background: transparent; }
+
+        .menu-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+
+        /* Responsive Breakpoints */
+        @media (min-width: 650px) { .menu-grid { grid-template-columns: repeat(3, 1fr); gap: 20px; } }
+        @media (min-width: 900px) { .menu-grid { grid-template-columns: repeat(4, 1fr); } }
+
+        /* TARJETAS BOTÓN (MÓDULOS) */
+        .menu-btn {
+            background: var(--p-surface); border: 1px solid var(--p-border); border-radius: 12px; padding: 24px 12px;
+            display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px;
+            box-shadow: var(--p-shadow-card); cursor: pointer; transition: all 0.2s ease; color: var(--p-text);
         }
 
-        /* ENCABEZADO */
-        .menu-header {
-            background-color: var(--primary-color);
-            color: var(--white);
-            padding: 18px 15px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        .menu-btn:hover { transform: translateY(-4px); box-shadow: var(--p-shadow-hover); border-color: var(--p-action-primary); }
+        .menu-btn:active { transform: translateY(0); box-shadow: var(--p-shadow-card); }
+
+        .menu-btn .material-icons-outlined { font-size: 36px; color: var(--p-action-primary); transition: transform 0.2s; }
+        .menu-btn:hover .material-icons-outlined { transform: scale(1.1); }
+
+        .menu-btn span.label { font-size: 13px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; text-align: center; line-height: 1.3; }
+
+        /* BOTÓN DESTACADO (EJ: ECOPOINTS / NFC / ANÁLISIS) */
+        .menu-btn.highlight { background: #e8f5e9; border-color: #a5d6a7; }
+        .menu-btn.highlight .material-icons-outlined { color: var(--p-success); }
+        .menu-btn.highlight:hover { background: #c8e6c9; border-color: #81c784; }
+
+        /* BOTÓN CONFIGURACIÓN / ANÁLISIS */
+        .menu-btn.config { background: #e0f2fe; border-color: #bae6fd; }
+        .menu-btn.config .material-icons-outlined { color: var(--p-interactive); }
+        .menu-btn.config:hover { background: #bae6fd; border-color: #7dd3fc; }
+
+        /* ==========================================
+           FOOTER ESTÁTICO
+           ========================================== */
+        .footer {
+            text-align: center; padding: 15px 20px; font-size: 11px; color: var(--p-text-subdued); border-top: 1px solid var(--p-border);
+            background: var(--p-surface); flex-shrink: 0; display: flex; flex-direction: column; align-items: center; gap: 4px;
         }
+        .footer strong { color: var(--p-action-primary); font-size: 12px;}
 
-        .menu-header .icon-link {
-            position: absolute;
-            left: 15px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .menu-header .icon {
-            width: 26px;
-            height: 26px;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-
-        .menu-header .icon:hover {
-            transform: scale(1.15);
-            filter: brightness(1.2);
-        }
-
-        .menu-title {
-            font-size: 1.1rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin: 0;
-        }
-
-        /* =====================================================
-           BOTONES COMPACTOS DE NAVEGACIÓN
-        ===================================================== */
-        .menu-buttons {
-            padding: 30px 25px;
-            display: flex;
-            flex-direction: column;
-            gap: 12px; /* Reducido para compactar */
-        }
-
-        .menu-buttons button {
-            width: 100%;
-            padding: 14px; /* Padding reducido para afinar el botón */
-            font-size: 0.9rem; /* Fuente un poco más pequeña */
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            background-color: var(--primary-color);
-            color:#f9fcfc;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: var(--transition);
-            box-shadow: 0 4px 10px rgba(29, 59, 32, 0.15);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .menu-buttons button:hover {
-            background-color: var(--primary-hover);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 15px rgba(29, 59, 32, 0.25);
-        }
-
-        .menu-buttons button:active {
-            transform: scale(0.98);
-        }
-
-        /* =====================================================
-           PIE DE PÁGINA
-        ===================================================== */
-        .card-footer {
-            background-color: #ffffff;
-            padding: 15px;
-            border-top: 1px solid #fcfbfb;
-            text-align: center;
-            margin-top: auto;
-        }
-
-        .card-footer .logo {
-            width: 80px;
-            height: auto;
-            margin-bottom: 5px;
-            transition: var(--transition);
-        }
-
-        .card-footer a:hover .logo {
-            transform: scale(1.05);
-        }
-
-        .card-footer p {
-            font-size: 0.75rem;
-            color: var(--primary-color);
-            margin: 0;
-            letter-spacing: 0.5px;
-        }
-
-        /* =====================================================
-           RESPONSIVE MÓVIL PROFESIONAL (PANTALLA COMPLETA)
-        ===================================================== */
-        @media screen and (max-width: 480px) {
-            html, body {
-                margin: 0;
-                padding: 0;
-                width: 100vw;
-                height: 100svh; /* Altura real en móviles modernos */
-                overflow: hidden; /* Evita que toda la página haga scroll, controlamos todo por dentro */
-                background-color: var(--white);
-            }
-            
-            .menu-container { 
-                width: 100%;
-                max-width: none;
-                height: 100svh; /* Ocupa el 100% de la pantalla */
-                border-radius: 0; /* Quita los bordes curvos */
-                border: none;
-                box-shadow: none;
-                display: flex;
-                flex-direction: column;
-            }
-
-            .menu-header {
-                flex-shrink: 0; /* El encabezado nunca se encoge */
-            }
-
-            .menu-buttons { 
-                flex: 1; /* Este contenedor empuja el footer hacia abajo */
-                padding: 25px 20px; 
-                overflow-y: auto; /* Agrega scroll interno solo si hay demasiados botones */
-                -webkit-overflow-scrolling: touch; /* Suaviza el scroll en iOS */
-            }
-            
-            .menu-buttons button { 
-                padding: 16px; /* Hacemos la zona táctil un poco más cómoda en móvil */
-            } 
-
-            .card-footer {
-                flex-shrink: 0; /* El footer nunca se encoge, siempre al final */
-                border-top: 1px solid #eaeaea; /* Línea separadora sutil */
-            }
-        }
     </style>
 </head>
 <body>
 
+    <header class="polaris-header">
+        <div class="spacer"></div>
+        <div class="brand-container">
+            <span class="material-icons-outlined">corporate_fare</span>
+            <h1>PANEL DE CONTROL</h1>
+        </div>
+        <button class="icon-btn" onclick="cerrarSesion()" title="Cerrar Sesión">
+            <span class="material-icons-outlined">logout</span>
+        </button>
+    </header>
+
+    <div class="user-status-bar" id="statusBar">
+        Cargando credenciales...
+    </div>
+
     <main class="menu-container">
-        
-        <header class="menu-header">
-            <a href="#" title="Cerrar sesión de forma segura" class="icon-link" onclick="cerrarSesion(event)">
-                <img src="Iconos/SALIR.png" alt="Cerrar sesión" class="icon">
-            </a>
-            <h1 class="menu-title">MENÚ GENERAL</h1>
-        </header>
+        <div class="menu-grid">
+            
+            <!-- MÓDULOS DE EVENTOS -->
+            <button class="menu-btn" onclick="window.location.href='CrearEvento.html'">
+                <span class="material-icons-outlined">event_available</span>
+                <span class="label">Crear Evento</span>
+            </button>
 
-        <nav class="menu-buttons" aria-label="Navegación principal">
-            <button onclick="window.location.href='ListaEventos.html'">REGISTRAR LISTA</button>
-            <button onclick="window.location.href='CrearEvento.html'">CREAR EVENTO</button>
-            <button onclick="window.location.href='RegistroPersonal.html'">REGISTRAR PERSONAL</button>
-            <button onclick="window.location.href='RegistroUsuarios.html'">REGISTRAR USUARIOS</button>
-            <button onclick="window.location.href='Membresias.html'">MEMBRESÍAS</button>
-            <button onclick="window.location.href='Ecopoints.html'">ECOPOINTS</button>
-            <button onclick="window.location.href='EscanearNFC.html'">ESCANEAR NFC</button>
-            <button onclick="window.location.href='ListaTablas.html'">LISTA DE TABLAS</button>
-        </nav>
+            <button class="menu-btn" onclick="window.location.href='ListaEventos.html'">
+                <span class="material-icons-outlined">format_list_bulleted</span>
+                <span class="label">Registrar Lista</span>
+            </button>
 
-        <footer class="card-footer">
-            <img src="Imagenes/ECFM.png" alt="Logo de MEF Engineering" class="logo">
-            <p><strong>MEF ENGINEERING & SOLUCIONES</strong></p>
-        </footer>
+            <!-- MÓDULOS ADMINISTRATIVOS -->
+            <button class="menu-btn" onclick="window.location.href='RegistroPersonal.html'">
+                <span class="material-icons-outlined">badge</span>
+                <span class="label">Personal</span>
+            </button>
 
+            <button class="menu-btn" onclick="window.location.href='Membresias.html'">
+                <span class="material-icons-outlined">card_membership</span>
+                <span class="label">Membresías</span>
+            </button>
+
+            <!-- BOTONES PROTEGIDOS (OCULTOS PARA OPERARIOS) -->
+            <button class="menu-btn restrict-btn" id="btn-usuarios" onclick="window.location.href='RegistroUsuarios.html'">
+                <span class="material-icons-outlined">group_add</span>
+                <span class="label">Usuarios</span>
+            </button>
+
+            <button class="menu-btn restrict-btn" id="btn-tablas" onclick="window.location.href='ListaTablas.html'">
+                <span class="material-icons-outlined">table_view</span>
+                <span class="label">Base de Batos</span>
+            </button>
+            
+            <button class="menu-btn config restrict-btn" id="btn-configuracion" onclick="window.location.href='Configuracion.html'">
+                <span class="material-icons-outlined">settings</span>
+                <span class="label">Configuración</span>
+            </button>
+
+            <button class="menu-btn config restrict-btn" id="btn-analisis" onclick="window.location.href='AnalisisDatos.html'">
+                <span class="material-icons-outlined">analytics</span>
+                <span class="label">Análisis de Datos</span>
+            </button>
+
+            <!-- MÓDULOS TECNOLÓGICOS (DESTACADOS) -->
+            <button class="menu-btn highlight" onclick="window.location.href='Ecopoints.html'">
+                <span class="material-icons-outlined">eco</span>
+                <span class="label">EcoPoints</span>
+            </button>
+
+            <button class="menu-btn highlight" onclick="window.location.href='EscanearNFC.html'">
+                <span class="material-icons-outlined">nfc</span>
+                <span class="label">Escanear NFC</span>
+            </button>
+
+        </div>
     </main>
+
+    <footer class="footer">
+        <strong>M.E.F- ENGINEERING & HSSE SOLUTIONS</strong>
+        <span>&copy; 2026 Plataforma de Gestión Tecnológica</span>
+    </footer>
 
 <script>
     'use strict';
 
-    // ==========================================
-    // 1. GESTIÓN DE SESIÓN Y SEGURIDAD
-    // ==========================================
-    function cerrarSesion(e) {
-        if (e && typeof e.preventDefault === 'function') {
-            e.preventDefault();
+    // 1. INICIALIZACIÓN Y SEGURIDAD VISUAL (RBAC)
+    function inicializarPanel() {
+        const usuarioActivo = sessionStorage.getItem("usuarioLogueado") || "USUARIO";
+        const rolActivo = sessionStorage.getItem("rolUsuario") || "OPERARIO";
+        const sedeActiva = sessionStorage.getItem("usuarioSede") || "SEDE NO ASIGNADA";
+
+        document.getElementById("statusBar").innerHTML = `
+            <span><span class="material-icons-outlined">badge</span><strong>${usuarioActivo}</strong></span>
+            &nbsp;|&nbsp; <span><span class="material-icons-outlined">shield</span>${rolActivo}</span>
+            &nbsp;|&nbsp; <span><span class="material-icons-outlined">domain</span>${sedeActiva}</span>
+        `;
+
+        // BARRERA DE SEGURIDAD: Solo Administrador, Gerente o MTMENDOZA ven los botones sensibles
+        if (rolActivo !== "ADMINISTRADOR" && rolActivo !== "GERENTE" && usuarioActivo !== "MTMENDOZA") {
+            const botonesProtegidos = document.querySelectorAll('.restrict-btn');
+            botonesProtegidos.forEach(btn => btn.style.display = 'none');
         }
-        alert("🔒 Sesión finalizada de forma segura.");
-        sessionStorage.clear();
-        localStorage.setItem("sesionActiva", "no");
-        window.location.replace("index.html"); 
+    }
+
+    // 2. GESTIÓN DE SESIÓN
+    function cerrarSesion() {
+        if (confirm("¿Estás seguro de que deseas salir del sistema?")) {
+            sessionStorage.clear();
+            localStorage.setItem("sesionActiva", "no");
+            window.location.replace("index.html"); 
+        }
     }
 
     function validarSesion() {
-        const activa = sessionStorage.getItem("sesionActiva");
-        if (activa !== "true") {
-            cerrarSesion();
+        if (sessionStorage.getItem("sesionActiva") !== "true") {
+            window.location.replace("index.html");
+        } else {
+            inicializarPanel();
         }
     }
 
-    // Validaciones del ciclo de vida de la página
     window.addEventListener("DOMContentLoaded", validarSesion);
     window.addEventListener("pageshow", validarSesion);
 
-    // ==========================================
-    // 2. CONTROL ESTRICTO DE INACTIVIDAD (1 MIN)
-    // ==========================================
+    // 3. CONTROL ESTRICTO DE INACTIVIDAD (1 MIN)
     let timerInactividad;
     const reiniciarTemporizador = () => {
         clearTimeout(timerInactividad);
         timerInactividad = setTimeout(() => {
-            alert("⏰ TIEMPO DE INACTIVIDAD EXCEDIDO. SESIÓN CERRADA.");
-            cerrarSesion();
-        }, 1 * 60 * 1000); 
+            alert("⏰ TIEMPO DE INACTIVIDAD EXCEDIDO. Su sesión ha sido cerrada por seguridad.");
+            sessionStorage.clear();
+            localStorage.setItem("sesionActiva", "no");
+            window.location.replace("index.html"); 
+        }, 60000); 
     };
 
-    // Listeners optimizados
-    ["mousemove", "keydown", "click", "scroll", "touchstart"].forEach(evento => {
-        document.addEventListener(evento, reiniciarTemporizador, { passive: true });
-    });
-    reiniciarTemporizador();
+    ["mousemove", "keydown", "click", "touchstart"].forEach(ev => document.addEventListener(ev, reiniciarTemporizador, { passive: true }));
 
-    // ==========================================
-    // 3. CERRAR SESIÓN AL PRESIONAR "ATRÁS"
-    // ==========================================
-    // Añadimos un estado virtual al historial del navegador al momento de entrar
+    // 4. CERRAR SESIÓN AL PRESIONAR "ATRÁS"
     window.history.pushState(null, null, window.location.href);
-
-    // Cuando el usuario intente regresar (botón atrás del móvil o PC), interceptamos el evento
-    window.addEventListener('popstate', function(event) {
-        // En lugar de ir a la página anterior, destruimos la sesión y lo enviamos al login
-        cerrarSesion();
+    window.addEventListener('popstate', () => {
+        sessionStorage.clear();
+        localStorage.setItem("sesionActiva", "no");
+        window.location.replace("index.html");
     });
 
+    // 5. BLOQUEO DE CURIOSOS
+    document.addEventListener('contextmenu', e => e.preventDefault());
+    document.addEventListener('keydown', e => {
+        if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && ['I','J','C'].includes(e.key)) || (e.ctrlKey && e.key === 'U')) e.preventDefault();
+    });
 </script>
 
 </body>
