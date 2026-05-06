@@ -1,177 +1,493 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>REGISTRAR USUARIO | MEF Engineering & Soluciones</title>
-    <link rel="stylesheet" href="RegistroUsuarios.css">
+    
+    <!-- FUENTES E ICONOS DE GOOGLE -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+
     <style>
-        /* Estilos específicos para el input de contraseña con ícono */
-        .password-wrapper {
-            position: relative;
+        /* ==========================================
+           SISTEMA DE DISEÑO MEF ENGINEERING (COMPACTO)
+           ========================================== */
+        :root {
+            --primary-color: #1d3b20;
+            --primary-hover: #0a1f0d;
+            --bg-color: #f4f6f8;
+            --surface: #ffffff;
+            --text-dark: #202223;
+            --text-subdued: #6d7175;
+            --border: #c9cccf;
+            --interactive: #2c6ecb;
+            --critical: #d82c0d;
+            --warning: #b98900;
+            --success: #108043;
+            --shadow-card: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.03);
+            --radius: 10px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+            height: 100vh;
+            height: 100svh;
+            overflow: hidden; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 15px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 380px; 
+            background-color: var(--surface);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-card);
+            border: 1px solid var(--border);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            max-height: 800px;
+        }
+
+        .card-header {
+            background-color: var(--primary-color);
+            color: #ffffff;
+            padding: 12px 16px;
             display: flex;
             align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            flex-shrink: 0;
+            z-index: 10;
         }
-        .password-wrapper input {
+
+        .card-header .spacer { width: 32px; }
+
+        .card-header h1 {
+            font-size: 0.95rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            margin: 0;
+            text-align: center;
+            flex-grow: 1;
+            text-transform: uppercase;
+        }
+
+        .icon-btn {
+            background: rgba(255,255,255,0.05);
+            color: white;
+            border: none;
+            padding: 4px;
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            text-decoration: none;
+        }
+        .icon-btn:hover { background: rgba(255,255,255,0.2); transform: scale(1.05); }
+        .icon-btn .material-icons-outlined { font-size: 20px; }
+
+        .form-section {
+            padding: 20px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            overflow-y: auto;
+            flex-grow: 1;
+            background-color: var(--surface);
+        }
+        .form-section::-webkit-scrollbar { width: 4px; }
+        .form-section::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
+
+        .section-title {
+            font-size: 11px;
+            font-weight: 800;
+            color: var(--primary-color);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-bottom: 2px solid var(--bg-color);
+            padding-bottom: 4px;
+            margin-top: 8px;
+            margin-bottom: 2px;
+        }
+
+        .form-group { display: flex; flex-direction: column; gap: 4px; }
+        .form-group label {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text-subdued);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-left: 2px;
+        }
+
+        .input-wrapper { position: relative; display: flex; align-items: center; width: 100%; }
+        .prefix-icon { position: absolute; left: 10px; color: var(--text-subdued); font-size: 18px; }
+
+        .form-input {
             width: 100%;
-            padding-right: 40px; /* Deja espacio para que el texto no pise el ícono */
+            padding: 10px 12px 10px 36px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 13px;
+            color: var(--text-dark);
+            background-color: var(--surface);
+            transition: all 0.3s ease;
+            outline: none;
         }
+        .form-input:focus { border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(29, 59, 32, 0.1); }
+
+        select.form-input {
+            appearance: none;
+            cursor: pointer;
+            background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%236d7175%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E");
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            background-size: 16px;
+        }
+
         .toggle-password {
             position: absolute;
-            right: 10px;
+            right: 8px;
             cursor: pointer;
+            color: var(--text-subdued);
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 4px;
             border-radius: 50%;
-            transition: background-color 0.2s ease;
+            transition: all 0.2s ease;
         }
-        .toggle-password:hover {
-            background-color: rgba(0, 0, 0, 0.05);
+        .toggle-password:hover { color: var(--text-dark); background-color: #f0f2f4; }
+        .input-password-field { padding-right: 40px; }
+
+        .submit-btn {
+            margin-top: 10px;
+            width: 100%;
+            background-color: var(--primary-color);
+            color: #fff;
+            padding: 12px;
+            font-size: 13px;
+            font-weight: 800;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 8px rgba(29, 59, 32, 0.15);
         }
-        .toggle-password img {
-            width: 20px;
-            height: 20px;
-            opacity: 0.6;
-            transition: opacity 0.2s ease;
+        .submit-btn:hover { background-color: var(--primary-hover); transform: translateY(-2px); box-shadow: 0 4px 12px rgba(29, 59, 32, 0.25); }
+        .submit-btn:active { transform: translateY(0); }
+
+        .card-footer {
+            background-color: var(--bg-color);
+            text-align: center;
+            padding: 12px;
+            border-top: 1px solid var(--border);
+            flex-shrink: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
-        .toggle-password:hover img {
-            opacity: 1;
+        .card-footer .logo { height: 25px; width: auto; display: block; opacity: 0.8; pointer-events: none; }
+
+        /* MODALES */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(32, 34, 35, 0.8);
+            display: none; justify-content: center; align-items: center; z-index: 1000; opacity: 0; animation: fadeIn 0.2s forwards;
+            padding: 15px;
+        }
+        .modal-content {
+            background: var(--surface); width: 100%; max-width: 320px; border-radius: var(--radius); box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            overflow: hidden; transform: scale(0.95); animation: scaleUp 0.2s forwards; text-align: center;
+        }
+        .modal-header { padding: 20px 16px 10px; display: flex; flex-direction: column; align-items: center; gap: 6px; font-size: 15px; font-weight: 700;}
+        .modal-body { padding: 0 16px 16px; color: var(--text-subdued); font-size: 13px; line-height: 1.4; white-space: pre-wrap;}
+        .modal-footer { padding: 12px 16px; background: #fafbfb; border-top: 1px solid var(--border); display: flex; justify-content: center;}
+        .modal-header.error { color: var(--critical); }
+        .modal-header.warning { color: var(--warning); }
+        .modal-header .material-icons-outlined { font-size: 40px; margin-bottom: 2px;}
+
+        .btn-modal { background-color: var(--primary-color); color: white; border: none; padding: 8px 16px; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; width: 100%; transition: 0.2s; }
+        .btn-modal:hover { background-color: var(--primary-hover); }
+
+        .toast {
+            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: #202223; color: white; 
+            padding: 10px 16px; border-radius: 8px; font-size: 13px; display: none; z-index: 1200; align-items: center; gap: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15); font-weight: 500;
+        }
+
+        @keyframes fadeIn { to { opacity: 1; } }
+        @keyframes scaleUp { to { transform: scale(1); } }
+
+        @media screen and (max-width: 480px) {
+            body { padding: 0; background-color: var(--surface); }
+            .container { max-width: none; height: 100svh; max-height: none; border-radius: 0; border: none; box-shadow: none; }
         }
     </style>
 </head>
 <body>
 
-    <main class="card">
-        
+    <main class="container">
         <header class="card-header">
-            <div class="header-content">
-                <a href="TBRegistroUsuarios.html" title="Ver usuarios registrados" class="icon-link">
-                    <img src="Iconos/LUPA1.png" alt="Ver usuarios registrados" class="icon">
-                </a>
-                <h1>REGISTRAR USUARIO</h1>
-            </div>
+            <div class="spacer"></div>
+            <h1>REGISTRAR USUARIO</h1>
+            <button class="icon-btn" title="Volver atrás" onclick="window.history.back();">
+                <span class="material-icons-outlined">close</span>
+            </button>
         </header>
 
-        <section class="card-body">
-            <form class="card-form" id="formRegistroUsuario" autocomplete="off" novalidate>
+        <section class="form-section">
+            <form id="formRegistroUsuario" autocomplete="off" novalidate>
                 
+                <div class="section-title">Datos Personales</div>
+
                 <div class="form-group">
-                    <label for="codigo">CÓDIGO DE PERSONAL:</label>
-                    <input 
-                        type="text" 
-                        id="codigo" 
-                        name="codigo" 
-                        placeholder="Ej. P001 (Presione Enter o salga del campo)" 
-                        required 
-                        oninput="this.value = this.value.toUpperCase()"
-                        autofocus
-                    >
+                    <label for="codigo">Código de Empleado *</label>
+                    <div class="input-wrapper">
+                        <span class="material-icons-outlined prefix-icon">tag</span>
+                        <input type="text" id="codigo" class="form-input" placeholder="Ej. P001" required oninput="this.value = this.value.toUpperCase()" autofocus />
+                    </div>
                 </div>
 
                 <div class="form-group">
-                    <label for="dni">DNI:</label>
-                    <input type="text" id="dni" name="dni" placeholder="Autollenado" readonly tabindex="-1">
+                    <label for="dni">DNI / Identificación *</label>
+                    <div class="input-wrapper">
+                        <span class="material-icons-outlined prefix-icon">branding_watermark</span>
+                        <input type="text" id="dni" class="form-input" placeholder="8 dígitos" maxlength="8" required oninput="this.value = this.value.replace(/[^0-9]/g, '')" />
+                    </div>
                 </div>
 
                 <div class="form-group">
-                    <label for="apellidos">APELLIDOS:</label>
-                    <input type="text" id="apellidos" name="apellidos" placeholder="Autollenado" readonly tabindex="-1">
+                    <label for="apellidos">Apellidos *</label>
+                    <div class="input-wrapper">
+                        <span class="material-icons-outlined prefix-icon">person</span>
+                        <input type="text" id="apellidos" class="form-input" placeholder="Apellidos completos" required oninput="this.value = this.value.toUpperCase()" />
+                    </div>
                 </div>
 
                 <div class="form-group">
-                    <label for="nombres">NOMBRES:</label>
-                    <input type="text" id="nombres" name="nombres" placeholder="Autollenado" readonly tabindex="-1">
+                    <label for="nombres">Nombres *</label>
+                    <div class="input-wrapper">
+                        <span class="material-icons-outlined prefix-icon">person_outline</span>
+                        <input type="text" id="nombres" class="form-input" placeholder="Nombres completos" required oninput="this.value = this.value.toUpperCase()" />
+                    </div>
                 </div>
 
+                <div class="section-title">Contacto & Área</div>
+
                 <div class="form-group">
-                    <label for="cargo">CARGO (ROL):</label>
-                    <select id="cargo" name="cargo" required>
-                        <option value="" disabled selected>Seleccione un cargo...</option>
-                        <option value="ADMINISTRADOR">ADMINISTRADOR</option>
-                        <option value="SUPERVISOR">SUPERVISOR</option>
-                        <option value="ASISTENTE">ASISTENTE</option>
-                        <option value="OPERARIO">OPERARIO</option>
-                    </select>
+                    <label for="email">Correo Electrónico *</label>
+                    <div class="input-wrapper">
+                        <span class="material-icons-outlined prefix-icon">email</span>
+                        <input type="email" id="email" class="form-input" placeholder="ejemplo@mef-engineering.com" required />
+                    </div>
+                </div>
+
+                <!-- CAMPO DINÁMICO DE SEDE -->
+                <div class="form-group">
+                    <label for="area">Área / Sede *</label>
+                    <div class="input-wrapper">
+                        <span class="material-icons-outlined prefix-icon">domain</span>
+                        <select id="area" class="form-input" required>
+                            <option value="" disabled selected>Cargando sedes...</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="section-title">Credenciales & Estado</div>
+
+                <div class="form-group">
+                    <label for="cargo">Rol en el Sistema *</label>
+                    <div class="input-wrapper">
+                        <span class="material-icons-outlined prefix-icon">admin_panel_settings</span>
+                        <select id="cargo" class="form-input" required>
+                            <option value="" disabled selected>Seleccione un rol...</option>
+                            <option value="ADMINISTRADOR">ADMINISTRADOR</option>
+                            <option value="SUPERVISOR">SUPERVISOR</option>
+                            <option value="ASISTENTE">ASISTENTE</option>
+                            <option value="OPERARIO">OPERARIO</option>
+                        </select>
+                    </div>
                 </div> 
 
                 <div class="form-group">
-                    <label for="id">ID DE USUARIO (Login):</label>
-                    <input 
-                        type="text" 
-                        id="id" 
-                        name="id" 
-                        placeholder="Ej. MMENDOZA" 
-                        required 
-                        oninput="this.value = this.value.toUpperCase()" 
-                    />
+                    <label for="id">ID de Usuario (Login) *</label>
+                    <div class="input-wrapper">
+                        <span class="material-icons-outlined prefix-icon">account_circle</span>
+                        <input type="text" id="id" class="form-input" placeholder="Ej. MMENDOZA" required oninput="this.value = this.value.toUpperCase()" />
+                    </div>
                 </div>
 
                 <div class="form-group">
-                    <label for="clave">CONTRASEÑA:</label>
-                    <div class="password-wrapper">
-                        <input 
-                            type="password" 
-                            id="clave" 
-                            name="clave" 
-                            placeholder="Mín. 7 caracteres (Letras y números)" 
-                            minlength="7" 
-                            maxlength="20" 
-                            required 
-                        />
+                    <label for="clave">Contraseña *</label>
+                    <div class="input-wrapper">
+                        <span class="material-icons-outlined prefix-icon">lock</span>
+                        <input type="password" id="clave" class="form-input input-password-field" placeholder="Mínimo 7 caracteres" minlength="7" maxlength="20" required />
                         <span class="toggle-password" id="togglePassword" title="Mostrar/Ocultar contraseña">
-                            <img src="Iconos/VER.png" id="eyeIcon" alt="Mostrar">
+                            <span class="material-icons-outlined" id="eyeIcon">visibility</span>
                         </span>
                     </div>
                 </div>
 
-                <button type="submit" class="submit-btn">CREAR USUARIO</button>
+                <div class="form-group">
+                    <label for="estado">Estado de la Cuenta *</label>
+                    <div class="input-wrapper">
+                        <span class="material-icons-outlined prefix-icon">toggle_on</span>
+                        <select id="estado" class="form-input" required style="color: var(--success); font-weight: 700;">
+                            <option value="ACTIVO" selected>ACTIVO (Permitir Acceso)</option>
+                            <option value="INACTIVO">INACTIVO (Bloquear Acceso)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button type="submit" class="submit-btn">
+                    <span class="material-icons-outlined">how_to_reg</span>
+                    CREAR USUARIO
+                </button>
             </form>
         </section>
 
         <footer class="card-footer">
-            <a href="#" title="Volver al Menú Principal" onclick="volverAlMenu(event)">
-                <img src="Imagenes/ECFM.png" alt="Logo MEF Engineering" class="logo">
-            </a>
+            <img src="Imagenes/ECFM.png" alt="Logo" class="logo" onerror="this.style.display='none'" />
         </footer>
-        
     </main>
+
+    <!-- ALERTAS -->
+    <div id="modal-alerta" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header" id="alerta-header">
+                <span class="material-icons-outlined" id="alerta-icon">error</span>
+                <span id="alerta-titulo">Atención</span>
+            </div>
+            <div class="modal-body" id="alerta-mensaje"></div>
+            <div class="modal-footer">
+                <button class="btn-modal" onclick="cerrarAlerta()">Entendido</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOAST -->
+    <div id="toast" class="toast">
+        <span class="material-icons-outlined" style="color: #4ade80;">check_circle</span>
+        <span id="toast-msg">Operación exitosa</span>
+    </div>
 
 <script>
     'use strict';
 
     // ==========================================
-    // 1. GESTIÓN DE SESIÓN Y NAVEGACIÓN
+    // 0. CARGAR SEDES DINÁMICAS DESDE CONFIGURACIÓN
     // ==========================================
-    function cerrarSesion(e) {
-        if (e && typeof e.preventDefault === 'function') e.preventDefault();
-        alert("🔒 Sesión finalizada de forma segura.");
+    function cargarSedesDinamicas() {
+        const selectArea = document.getElementById('area');
+        const sedesConfig = JSON.parse(localStorage.getItem('config_sedes')) || 
+                           ["SANTA ELENA", "MOLLEPAMPA ALTA", "BAÑOS DEL INCA", "NUEVO CAJAMARCA", "GLOBAL (TODAS)"];
+        
+        selectArea.innerHTML = '<option value="" disabled selected>Seleccione la sede/área...</option>';
+        sedesConfig.forEach(sede => {
+            const option = document.createElement('option');
+            option.value = sede;
+            option.textContent = sede;
+            selectArea.appendChild(option);
+        });
+    }
+
+    // ==========================================
+    // 1. SISTEMA VISUAL DE ALERTAS Y TOAST
+    // ==========================================
+    function mostrarAlerta(titulo, mensaje, tipo = 'warning') {
+        const modal = document.getElementById('modal-alerta');
+        const header = document.getElementById('alerta-header');
+        const icon = document.getElementById('alerta-icon');
+        
+        document.getElementById('alerta-titulo').innerText = titulo;
+        document.getElementById('alerta-mensaje').innerText = mensaje;
+
+        header.className = 'modal-header'; 
+        if(tipo === 'error') {
+            header.classList.add('error'); icon.innerText = 'gpp_bad';
+        } else if (tipo === 'warning') {
+            header.classList.add('warning'); icon.innerText = 'warning';
+        }
+
+        modal.style.display = 'flex';
+    }
+
+    function cerrarAlerta() {
+        document.getElementById('modal-alerta').style.display = 'none';
+    }
+
+    function mostrarToast(mensaje, redireccion = null) {
+        const toast = document.getElementById('toast');
+        document.getElementById('toast-msg').innerText = mensaje;
+        toast.style.display = 'flex';
+        
+        setTimeout(() => { 
+            toast.style.display = 'none'; 
+            if(redireccion) window.location.href = redireccion;
+        }, 1800);
+    }
+
+    // ==========================================
+    // 2. GESTIÓN DE SESIÓN Y SEGURIDAD (RBAC)
+    // ==========================================
+    function cerrarSesion() {
         sessionStorage.clear();
         localStorage.setItem("sesionActiva", "no");
         window.location.replace("index.html");
     }
 
-    function validarSesion() {
-        if (sessionStorage.getItem("sesionActiva") !== "true") {
+    function validarSesionYRol() {
+        const sesionActiva = sessionStorage.getItem("sesionActiva");
+        const rolUsuario = sessionStorage.getItem("rolUsuario") || "";
+        const idLogueado = sessionStorage.getItem("usuarioLogueado") || "";
+
+        if (sesionActiva !== "true") {
             cerrarSesion();
+            return;
+        }
+
+        // BARRERA DE SEGURIDAD: Solo Administradores y el Maestro pueden crear usuarios
+        if (rolUsuario !== "ADMINISTRADOR" && idLogueado !== "MTMENDOZA") {
+            alert("⚠️ ACCESO DENEGADO: No tienes permisos para registrar nuevos usuarios.");
+            window.location.replace("Botones.html");
         }
     }
 
-    function volverAlMenu(e) {
-        if (e && typeof e.preventDefault === 'function') e.preventDefault();
-        window.location.href = sessionStorage.getItem("menuUsuario") || "Botones.html";
-    }
+    window.addEventListener("DOMContentLoaded", () => {
+        validarSesionYRol();
+        cargarSedesDinamicas();
+    });
+    window.addEventListener("pageshow", validarSesionYRol);
 
-    window.addEventListener("DOMContentLoaded", validarSesion);
-    window.addEventListener("pageshow", validarSesion);
-
-    // Inactividad estricta a 1 minuto
+    // Control estricto de inactividad a 1 minuto
     let timerInactividad;
     const reiniciarTemporizador = () => {
         clearTimeout(timerInactividad);
         timerInactividad = setTimeout(() => {
-            alert("⏰ INACTIVIDAD DETECTADA. SESIÓN CERRADA.");
+            alert("⏰ TIEMPO DE INACTIVIDAD EXCEDIDO. SESIÓN CERRADA.");
             cerrarSesion();
         }, 1 * 60 * 1000); 
     };
@@ -181,146 +497,119 @@
     });
     reiniciarTemporizador();
 
+    // Bloqueo Anti-Inspección
+    document.addEventListener('contextmenu', function(e) { e.preventDefault(); });
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C')) || (e.ctrlKey && e.key === 'U')) {
+            e.preventDefault();
+        }
+    });
 
     // ==========================================
-    // 2. LÓGICA PRINCIPAL (AUTOCOMPLETADO, OJITO Y REGISTRO)
+    // 3. CAMBIO DE COLOR EN ESTADO
+    // ==========================================
+    const selectEstado = document.getElementById('estado');
+    selectEstado.addEventListener('change', function() {
+        if(this.value === 'ACTIVO') {
+            this.style.color = 'var(--success)';
+        } else {
+            this.style.color = 'var(--critical)';
+        }
+    });
+
+    // ==========================================
+    // 4. LÓGICA DE REGISTRO MANUAL CON AUDITORÍA
     // ==========================================
     document.addEventListener("DOMContentLoaded", () => {
-        
         const form = document.getElementById('formRegistroUsuario');
-        const inputCodigo = document.getElementById('codigo');
         const inputClave = document.getElementById('clave');
         const togglePassword = document.getElementById('togglePassword');
         const eyeIcon = document.getElementById('eyeIcon');
 
-        // --- LÓGICA DEL OJITO (MOSTRAR/OCULTAR CONTRASEÑA) ---
+        // --- LÓGICA DEL OJITO ---
         togglePassword.addEventListener('click', function () {
             const isPassword = inputClave.getAttribute('type') === 'password';
-            
-            // Intercambiar entre texto y contraseña
             inputClave.setAttribute('type', isPassword ? 'text' : 'password');
-            
-            // Feedback visual: Si se ve, el icono brilla más
-            eyeIcon.style.opacity = isPassword ? "1" : "0.6";
+            eyeIcon.innerText = isPassword ? 'visibility_off' : 'visibility';
         });
-
-
-        // --- LÓGICA DE AUTOCOMPLETADO DE PERSONAL ---
-        const limpiarCampos = () => {
-            ['dni', 'apellidos', 'nombres'].forEach(id => {
-                document.getElementById(id).value = '';
-            });
-        };
-
-        const cargarDatosPersonal = () => {
-            const codigo = inputCodigo.value.trim().toUpperCase();
-            
-            if (!codigo) {
-                limpiarCampos();
-                return false;
-            }
-
-            const personal = JSON.parse(localStorage.getItem('personal')) || [];
-            const persona = personal.find(p => p.codigo === codigo);
-
-            if (persona) {
-                document.getElementById('dni').value = persona.dni || '';
-                document.getElementById('apellidos').value = persona.apellidos || '';
-                document.getElementById('nombres').value = persona.nombres || '';
-                return true;
-            } else {
-                limpiarCampos();
-                inputCodigo.value = ''; 
-                alert("⚠️ CÓDIGO NO ENCONTRADO.\nPara crear un usuario, el trabajador debe estar registrado primero en el módulo de 'Personal'.");
-                inputCodigo.focus();
-                return false;
-            }
-        };
-
-        inputCodigo.addEventListener('blur', cargarDatosPersonal);
-        
-        inputCodigo.addEventListener('keypress', function(e) {
-            if(e.key === 'Enter') {
-                e.preventDefault(); 
-                if (cargarDatosPersonal()) {
-                    document.getElementById('cargo').focus(); // Salta al selector de rol
-                }
-            }
-        });
-
 
         // --- PROCESAR EL REGISTRO FINAL ---
         form.addEventListener('submit', function (event) {
             event.preventDefault();
 
-            // 1. Validar que el autocompletado haya traído datos
-            if (!document.getElementById('dni').value) {
-                alert("⚠️ ERROR: Faltan los datos del personal. Ingrese un código válido primero.");
-                inputCodigo.focus();
-                return;
-            }
-
+            const codigoTexto = document.getElementById('codigo').value.trim().toUpperCase();
+            const dniTexto = document.getElementById('dni').value.trim();
+            const apellidosTexto = document.getElementById('apellidos').value.trim().toUpperCase();
+            const nombresTexto = document.getElementById('nombres').value.trim().toUpperCase();
+            const emailTexto = document.getElementById('email').value.trim();
+            const areaSelect = document.getElementById('area').value;
+            const cargoSelect = document.getElementById('cargo').value;
             const idTexto = document.getElementById('id').value.trim().toUpperCase();
             const claveTexto = inputClave.value.trim();
-            const cargoSelect = document.getElementById('cargo').value;
+            const estadoSelect = document.getElementById('estado').value;
 
-            // 2. Validar selección de rol
-            if (!cargoSelect) {
-                alert("⚠️ POR FAVOR, SELECCIONE EL CARGO (ROL) PARA ESTE USUARIO.");
-                document.getElementById('cargo').focus();
+            if (!codigoTexto || !dniTexto || !apellidosTexto || !nombresTexto || !emailTexto) {
+                mostrarAlerta("Datos Faltantes", "Todos los datos personales y de contacto son obligatorios.", "warning");
                 return;
             }
 
-            // 3. Validar campos de acceso vacíos
+            if (!areaSelect || !cargoSelect) {
+                mostrarAlerta("Datos Faltantes", "Por favor, seleccione un Área y un Rol en el sistema.", "warning");
+                return;
+            }
+
             if (!idTexto || !claveTexto) {
-                alert("⚠️ POR FAVOR, CREA UN ID Y UNA CONTRASEÑA PARA ESTE USUARIO.");
+                mostrarAlerta("Credenciales Faltantes", "Por favor, crea un ID de Login y una contraseña.", "warning");
                 return;
             }
 
-            // 4. Validación estricta de contraseña
             if (!/^(?=.*[A-Za-z])(?=.*\d).{7,}$/.test(claveTexto)) {
-                alert("⚠️ SEGURIDAD DÉBIL:\nLa contraseña debe tener al menos 7 caracteres e incluir una mezcla de letras y números.");
+                mostrarAlerta("Seguridad Débil", "La contraseña debe tener al menos 7 caracteres e incluir letras y números obligatoriamente.", "error");
                 inputClave.focus();
                 return;
             }
 
             const usuarios = JSON.parse(localStorage.getItem('usuarios')) || [];
 
-            // 5. Validar duplicados (Código)
-            if (usuarios.some(u => u.codigo === inputCodigo.value.trim().toUpperCase())) {
-                alert("⚠️ ESTE TRABAJADOR YA TIENE UNA CUENTA DE USUARIO CREADA.");
+            if (usuarios.some(u => u.codigo === codigoTexto)) {
+                mostrarAlerta("Usuario Existente", "El código de empleado ingresado ya tiene una cuenta creada en el sistema.", "error");
                 return;
             }
-
-            // 6. Validar duplicados (ID Login)
+            if (usuarios.some(u => u.dni === dniTexto)) {
+                mostrarAlerta("Usuario Existente", "El DNI ingresado ya pertenece a un usuario registrado.", "error");
+                return;
+            }
             if (usuarios.some(u => u.id === idTexto)) {
-                alert(`⚠️ EL ID DE USUARIO "${idTexto}" YA EXISTE.\nPor favor, invente un ID diferente (ej. agregue un número o la inicial del segundo nombre).`);
+                mostrarAlerta("ID Duplicado", `El ID de usuario "${idTexto}" ya está en uso.\nAsigne un ID diferente.`, "error");
                 document.getElementById('id').focus();
                 return;
             }
 
-            // 7. Construcción y guardado
+            const fechaActualLocal = new Date();
+            fechaActualLocal.setMinutes(fechaActualLocal.getMinutes() - fechaActualLocal.getTimezoneOffset());
+            const fechaAuditoria = fechaActualLocal.toISOString().split('T')[0] + ' ' + fechaActualLocal.toTimeString().split(' ')[0].substring(0, 5);
+
             const nuevoUsuario = {
-                codigo: inputCodigo.value.trim().toUpperCase(),
-                dni: document.getElementById('dni').value.trim(),
-                apellidos: document.getElementById('apellidos').value.trim().toUpperCase(),
-                nombres: document.getElementById('nombres').value.trim().toUpperCase(),
+                codigo: codigoTexto,
+                dni: dniTexto,
+                apellidos: apellidosTexto,
+                nombres: nombresTexto,
+                email: emailTexto,
+                area: areaSelect,
                 cargo: cargoSelect,
                 id: idTexto,
-                clave: btoa(claveTexto) // ⚠️ ENCRIPTACIÓN BASE64 DE LA CONTRASEÑA
+                clave: btoa(claveTexto), // Encriptación en Base64
+                estado: estadoSelect,
+                fechaCreacion: fechaAuditoria 
             };
 
             usuarios.push(nuevoUsuario);
             localStorage.setItem('usuarios', JSON.stringify(usuarios));
 
-            alert(`✅ USUARIO CREADO CON ÉXITO.\n\nNombre: ${nuevoUsuario.nombres}\nID de Acceso: ${nuevoUsuario.id}\nRol del Sistema: ${nuevoUsuario.cargo}`);
+            mostrarToast("Usuario creado correctamente", "TBRegistroUsuarios.html");
             
-            this.reset();
-            // Restablecer el icono del ojo por si se quedó como texto
             inputClave.setAttribute('type', 'password');
-            eyeIcon.style.opacity = "0.6";
-
-            window.location.href = 'RegistroUsuarios.html';
+            eyeIcon.innerText = 'visibility';
         });
     });
 </script>
