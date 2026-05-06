@@ -1,329 +1,492 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>REGISTRO DE USUARIOS | MEF Engineering & Soluciones</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>GESTIÓN DE USUARIOS | MEF Engineering & Soluciones</title>
+    
+    <!-- FUENTES E ICONOS DE GOOGLE -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+    
+    <!-- LIBRERÍA SHEETJS PARA EXCEL -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
     <style>
-        /* VARIABLES GLOBALES Y RESET */
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-
+        /* ==========================================
+           SISTEMA DE DISEÑO MEF ENGINEERING (COMPACTO)
+           ========================================== */
         :root {
-            --color-principal: #1d3b20;
-            --color-fondo: #f4f6f5;
-            --color-texto: #333;
-            --color-hover: #e8f5e9;
-            --color-par: #ffffff;
-            --color-impar: #fbfdfb;
+            --primary-color: #1d3b20;
+            --primary-hover: #0a1f0d;
+            --bg-color: #f4f6f8;
+            --surface: #ffffff;
+            --text-dark: #202223;
+            --text-subdued: #6d7175;
+            --border: #c9cccf;
+            --interactive: #2c6ecb;
+            --critical: #d82c0d;
+            --warning: #b98900;
+            --success: #108043;
+            --shadow-card: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.03);
+            --radius: 10px;
         }
 
-        * { 
-            box-sizing: border-box; 
-            margin: 0; 
-            padding: 0; 
+        * {
+            margin: 0; padding: 0; box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            -webkit-tap-highlight-color: transparent;
         }
 
+        /* LAYOUT FIJO */
         body {
-            padding: 40px;
-            font-family: 'Inter', -apple-system, sans-serif;
-            background-color: var(--color-fondo);
-            color: var(--color-texto);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+            background-color: var(--bg-color); color: var(--text-dark);
+            height: 100vh; height: 100svh; overflow: hidden; display: flex; flex-direction: column;
         }
 
-        /* BARRA DE NAVEGACIÓN */
-        .icon-bar {
-            display: flex;
-            align-items: center;
-            justify-content: flex-start;
-            gap: 20px;
-            width: 100%;
-            max-width: 1100px;
-            margin-bottom: 30px;
+        /* ENCABEZADO FIJO */
+        .header {
+            background-color: var(--primary-color); color: #ffffff; padding: 10px 16px;
+            display: flex; align-items: center; justify-content: space-between;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); flex-shrink: 0; z-index: 100;
         }
-
-        .icon-bar a img {
-            width: 28px;
-            height: 28px;
-            cursor: pointer;
-            transition: transform 0.2s ease, opacity 0.2s ease;
-            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
-        }
-
-        .icon-bar a img:hover {
-            transform: scale(1.15);
-            opacity: 0.8;
-        }
-
-        /* TABLA RESPONSIVA */
-        .table-container {
-            width: 100%;
-            max-width: 1100px;
-            overflow-x: auto;
-            border-radius: 12px;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
-            background-color: #fff;
-            border: 1px solid #e0e0e0;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            min-width: 900px;
-        }
-
-        caption {
-            background: linear-gradient(135deg, var(--color-principal), #142d17);
-            color: #fff;
-            font-size: 1.2rem;
-            font-weight: 700;
-            padding: 18px;
-            letter-spacing: 1.5px;
-            text-transform: uppercase;
-            text-align: center;
-        }
-
-        thead {
-            background-color: #e8f5e9;
-            border-bottom: 2px solid #2e7d32;
-        }
-
-        th, td {
-            padding: 16px 14px;
-            font-size: 0.9rem;
-            text-align: center;
-            border-bottom: 1px solid #f0f0f0;
-            white-space: nowrap;
-        }
-
-        th {
-            color: var(--color-principal);
-            text-transform: uppercase;
-            font-weight: 700;
-            letter-spacing: 0.5px;
-        }
-
-        tbody tr:nth-child(even) { background-color: var(--color-par); }
-        tbody tr:nth-child(odd) { background-color: var(--color-impar); }
-        tbody tr:hover { background-color: var(--color-hover); }
-
-        .acciones {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 12px;
-        }
+        .header .spacer { width: 32px; }
+        .header h1 { font-size: 13px; font-weight: 700; letter-spacing: 1px; text-align: center; margin: 0; flex-grow: 1; text-transform: uppercase; }
 
         .icon-btn {
-            background: none;
-            border: none;
-            cursor: pointer;
-            padding: 6px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: transform 0.2s ease;
-            border-radius: 8px;
+            background: rgba(255,255,255,0.08); color: white; border: none; padding: 6px; border-radius: 6px;
+            cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s ease;
+        }
+        .icon-btn:hover { background: rgba(255,255,255,0.2); transform: scale(1.05); }
+        .icon-btn .material-icons-outlined { font-size: 18px; }
+
+        /* CONTENEDOR PRINCIPAL */
+        .main-container {
+            padding: 20px 15px; width: 100%; max-width: 1200px; margin: 0 auto; flex-grow: 1;
+            display: flex; flex-direction: column; gap: 15px; overflow: hidden; position: relative;
         }
 
-        .icon-btn:hover {
-            transform: scale(1.15) translateY(-2px);
-            background-color: rgba(46, 125, 50, 0.1);
+        /* CONTROLES (DOBLE BUSCADOR) */
+        .control-bar {
+            background: var(--surface); padding: 12px 16px; display: flex; gap: 12px; align-items: center;
+            justify-content: space-between; border-radius: var(--radius); border: 1px solid var(--border);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.03); flex-shrink: 0; flex-wrap: wrap;
         }
 
-        .icon-btn img {
-            width: 22px;
-            height: 22px;
-            pointer-events: none;
+        .search-group { display: flex; gap: 10px; flex-grow: 1; max-width: 600px; }
+        .search-wrapper { position: relative; flex: 1; min-width: 140px; }
+        .search-wrapper .material-icons-outlined {
+            position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--text-subdued); font-size: 16px;
         }
 
-        /* RESPONSIVE PARA CELULARES */
-        @media (max-width: 600px) {
-            body { padding: 15px 10px; }
-            .icon-bar { justify-content: center; gap: 25px; margin-bottom: 20px; }
-            caption { font-size: 1rem; padding: 15px; }
-            th, td { padding: 12px 10px; font-size: 0.85rem; }
-            .icon-btn img { width: 20px; height: 20px; }
+        .search-input {
+            width: 100%; padding: 8px 10px 8px 32px; border: 1px solid var(--border); border-radius: 6px;
+            font-size: 12px; color: var(--text-dark); background-color: var(--bg-color); transition: all 0.3s;
+            outline: none; height: 34px;
+        }
+        .search-input:focus { border-color: var(--primary-color); background-color: var(--surface); box-shadow: 0 0 0 3px rgba(29, 59, 32, 0.1);}
+
+        .action-btn {
+            display: flex; align-items: center; gap: 4px; padding: 0 12px; height: 34px; border-radius: 6px;
+            font-size: 12px; font-weight: 700; cursor: pointer; border: 1px solid #a5d6a7; background-color: #e8f5e9;
+            color: var(--success); transition: all 0.2s; white-space: nowrap;
+        }
+        .action-btn .material-icons-outlined { font-size: 16px; }
+        .action-btn:hover { background-color: #c8e6c9; }
+
+        /* TABLA Y SCROLL */
+        .table-card {
+            background-color: var(--surface); border-radius: var(--radius); box-shadow: var(--shadow-card);
+            border: 1px solid var(--border); overflow: hidden; width: 100%; flex-grow: 1; display: flex; flex-direction: column;
+        }
+        .table-responsive { width: 100%; overflow-x: auto; overflow-y: auto; flex-grow: 1; -webkit-overflow-scrolling: touch; }
+
+        table { width: 100%; border-collapse: collapse; min-width: 900px; }
+        thead { background-color: #f8fafc; position: sticky; top: 0; z-index: 10; }
+        th {
+            padding: 12px 10px; font-size: 11px; font-weight: 700; color: var(--text-subdued); text-transform: uppercase;
+            letter-spacing: 0.5px; text-align: center; border-bottom: 2px solid var(--border); white-space: nowrap;
+        }
+        td {
+            padding: 10px 12px; font-size: 12px; border-bottom: 1px solid #f0f2f4; color: var(--text-dark);
+            vertical-align: middle; text-align: center; white-space: nowrap;
+        }
+        th:nth-child(3), td:nth-child(3) { text-align: left; } 
+        tbody tr:nth-child(even) { background-color: #fbfdfb; }
+        tbody tr:hover { background-color: #f4f6f8; }
+        
+        .badge-rol { background: #e0f2fe; color: var(--interactive); padding: 4px 8px; border-radius: 4px; font-weight: 700; font-size: 10px; letter-spacing: 0.5px; }
+        .badge-estado { padding: 4px 8px; border-radius: 4px; font-weight: 700; font-size: 10px; letter-spacing: 0.5px; }
+        .badge-estado.activo { background: #e8f5e9; color: var(--success); }
+        .badge-estado.inactivo { background: #fee2e2; color: var(--critical); }
+
+        /* ACCIONES DE FILA */
+        .td-actions { display: flex; align-items: center; justify-content: center; gap: 6px; }
+        .row-btn {
+            background: none; border: none; cursor: pointer; padding: 4px; border-radius: 4px; display: flex;
+            align-items: center; justify-content: center; transition: all 0.2s ease; color: var(--text-subdued);
+        }
+        .row-btn .material-icons-outlined { font-size: 18px; }
+        .row-btn.edit:hover { background-color: #e0f2fe; color: var(--interactive); }
+        .row-btn.delete:hover { background-color: #fef2f2; color: var(--critical); }
+
+        /* ESTADO VACÍO */
+        .empty-state { text-align: center; padding: 50px 20px; color: var(--text-subdued); display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .empty-state .material-icons-outlined { font-size: 36px; color: var(--border); margin-bottom: 8px;}
+
+        /* BOTÓN FLOTANTE */
+        .fab-btn {
+            position: fixed; bottom: 60px; right: 25px; width: 56px; height: 56px; background-color: var(--primary-color);
+            color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 4px 12px rgba(29, 59, 32, 0.3); cursor: pointer; transition: all 0.3s ease; text-decoration: none; z-index: 1000;
+        }
+        .fab-btn:hover { transform: translateY(-3px) scale(1.05); background-color: var(--primary-hover); box-shadow: 0 6px 16px rgba(29, 59, 32, 0.4); }
+        .fab-btn .material-icons-outlined { font-size: 28px; }
+
+        /* FOOTER ESTÁTICO */
+        .card-footer { background-color: var(--surface); text-align: center; padding: 10px; border-top: 1px solid var(--border); flex-shrink: 0; display: flex; justify-content: center; align-items: center; position: relative; z-index: 50; }
+        .card-footer .logo { height: 25px; width: auto; opacity: 0.8; pointer-events: none; }
+
+        /* MODALES Y TOAST */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(32, 34, 35, 0.85); display: none; justify-content: center; align-items: center; z-index: 2000; opacity: 0; animation: fadeIn 0.2s forwards; padding: 15px; }
+        .modal-content { background: var(--surface); width: 100%; max-width: 320px; border-radius: var(--radius); box-shadow: 0 10px 25px rgba(0,0,0,0.2); overflow: hidden; transform: scale(0.95); animation: scaleUp 0.2s forwards; text-align: center; }
+        .modal-header { padding: 20px 16px 10px; display: flex; flex-direction: column; align-items: center; gap: 6px; font-size: 15px; font-weight: 800; text-transform: uppercase;}
+        .modal-body { padding: 0 16px 16px; color: var(--text-subdued); font-size: 13px; line-height: 1.4; }
+        .modal-footer { padding: 12px 16px; background: #fafbfb; border-top: 1px solid var(--border); display: flex; justify-content: center; gap: 10px;}
+        
+        .modal-header.error { color: var(--critical); }
+        .modal-header.warning { color: var(--warning); }
+        .modal-header .material-icons-outlined { font-size: 40px; margin-bottom: 2px;}
+
+        .btn-modal { padding: 8px 16px; border-radius: 6px; font-size: 13px; font-weight: 700; cursor: pointer; width: 100%; transition: 0.2s; border: none; display: flex; justify-content: center; align-items: center; gap: 4px; }
+        .btn-modal.primary { background-color: var(--primary-color); color: white; }
+        .btn-modal.primary:hover { background-color: var(--primary-hover); }
+        .btn-modal.danger { background-color: var(--critical); color: white; }
+        .btn-modal.danger:hover { background-color: #b9250a; }
+        .btn-modal.outline { background-color: transparent; border: 1px solid var(--border); color: var(--text-dark); }
+        .btn-modal.outline:hover { background-color: var(--bg-color); }
+
+        .toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: #202223; color: white; padding: 10px 16px; border-radius: 8px; font-size: 13px; display: none; z-index: 3000; align-items: center; gap: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); font-weight: 500; }
+
+        @keyframes fadeIn { to { opacity: 1; } }
+        @keyframes scaleUp { to { transform: scale(1); } }
+
+        /* RESPONSIVE */
+        @media (max-width: 650px) {
+            .control-bar { flex-direction: column; align-items: stretch; }
+            .search-group { max-width: 100%; flex-direction: column; align-items: stretch; gap: 8px; }
+            .action-btn { justify-content: center; }
+            .main-container { padding: 10px; }
+            .fab-btn { bottom: 50px; right: 15px; width: 50px; height: 50px; }
         }
     </style>
 </head>
 <body>
 
-    <main style="width: 100%; display: flex; flex-direction: column; align-items: center;">
+    <header class="header">
+        <div class="spacer"></div>
+        <h1>PANEL DE USUARIOS</h1>
+        <button class="icon-btn" title="Cerrar y volver" onclick="window.history.back();">
+            <span class="material-icons-outlined">close</span>
+        </button>
+    </header>
 
-        <nav class="icon-bar" aria-label="Navegación superior">
-            <a href="#" title="Menú Principal" onclick="volverAlMenu(event)">
-                <img src="Iconos/MENU1.webp" alt="Menú">
-            </a>
-            <a href="RegistroUsuarios.html" title="Registrar Nuevo Usuario">
-                <img src="Iconos/VOLVER.png" alt="Registrar">
-            </a>
-            <a href="#" title="Cerrar Sesión de forma segura" onclick="cerrarSesion(event)">
-                <img src="Iconos/SALIR.png" alt="Cerrar sesión">
-            </a>
-        </nav>
+    <main class="main-container">
+        
+        <div class="control-bar">
+            <div class="search-group">
+                <div class="search-wrapper">
+                    <span class="material-icons-outlined">badge</span>
+                    <!-- PLACEHOLDER MODIFICADO PARA INDICAR QUE BUSCA DNI -->
+                    <input type="text" id="buscarCodigo" class="search-input" placeholder="Buscar ID, Código o DNI..." onkeyup="filtrarTabla()">
+                </div>
+                <div class="search-wrapper">
+                    <span class="material-icons-outlined">person_search</span>
+                    <input type="text" id="buscarNombre" class="search-input" placeholder="Buscar por Nombre o Apellido..." onkeyup="filtrarTabla()">
+                </div>
+            </div>
+            
+            <button class="action-btn export" onclick="exportarExcel()" title="Descargar Excel">
+                <span class="material-icons-outlined">file_download</span> Exportar
+            </button>
+        </div>
 
-        <section class="table-container">
-            <table>
-                <caption>REGISTRO DE USUARIOS DEL SISTEMA</caption>
-                <thead>
-                    <tr>
-                        <th>Código</th>
-                        <th>DNI</th>
-                        <th>Apellidos</th>
-                        <th>Nombres</th>
-                        <th>Rol (Cargo)</th>
-                        <th>ID de Acceso</th>
-                        <th>Contraseña</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody id="tablaUsuarios">
+        <div class="table-card">
+            <div class="table-responsive">
+                <table id="tablaUsuarios">
+                    <thead>
+                        <tr>
+                            <th>Código</th>
+                            <th>DNI</th>
+                            <th>Nombres y Apellidos</th>
+                            <th>Correo Electrónico</th>
+                            <th>Área / Sede</th>
+                            <th>Rol (Cargo)</th>
+                            <th>ID Acceso</th>
+                            <th>Estado</th>
+                            <th>Registro</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="cuerpoTabla">
+                        <!-- Contenido dinámico -->
                     </tbody>
-            </table>
-        </section>
+                </table>
+            </div>
+        </div>
+
+        <a href="RegistroUsuarios.html" class="fab-btn" title="Registrar Nuevo Usuario">
+            <span class="material-icons-outlined">person_add</span>
+        </a>
 
     </main>
+
+    <footer class="card-footer">
+        <img src="Imagenes/ECFM.png" alt="Logo de MEF Engineering" class="logo" onerror="this.style.display='none'">
+    </footer>
+
+    <!-- MODALES Y TOAST -->
+    <div id="modal-alerta" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header warning" id="alerta-header">
+                <span class="material-icons-outlined" id="alerta-icon">warning</span>
+                <span id="alerta-titulo">Atención</span>
+            </div>
+            <div class="modal-body" id="alerta-mensaje">Mensaje aquí.</div>
+            <div class="modal-footer">
+                <button class="btn-modal primary" onclick="cerrarModales()">Entendido</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-confirmacion" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header error">
+                <span class="material-icons-outlined">person_remove</span>
+                <span>Revocar Acceso</span>
+            </div>
+            <div class="modal-body" id="confirmacion-mensaje">
+                ¿Estás seguro de eliminar permanentemente a este usuario? Perderá todo acceso al sistema.
+            </div>
+            <div class="modal-footer">
+                <button class="btn-modal outline" onclick="cerrarModales()">Cancelar</button>
+                <button class="btn-modal danger" id="btn-confirmar-eliminar">Sí, eliminar</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast" class="toast">
+        <span class="material-icons-outlined" style="color: #4ade80;">check_circle</span>
+        <span id="toast-msg">Operación exitosa</span>
+    </div>
 
 <script>
     'use strict';
 
-    // ==========================================
-    // 1. GESTIÓN DE SESIÓN Y NAVEGACIÓN
-    // ==========================================
-    function cerrarSesion(e) {
-        if (e && typeof e.preventDefault === 'function') e.preventDefault();
-        alert("🔒 Sesión finalizada de forma segura.");
+    // 1. SISTEMA VISUAL DE MODALES
+    function mostrarAlerta(titulo, mensaje, tipo = 'warning') {
+        const modal = document.getElementById('modal-alerta');
+        const header = document.getElementById('alerta-header');
+        const icon = document.getElementById('alerta-icon');
+        
+        document.getElementById('alerta-titulo').innerText = titulo;
+        document.getElementById('alerta-mensaje').innerText = mensaje;
+        header.className = 'modal-header ' + (tipo === 'error' ? 'error' : 'warning'); 
+        icon.innerText = tipo === 'error' ? 'gpp_bad' : 'warning';
+        modal.style.display = 'flex';
+    }
+
+    function prepararEliminacion(idAcceso, index) {
+        const mensajeHTML = `¿Estás seguro de revocar permanentemente el acceso del usuario:<br><br><strong style="color:var(--critical); font-size:16px;">[ ${idAcceso} ]</strong>?<br><br>Esta acción NO se puede deshacer.`;
+        document.getElementById('confirmacion-mensaje').innerHTML = mensajeHTML;
+        
+        const btnConfirmar = document.getElementById('btn-confirmar-eliminar');
+        btnConfirmar.onclick = () => { ejecutarEliminacion(index); };
+        document.getElementById('modal-confirmacion').style.display = 'flex';
+    }
+
+    function cerrarModales() {
+        document.getElementById('modal-alerta').style.display = 'none';
+        document.getElementById('modal-confirmacion').style.display = 'none';
+    }
+
+    function mostrarToast(mensaje) {
+        const toast = document.getElementById('toast');
+        document.getElementById('toast-msg').innerText = mensaje;
+        toast.style.display = 'flex';
+        setTimeout(() => { toast.style.display = 'none'; }, 2000);
+    }
+
+    // 2. GESTIÓN DE SESIÓN Y SEGURIDAD
+    function cerrarSesion() {
         sessionStorage.clear();
         localStorage.setItem("sesionActiva", "no");
         window.location.replace("index.html");
     }
 
-    function validarSesion() {
-        if (sessionStorage.getItem("sesionActiva") !== "true") {
-            cerrarSesion();
-        }
-    }
+    window.addEventListener("DOMContentLoaded", () => {
+        if (sessionStorage.getItem("sesionActiva") !== "true") cerrarSesion();
+        cargarUsuarios();
+    });
 
-    function volverAlMenu(e) {
-        if (e && typeof e.preventDefault === 'function') e.preventDefault();
-        window.location.href = sessionStorage.getItem("menuUsuario") || "Botones.html";
-    }
-
-    window.addEventListener("DOMContentLoaded", validarSesion);
-    window.addEventListener("pageshow", validarSesion);
-
-    // Límite estricto de inactividad a 1 minuto
     let timerInactividad;
     const reiniciarTemporizador = () => {
         clearTimeout(timerInactividad);
         timerInactividad = setTimeout(() => {
             alert("⏰ INACTIVIDAD DETECTADA. SESIÓN CERRADA.");
             cerrarSesion();
-        }, 1 * 60 * 1000); 
+        }, 60000); 
     };
 
-    ["mousemove", "keydown", "click", "scroll", "touchstart"].forEach(evento => {
-        document.addEventListener(evento, reiniciarTemporizador, { passive: true });
-    });
-    reiniciarTemporizador();
+    ["mousemove", "keydown", "click", "touchstart"].forEach(evt => document.addEventListener(evt, reiniciarTemporizador, { passive: true }));
+    document.addEventListener('contextmenu', e => e.preventDefault());
+    document.addEventListener('keydown', e => { if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && ['I','J','C'].includes(e.key)) || (e.ctrlKey && e.key === 'U')) e.preventDefault(); });
 
-
-    // ==========================================
-    // 2. LÓGICA DE LA TABLA DE USUARIOS
-    // ==========================================
+    // 3. CARGAR DATOS EN LA TABLA
     function cargarUsuarios() {
-        const tabla = document.getElementById('tablaUsuarios');
+        const tbody = document.getElementById('cuerpoTabla');
         const usuarios = JSON.parse(localStorage.getItem('usuarios')) || [];
-        
-        tabla.innerHTML = '';
+        tbody.innerHTML = '';
 
         if (usuarios.length === 0) {
-            tabla.innerHTML = `<tr><td colspan="8" style="text-align:center; padding:30px; font-style:italic; color:#777;">NO HAY USUARIOS REGISTRADOS EN EL SISTEMA.</td></tr>`;
+            tbody.innerHTML = `
+                <tr class="empty-row">
+                    <td colspan="10">
+                        <div class="empty-state">
+                            <span class="material-icons-outlined">manage_accounts</span>
+                            <p style="font-weight: 600; font-size: 13px; color: var(--text-dark);">No hay usuarios registrados en el sistema.</p>
+                        </div>
+                    </td>
+                </tr>`;
             return;
         }
 
         usuarios.forEach((usuario, index) => {
-            // Desencriptar solo para contar cuántos asteriscos pintar (Seguridad Visual)
-            let longitudReal = 7;
-            try {
-                longitudReal = atob(usuario.clave).length;
-            } catch (e) {
-                longitudReal = (usuario.clave || "*******").length;
-            }
+            const estadoActual = usuario.estado || 'ACTIVO';
+            const badgeEstadoHTML = estadoActual === 'INACTIVO' 
+                ? `<span class="badge-estado inactivo">INACTIVO</span>` 
+                : `<span class="badge-estado activo">ACTIVO</span>`;
+
+            const esAdminMaestro = (usuario.id || "").toUpperCase() === "MTMENDOZA";
+            let accionesHTML = esAdminMaestro 
+                ? `<div class="td-actions">
+                    <button class="row-btn" style="color: var(--warning); cursor: not-allowed;" title="Cuenta Maestra Protegida" onclick="mostrarAlerta('Acceso Denegado', 'Esta cuenta es el administrador principal.\\nNo puede ser modificada.', 'warning')">
+                        <span class="material-icons-outlined">local_police</span>
+                    </button>
+                   </div>`
+                : `<div class="td-actions">
+                    <button class="row-btn edit" title="Editar Accesos" onclick="editarUsuario(${index})">
+                        <span class="material-icons-outlined">edit</span>
+                    </button>
+                    <button class="row-btn delete" title="Revocar Acceso" onclick="prepararEliminacion('${usuario.id}', ${index})">
+                        <span class="material-icons-outlined">person_remove</span>
+                    </button>
+                   </div>`;
 
             const fila = document.createElement('tr');
             fila.innerHTML = `
                 <td><strong>${usuario.codigo || '-'}</strong></td>
                 <td>${usuario.dni || '-'}</td>
-                <td>${usuario.apellidos || '-'}</td>
-                <td>${usuario.nombres || '-'}</td>
-                <td><span style="background:#e8f5e9; color:#2e7d32; padding:4px 8px; border-radius:4px; font-weight:600; font-size:0.8rem;">${usuario.cargo || '-'}</span></td>
-                <td><strong>${usuario.id || '-'}</strong></td>
-                <td style="letter-spacing: 2px; color:#666;">${'*'.repeat(longitudReal)}</td>
-                <td class="acciones">
-                    <button class="icon-btn" title="Editar Usuario" onclick="editarUsuario(${index})">
-                        <img src="Iconos/EDITAR.png" alt="Editar">
-                    </button>
-                    <button class="icon-btn" title="Eliminar Usuario" onclick="eliminarUsuario(${index})">
-                        <img src="Iconos/ELIMINAR.png" alt="Eliminar">
-                    </button>
-                </td>
+                <td><strong>${usuario.apellidos || ''}</strong> ${usuario.nombres || ''}</td>
+                <td style="color: var(--text-subdued);">${usuario.email || '-'}</td>
+                <td>${usuario.area || '-'}</td>
+                <td><span class="badge-rol">${usuario.cargo || '-'}</span></td>
+                <td><strong style="color: var(--interactive);">${usuario.id || '-'}</strong></td>
+                <td>${badgeEstadoHTML}</td>
+                <td style="color: var(--text-subdued); font-size:11px;">${usuario.fechaCreacion || '-'}</td>
+                <td>${accionesHTML}</td>
             `;
-            tabla.appendChild(fila);
+            tbody.appendChild(fila);
         });
     }
 
-    // --- FUNCIONES DE ACCIÓN (Globales para uso en los botones) ---
-    window.eliminarUsuario = function(index) {
-        const usuarios = JSON.parse(localStorage.getItem('usuarios')) || [];
-        const usuario = usuarios[index];
+    // ==========================================
+    // 4. FILTRAR TABLA (Buscador Inteligente Actualizado)
+    // ==========================================
+    function filtrarTabla() {
+        const filtroCodigo = document.getElementById("buscarCodigo").value.toUpperCase();
+        const filtroNombre = document.getElementById("buscarNombre").value.toUpperCase();
+        const tabla = document.getElementById("tablaUsuarios");
+        const filas = tabla.getElementsByTagName("tr");
 
-        if (!usuario) return;
+        for (let i = 1; i < filas.length; i++) { 
+            if (filas[i].classList.contains('empty-row')) continue;
 
-        // Protección absoluta para el administrador maestro
-        if (usuario.id.toUpperCase() === "MTMENDOZA") {
-            alert("❌ ACCIÓN PROHIBIDA:\nNo se puede eliminar la cuenta del administrador principal del sistema.");
-            return;
+            const tdCodigo = filas[i].getElementsByTagName("td")[0];
+            const tdDni = filas[i].getElementsByTagName("td")[1]; // SE AÑADIÓ LA COLUMNA DNI
+            const tdNombre = filas[i].getElementsByTagName("td")[2];
+            const tdIdLogin = filas[i].getElementsByTagName("td")[6];
+            
+            if (tdCodigo && tdDni && tdNombre && tdIdLogin) {
+                const txtCodigo = (tdCodigo.textContent || tdCodigo.innerText).toUpperCase();
+                const txtDni = (tdDni.textContent || tdDni.innerText).toUpperCase(); // LEE EL DNI
+                const txtIdLogin = (tdIdLogin.textContent || tdIdLogin.innerText).toUpperCase();
+                const txtNombre = (tdNombre.textContent || tdNombre.innerText).toUpperCase();
+                
+                // LÓGICA OR: Coincide si el texto está en Código, ID de Login o DNI
+                const matchCodigo = txtCodigo.indexOf(filtroCodigo) > -1 || 
+                                    txtIdLogin.indexOf(filtroCodigo) > -1 || 
+                                    txtDni.indexOf(filtroCodigo) > -1;
+                
+                const matchNombre = txtNombre.indexOf(filtroNombre) > -1;
+
+                if (matchCodigo && matchNombre) filas[i].style.display = "";
+                else filas[i].style.display = "none";
+            }       
         }
+    }
 
-        if (!confirm(`⚠️ ADVERTENCIA CRÍTICA:\n\n¿Estás seguro de eliminar permanentemente el acceso del usuario:\n[ ${usuario.id} - ${usuario.nombres} ]?`)) {
+    // 5. ACCIONES (ELIMINAR / EDITAR)
+    function ejecutarEliminacion(index) {
+        const usuarios = JSON.parse(localStorage.getItem('usuarios')) || [];
+        
+        if (usuarios[index] && usuarios[index].id.toUpperCase() === "MTMENDOZA") {
+            cerrarModales();
+            mostrarAlerta("Acceso Denegado", "El administrador maestro no puede ser eliminado.", "error");
             return;
         }
 
         usuarios.splice(index, 1);
         localStorage.setItem('usuarios', JSON.stringify(usuarios));
-        cargarUsuarios();
-    };
+        cerrarModales(); cargarUsuarios(); mostrarToast("Acceso revocado correctamente");
+    }
 
     window.editarUsuario = function(index) {
         const usuarios = JSON.parse(localStorage.getItem('usuarios')) || [];
-        const usuario = usuarios[index];
+        if (!usuarios[index]) return mostrarAlerta("Error", "No se encontró el registro solicitado.");
+        if (usuarios[index].id.toUpperCase() === "MTMENDOZA") return mostrarAlerta("Acceso Denegado", "La cuenta principal MTMENDOZA está protegida y no puede ser editada.", "error");
 
-        if (!usuario) {
-            alert("⚠️ ERROR: No se encontró la cuenta de usuario solicitada.");
-            return;
-        }
-
-        // Protección absoluta: No permitir editar la cuenta maestra desde esta vista
-        if (usuario.id.toUpperCase() === "MTMENDOZA") {
-            alert("❌ ACCIÓN PROHIBIDA:\nLos datos del administrador principal no pueden ser modificados por seguridad.");
-            return;
-        }
-
-        // Cachear datos y enviar a pantalla de edición
-        localStorage.setItem('usuarioEditar', JSON.stringify(usuario));
+        localStorage.setItem('usuarioEditar', JSON.stringify(usuarios[index]));
         localStorage.setItem('usuarioEditarIndex', index.toString());
-        
-        // ⚠️ Asumo que llamarás al archivo EditarU.html o similar (Edición de usuario)
         window.location.href = 'EditarUsuario.html'; 
     };
 
-    // --- INICIALIZAR ---
-    document.addEventListener("DOMContentLoaded", cargarUsuarios);
+    // 6. EXPORTACIÓN A EXCEL
+    window.exportarExcel = function() {
+        const usuarios = JSON.parse(localStorage.getItem('usuarios')) || [];
+        if (usuarios.length === 0) return mostrarAlerta("Sin Datos", "No hay usuarios registrados para exportar.");
 
+        const datosExcel = usuarios.map(u => ({
+            "CÓDIGO": u.codigo || "-",
+            "DNI": u.dni || "-",
+            "NOMBRES Y APELLIDOS": `${u.nombres || ''} ${u.apellidos || ''}`.trim(),
+            "CORREO ELECTRÓNICO": u.email || "-",
+            "ÁREA / SEDE": u.area || "-",
+            "ROL (CARGO)": u.cargo || "-",
+            "ID ACCESO": u.id || "-",
+            "ESTADO": u.estado || "ACTIVO",
+            "FECHA CREACIÓN": u.fechaCreacion || "-"
+        }));
+
+        try {
+            const hoja = XLSX.utils.json_to_sheet(datosExcel);
+            const libro = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(libro, hoja, "Usuarios_Accesos");
+            const fecha = new Date().toISOString().split('T')[0];
+            XLSX.writeFile(libro, `Reporte_Usuarios_Accesos_${fecha}.xlsx`);
+            mostrarToast("Reporte descargado exitosamente");
+        } catch (error) { mostrarAlerta("Error", "No se pudo generar el archivo Excel."); }
+    }
 </script>
 
 </body>
