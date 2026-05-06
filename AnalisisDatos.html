@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>ANÁLISIS DE DATOS | MEF Engineering & Soluciones</title>
+    
+    <!-- FUENTES E ICONOS DE GOOGLE -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+    
+    <!-- CHART.JS PARA GRÁFICOS PROFESIONALES -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        /* ==========================================
+           SISTEMA DE DISEÑO MEF ENGINEERING
+           ========================================== */
+        :root {
+            --primary-color: #1d3b20;
+            --primary-hover: #0a1f0d;
+            --bg-color: #f4f6f8;
+            --surface: #ffffff;
+            --text-dark: #202223;
+            --text-subdued: #6d7175;
+            --border: #c9cccf;
+            --interactive: #2c6ecb;
+            --critical: #d82c0d;
+            --warning: #b98900;
+            --success: #108043;
+            --radius: 12px;
+            --shadow-sm: 0 2px 4px rgba(0,0,0,0.03);
+            --shadow-md: 0 4px 12px rgba(0,0,0,0.06);
+        }
+
+        * {
+            margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-color); color: var(--text-dark); height: 100vh; width: 100vw; display: flex; flex-direction: column; overflow: hidden; 
+        }
+
+        /* ENCABEZADO FIJO */
+        .card-header {
+            background-color: var(--primary-color); color: #ffffff; padding: 12px 20px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); flex-shrink: 0; z-index: 100;
+        }
+        .card-header .spacer { width: 32px; }
+        .card-header h1 { font-size: 1.1rem; font-weight: 700; letter-spacing: 0.5px; margin: 0; text-align: center; flex-grow: 1; text-transform: uppercase; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        
+        .icon-btn { background: rgba(255,255,255,0.05); color: white; border: none; padding: 6px; border-radius: 6px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s; }
+        .icon-btn:hover { background: rgba(255,255,255,0.2); transform: scale(1.05); }
+
+        /* CONTROLES Y FILTROS */
+        .filter-bar { background: var(--surface); padding: 12px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 12px; flex-shrink: 0; box-shadow: var(--shadow-sm); flex-wrap: wrap; }
+        .filter-bar label { font-size: 12px; font-weight: 700; color: var(--text-dark); display: flex; align-items: center; gap: 4px; }
+        .filter-input { padding: 6px 10px; border: 1px solid var(--border); border-radius: 6px; font-size: 13px; outline: none; color: var(--text-dark); cursor: pointer; font-family: inherit; }
+        .filter-input:focus { border-color: var(--interactive); box-shadow: 0 0 0 3px rgba(44, 110, 203, 0.1); }
+        
+        .filter-btn { background: var(--interactive); color: white; border: none; padding: 7px 14px; border-radius: 6px; font-size: 12px; font-weight: 700; cursor: pointer; transition: 0.2s; }
+        .filter-btn:hover { background: #1f57a4; }
+        .filter-btn.outline { background: transparent; color: var(--text-dark); border: 1px solid var(--border); }
+        .filter-btn.outline:hover { background: var(--bg-color); }
+
+        /* CONTENEDOR DEL DASHBOARD */
+        .dashboard-container { flex-grow: 1; overflow-y: auto; overflow-x: hidden; padding: 20px 20px 40px 20px; display: flex; flex-direction: column; gap: 16px; max-width: 1200px; margin: 0 auto; width: 100%; }
+        .dashboard-container::-webkit-scrollbar { width: 6px; }
+        .dashboard-container::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
+
+        .section-divider { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 800; color: var(--primary-color); text-transform: uppercase; letter-spacing: 1px; border-bottom: 2px solid var(--border); padding-bottom: 6px; margin-top: 5px; }
+
+        /* KPI CARDS */
+        .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; width: 100%; }
+        .kpi-card { background-color: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px; display: flex; align-items: center; gap: 14px; box-shadow: var(--shadow-sm); transition: transform 0.2s; }
+        .kpi-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+        .kpi-icon { background-color: #e8f5e9; color: var(--primary-color); width: 44px; height: 44px; border-radius: 50%; display: flex; justify-content: center; align-items: center; flex-shrink: 0; }
+        .kpi-icon .material-icons-outlined { font-size: 24px; }
+        .kpi-data { display: flex; flex-direction: column; }
+        .kpi-data span { font-size: 11px; color: var(--text-subdued); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;}
+        .kpi-data strong { font-size: 20px; color: var(--text-dark); font-weight: 800; line-height: 1.2; }
+
+        /* GRÁFICOS REDUCIDOS */
+        .charts-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; width: 100%; }
+        .chart-card { 
+            background-color: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); 
+            padding: 14px; box-shadow: var(--shadow-sm); display: flex; flex-direction: column; 
+            height: 220px; /* TAMAÑO REDUCIDO */
+            width: 100%; 
+        }
+        .chart-card.large { grid-column: 1 / -1; height: 240px; } /* Ligeramente más grande para acomodar más barras horizontales */
+        
+        .chart-header { font-size: 11px; font-weight: 800; color: var(--text-dark); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
+        .chart-header .material-icons-outlined { color: var(--interactive); font-size: 16px; }
+        .chart-container { position: relative; flex-grow: 1; width: 100%; height: 100%; min-height: 150px; }
+
+        /* TABLA TOP 5 */
+        .top-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+        .top-table th { background: var(--bg-color); padding: 8px; text-align: left; color: var(--text-subdued); font-weight: 700; text-transform: uppercase; font-size: 11px;}
+        .top-table td { padding: 8px; border-bottom: 1px solid var(--bg-color); font-weight: 500; }
+        .top-table tr:hover td { background-color: #f8fafc; }
+        .empty-row { text-align: center; color: var(--text-subdued); padding: 20px !important; font-style: italic;}
+        .medal { display: inline-block; width: 20px; text-align: center; font-size: 14px;}
+
+        /* RESPONSIVE */
+        @media screen and (max-width: 768px) {
+            .charts-grid { grid-template-columns: 1fr; }
+            .dashboard-container { padding: 15px; gap: 15px; }
+            .chart-card { height: 220px; }
+            .chart-card.large { height: 240px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- CABECERA FIJA -->
+    <header class="card-header">
+        <div class="spacer"></div>
+        <h1><span class="material-icons-outlined">query_stats</span> DASHBOARD ANALÍTICO</h1>
+        <button class="icon-btn" title="Cerrar y Volver" onclick="window.history.back();">
+            <span class="material-icons-outlined">close</span>
+        </button>
+    </header>
+
+    <!-- BARRA DE FILTROS -->
+    <div class="filter-bar">
+        <label for="mesFiltro"><span class="material-icons-outlined">calendar_month</span> Período:</label>
+        <input type="month" id="mesFiltro" class="filter-input" title="Seleccione mes y año a analizar">
+        <button class="filter-btn" onclick="actualizarDashboard()">Aplicar Filtro</button>
+        <button class="filter-btn outline" onclick="limpiarFiltro()">Ver Histórico</button>
+    </div>
+
+    <!-- CONTENEDOR PRINCIPAL -->
+    <div class="dashboard-container">
+        
+        <!-- SECCIÓN 1: KPIS GLOBALES -->
+        <div class="kpi-grid">
+            <div class="kpi-card">
+                <div class="kpi-icon"><span class="material-icons-outlined">badge</span></div>
+                <div class="kpi-data"><span>Clientes Registrados</span><strong id="kpi-personal">0</strong></div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-icon" style="color: var(--interactive); background: #e0f2fe;"><span class="material-icons-outlined">manage_accounts</span></div>
+                <div class="kpi-data"><span>Usuarios Sistema</span><strong id="kpi-usuarios">0</strong></div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-icon" style="color: var(--warning); background: #fef9c3;"><span class="material-icons-outlined">event_note</span></div>
+                <div class="kpi-data"><span>Eventos Creados</span><strong id="kpi-eventos">0</strong></div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-icon" style="color: var(--success); background: #e8f5e9;"><span class="material-icons-outlined">recycling</span></div>
+                <div class="kpi-data"><span>Kg Reciclados</span><strong id="kpi-kilos">0 Kg</strong></div>
+            </div>
+        </div>
+
+        <!-- SECCIÓN 2: RECURSOS HUMANOS -->
+        <div class="section-divider"><span class="material-icons-outlined">groups</span> Demografía & RRHH</div>
+        
+        <div class="charts-grid">
+            <div class="chart-card">
+                <div class="chart-header"><span class="material-icons-outlined">domain</span> Distribución por Sedes</div>
+                <div class="chart-container"><canvas id="chartSedes"></canvas></div>
+            </div>
+            <div class="chart-card">
+                <div class="chart-header"><span class="material-icons-outlined">admin_panel_settings</span> Usuarios por Rol</div>
+                <div class="chart-container"><canvas id="chartRoles"></canvas></div>
+            </div>
+            <div class="chart-card large">
+                <div class="chart-header"><span class="material-icons-outlined">cake</span> Distribución de Edades</div>
+                <div class="chart-container"><canvas id="chartEdades"></canvas></div>
+            </div>
+        </div>
+
+        <!-- SECCIÓN 3: SSOMA & EVENTOS -->
+        <div class="section-divider"><span class="material-icons-outlined">health_and_safety</span> Gestión de Eventos</div>
+        
+        <div class="charts-grid">
+            <div class="chart-card">
+                <div class="chart-header"><span class="material-icons-outlined">how_to_reg</span> Índice de Asistencia</div>
+                <div class="chart-container"><canvas id="chartAsistencia"></canvas></div>
+            </div>
+            <div class="chart-card">
+                <div class="chart-header"><span class="material-icons-outlined">timer</span> Horas-Hombre </div>
+                <div class="chart-container"><canvas id="chartHorasHombre"></canvas></div>
+            </div>
+        </div>
+
+        <!-- SECCIÓN 4: SOSTENIBILIDAD & MEMBRESÍAS -->
+        <div class="section-divider"><span class="material-icons-outlined">eco</span> Sostenibilidad</div>
+
+        <div class="charts-grid">
+            <!-- RANKING DE RESIDUOS -->
+            <div class="chart-card">
+                <div class="chart-header"><span class="material-icons-outlined">bar_chart</span> Residuos más reciclados</div>
+                <div class="chart-container"><canvas id="chartTiposResiduos"></canvas></div>
+            </div>
+
+            <!-- TENDENCIA RECICLAJE -->
+            <div class="chart-card">
+                <div class="chart-header"><span class="material-icons-outlined">compost</span> Histórico de Reciclaje (Kg)</div>
+                <div class="chart-container"><canvas id="chartReciclaje"></canvas></div>
+            </div>
+
+            <!-- SUSCRIPCIONES -->
+            <div class="chart-card">
+                <div class="chart-header"><span class="material-icons-outlined">card_membership</span> Suscripciones Activas</div>
+                <div class="chart-container"><canvas id="chartMembresias"></canvas></div>
+            </div>
+
+            <!-- TABLA TOP 5 -->
+            <div class="chart-card" style="height: auto; min-height: 220px;">
+                <div class="chart-header"><span class="material-icons-outlined">emoji_events</span> Top 5 Eco-Héroes</div>
+                <div class="chart-container" style="overflow-x: auto; min-height: auto;">
+                    <table class="top-table">
+                        <thead><tr><th>Puesto</th><th>Colaborador</th><th>Puntos</th></tr></thead>
+                        <tbody id="tablaTop5">
+                            <tr><td colspan="3" class="empty-row">Sin datos registrados</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<script>
+    'use strict';
+
+    let graficosInstancias = {};
+    const colores = {
+        primario: '#1d3b20', verde: '#108043', azul: '#2c6ecb', 
+        amarillo: '#b98900', rojo: '#d82c0d', gris: '#c9cccf', celeste: '#e0f2fe', morado: '#8b5cf6'
+    };
+
+    Chart.defaults.font.family = "'Inter', sans-serif";
+    Chart.defaults.color = '#6d7175';
+
+    // ==========================================
+    // 1. INICIALIZACIÓN Y SEGURIDAD
+    // ==========================================
+    function cerrarSesion(e) {
+        if (e) e.preventDefault();
+        sessionStorage.clear();
+        localStorage.setItem("sesionActiva", "no");
+        window.location.replace("index.html");
+    }
+
+    function validarSesionYRol() {
+        if (sessionStorage.getItem("sesionActiva") !== "true") return cerrarSesion();
+
+        const rolUsuario = sessionStorage.getItem("rolUsuario") || "";
+        const idUsuario = sessionStorage.getItem("usuarioLogueado") || "";
+        
+        if (rolUsuario !== "ADMINISTRADOR" && rolUsuario !== "GERENTE" && idUsuario !== "MTMENDOZA") {
+            alert("Acceso Denegado. Área exclusiva para Gerencia y Administración.");
+            window.location.replace("Botones.html");
+        }
+    }
+
+    window.addEventListener("DOMContentLoaded", () => {
+        validarSesionYRol();
+        establecerMesActual();
+        actualizarDashboard(); 
+    });
+
+    // Control inactividad (1 minuto) y Anti-Inspección
+    let timerInactividad;
+    const reiniciarTemporizador = () => {
+        clearTimeout(timerInactividad);
+        timerInactividad = setTimeout(() => {
+            alert("⏰ INACTIVIDAD DETECTADA. SESIÓN CERRADA.");
+            cerrarSesion();
+        }, 60000); 
+    };
+
+    ["mousemove", "keydown", "click", "touchstart"].forEach(evt => document.addEventListener(evt, reiniciarTemporizador, { passive: true }));
+    
+    document.addEventListener('contextmenu', e => e.preventDefault());
+    document.addEventListener('keydown', e => {
+        if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && ['I','J','C'].includes(e.key)) || (e.ctrlKey && e.key === 'U')) e.preventDefault();
+    });
+
+    // ==========================================
+    // 2. LÓGICA DE EXTRACCIÓN INTELIGENTE
+    // ==========================================
+    function obtenerDatosSeguros(llavesPosibles) {
+        for (let key of llavesPosibles) {
+            try {
+                let data = JSON.parse(localStorage.getItem(key));
+                if (Array.isArray(data) && data.length > 0) return data;
+            } catch(e) {}
+        }
+        return [];
+    }
+
+    function establecerMesActual() {
+        const fecha = new Date();
+        const mes = (fecha.getMonth() + 1).toString().padStart(2, '0');
+        document.getElementById('mesFiltro').value = `${fecha.getFullYear()}-${mes}`;
+    }
+
+    function limpiarFiltro() {
+        document.getElementById('mesFiltro').value = '';
+        actualizarDashboard();
+    }
+
+    function aplicarFiltroFecha(arrayDatos, campoFecha, campoAlternativo, filtroYYYYMM) {
+        if (!filtroYYYYMM || arrayDatos.length === 0) return arrayDatos;
+        return arrayDatos.filter(item => {
+            const fechaVal = String(item[campoFecha] || item[campoAlternativo] || "");
+            return fechaVal.startsWith(filtroYYYYMM);
+        });
+    }
+
+    // ==========================================
+    // 3. PROCESAMIENTO DEL DASHBOARD
+    // ==========================================
+    function actualizarDashboard() {
+        const filtro = document.getElementById('mesFiltro').value;
+
+        // Leer BD
+        const personalRaw = obtenerDatosSeguros(['personal', 'empleados']);
+        const usuariosRaw = obtenerDatosSeguros(['usuarios']);
+        const eventosRaw = obtenerDatosSeguros(['CrearLA', 'eventos']);
+        const asistenciasRaw = obtenerDatosSeguros(['registroAsistencias', 'asistencias']); 
+        const reciclajeRaw = obtenerDatosSeguros(['registroReciclaje', 'reciclaje']); 
+        const membresiasRaw = obtenerDatosSeguros(['membresiasActivas', 'membresias']); 
+
+        // Filtrar
+        const personal = aplicarFiltroFecha(personalRaw, 'fechaRegistro', 'fechaIngreso', filtro); 
+        const usuarios = aplicarFiltroFecha(usuariosRaw, 'fechaCreacion', 'fecha', filtro);
+        const eventos = aplicarFiltroFecha(eventosRaw, 'FechaEvento', 'fecha', filtro); 
+        const asistencias = aplicarFiltroFecha(asistenciasRaw, 'fecha', 'date', filtro);
+        const reciclaje = aplicarFiltroFecha(reciclajeRaw, 'fecha', 'date', filtro);
+        const membresias = aplicarFiltroFecha(membresiasRaw, 'fechaInicio', 'fecha', filtro);
+
+        // Actualizar KPIs Globales
+        document.getElementById('kpi-personal').innerText = personal.length;
+        document.getElementById('kpi-usuarios').innerText = usuarios.length;
+        document.getElementById('kpi-eventos').innerText = eventos.length;
+
+        let totalKilos = 0;
+        reciclaje.forEach(r => totalKilos += (parseFloat(r.kilos || r.peso) || 0));
+        document.getElementById('kpi-kilos').innerText = `${totalKilos.toFixed(1)} Kg`;
+
+        // ------------------------------------------
+        // PREPARACIÓN DE DATOS PARA GRÁFICOS
+        // ------------------------------------------
+
+        // 1. Sedes
+        const conteoSedes = {};
+        personal.forEach(p => { const s = p.area || p.sede || "No Registrada"; conteoSedes[s] = (conteoSedes[s] || 0) + 1; });
+        renderizarGrafico('chartSedes', 'doughnut', Object.keys(conteoSedes), Object.values(conteoSedes), [colores.primario, colores.azul, colores.amarillo, colores.verde, colores.gris]);
+
+        // 2. Roles
+        const conteoRoles = {};
+        usuarios.forEach(u => { const r = u.cargo || "Sin Rol"; conteoRoles[r] = (conteoRoles[r] || 0) + 1; });
+        renderizarGrafico('chartRoles', 'bar', Object.keys(conteoRoles), Object.values(conteoRoles), colores.azul);
+
+        // 3. Edades
+        let ed18_25 = 0, ed26_35 = 0, ed36_50 = 0, ed50mas = 0, edDesc = 0;
+        const añoActual = new Date().getFullYear();
+        personal.forEach(p => {
+            if(p.fechaNacimiento && !isNaN(new Date(p.fechaNacimiento).getTime())) {
+                const edad = añoActual - new Date(p.fechaNacimiento).getFullYear();
+                if(edad <= 25) ed18_25++; else if(edad <= 35) ed26_35++; else if(edad <= 50) ed36_50++; else ed50mas++;
+            } else { edDesc++; }
+        });
+        renderizarGrafico('chartEdades', 'bar_horizontal', ['18-25', '26-35', '36-50', '50+', 'N/A'], [ed18_25, ed26_35, ed36_50, ed50mas, edDesc], colores.amarillo);
+
+        // 4. Asistencia
+        const conteoAsistencias = {};
+        asistencias.forEach(a => { 
+            let est = (a.estado || a.status || (a.asistio ? 'ASISTIÓ' : 'FALTÓ') || "SIN ESTADO").toUpperCase();
+            conteoAsistencias[est] = (conteoAsistencias[est] || 0) + 1; 
+        });
+        renderizarGrafico('chartAsistencia', 'doughnut', Object.keys(conteoAsistencias), Object.values(conteoAsistencias), [colores.verde, colores.rojo, colores.amarillo, colores.gris]);
+
+        // 5. Horas Hombre
+        const histHoras = {};
+        asistencias.forEach(a => {
+            let est = (a.estado || a.status || "").toUpperCase();
+            if(est === "ASISTIÓ" || est === "PRESENTE" || a.asistio === true) {
+                const f = a.fecha || a.date || "S/F";
+                histHoras[f] = (histHoras[f] || 0) + (parseFloat(a.duracionHoras || a.horas || 1));
+            }
+        });
+        renderizarGrafico('chartHorasHombre', 'line_area', Object.keys(histHoras), Object.values(histHoras), colores.azul);
+
+        // 6. Ranking Residuos
+        const conteoResiduos = {};
+        reciclaje.forEach(r => { 
+            const tipo = (r.tipoResiduo || r.material || "OTROS").toUpperCase(); 
+            conteoResiduos[tipo] = (conteoResiduos[tipo] || 0) + (parseFloat(r.kilos || r.peso) || 0); 
+        });
+        const residuosOrdenados = Object.entries(conteoResiduos).sort((a,b) => b[1] - a[1]);
+        const resLabels = residuosOrdenados.map(e => e[0]);
+        const resData = residuosOrdenados.map(e => e[1]);
+        renderizarGrafico('chartTiposResiduos', 'bar_horizontal', resLabels, resData, [colores.verde, colores.azul, colores.amarillo, colores.morado, colores.gris, colores.primario]);
+
+        // 7. Histórico Reciclaje
+        const histReciclaje = {};
+        reciclaje.forEach(r => { const f = r.fecha || "S/F"; histReciclaje[f] = (histReciclaje[f] || 0) + (parseFloat(r.kilos || r.peso) || 0); });
+        renderizarGrafico('chartReciclaje', 'line', Object.keys(histReciclaje), Object.values(histReciclaje), colores.verde);
+
+        // 8. Membresías
+        const conteoMembresias = {};
+        membresias.forEach(m => { const tipo = (m.tipoMembresia || m.plan || m.tipo || "NO ESPECIFICADO").toUpperCase(); conteoMembresias[tipo] = (conteoMembresias[tipo] || 0) + 1; });
+        renderizarGrafico('chartMembresias', 'pie', Object.keys(conteoMembresias), Object.values(conteoMembresias), [colores.celeste, colores.azul, colores.primario]);
+
+        // 9. Tabla Top 5 
+        actualizarTablaTop5(personalRaw);
+    }
+
+    // ==========================================
+    // 4. MOTOR UNIVERSAL DE RENDERIZADO CHART.JS
+    // ==========================================
+    function renderizarGrafico(canvasId, tipo, etiquetasOriginales, datosOriginales, colorTheme) {
+        const ctx = document.getElementById(canvasId).getContext('2d');
+        if (graficosInstancias[canvasId]) graficosInstancias[canvasId].destroy();
+
+        const sumaDatos = datosOriginales.reduce((a, b) => a + b, 0);
+        const sinDatos = etiquetasOriginales.length === 0 || sumaDatos === 0;
+
+        const labels = sinDatos ? ['Sin datos registrados'] : etiquetasOriginales;
+        const data = sinDatos ? [1] : datosOriginales; 
+        const bgColors = sinDatos ? ['#e2e8f0'] : colorTheme;
+
+        let config = {};
+
+        if(tipo === 'doughnut' || tipo === 'pie') {
+            config = {
+                type: tipo,
+                data: { labels: labels, datasets: [{ data: data, backgroundColor: bgColors, borderWidth: 1 }] },
+                options: { responsive: true, maintainAspectRatio: false, cutout: tipo==='doughnut'?'65%':0, plugins: { legend: { position: 'right', labels: { boxWidth: 10, font: { size: 10 } } }, tooltip: { callbacks: { label: function(context) { return sinDatos ? ' Sin Registros' : ` ${context.label}: ${context.raw}`; } } } } }
+            };
+        } 
+        else if (tipo === 'bar' || tipo === 'bar_horizontal') {
+            const isHoriz = tipo === 'bar_horizontal';
+            config = {
+                type: 'bar',
+                data: { labels: labels, datasets: [{ data: sinDatos ? [0] : data, backgroundColor: bgColors, borderRadius: 4 }] },
+                options: { 
+                    indexAxis: isHoriz ? 'y' : 'x', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, 
+                    scales: { 
+                        x: { beginAtZero: true, grid: { display: !isHoriz }, ticks: { precision: 0 } }, 
+                        y: { beginAtZero: true, grid: { display: isHoriz }, ticks: { precision: 0 } } 
+                    } 
+                }
+            };
+        }
+        else if (tipo === 'line' || tipo === 'line_area') {
+            const isArea = tipo === 'line_area';
+            config = {
+                type: 'line',
+                data: { labels: labels, datasets: [{ data: sinDatos ? [0] : data, borderColor: bgColors, backgroundColor: isArea ? 'rgba(44, 110, 203, 0.15)' : 'transparent', fill: isArea, tension: 0.3, borderWidth: 2, pointBackgroundColor: bgColors }] },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
+            };
+        }
+
+        graficosInstancias[canvasId] = new Chart(ctx, config);
+    }
+
+    // ==========================================
+    // 5. TABLA TOP 5 DINÁMICA
+    // ==========================================
+    function actualizarTablaTop5(personalArray) {
+        const tbody = document.getElementById('tablaTop5');
+        tbody.innerHTML = '';
+
+        const ranking = personalArray
+            .filter(p => parseFloat(p.ecoPuntos || p.puntos || 0) > 0)
+            .sort((a, b) => parseFloat(b.ecoPuntos || b.puntos || 0) - parseFloat(a.ecoPuntos || a.puntos || 0))
+            .slice(0, 5);
+
+        if (ranking.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="3" class="empty-row">Sin datos de reciclaje registrados</td></tr>';
+            return;
+        }
+
+        const medallas = ['🥇', '🥈', '🥉', '4°', '5°'];
+        
+        ranking.forEach((p, index) => {
+            const tr = document.createElement('tr');
+            const ptos = parseFloat(p.ecoPuntos || p.puntos || 0);
+            const style = index < 3 ? 'font-size: 16px;' : 'font-size: 11px; color: var(--text-subdued); font-weight: 800;';
+            
+            tr.innerHTML = `
+                <td><span class="medal" style="${style}">${medallas[index]}</span></td>
+                <td>${p.nombres || ''} ${p.apellidos || ''}</td>
+                <td style="color:var(--success); font-weight:800;">${ptos}</td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+</script>
+
+</body>
+</html>
